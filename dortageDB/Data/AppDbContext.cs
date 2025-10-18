@@ -2,6 +2,7 @@
 using dortageDB.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace dortageDB.Data
 {
@@ -65,6 +66,23 @@ namespace dortageDB.Data
                 .HasForeignKey(s => s.TopraktarID);
 
             b.Entity<Satis>().HasIndex(s => new { s.TopraktarID, s.SatilmaTarihi });
+
+            b.Entity<Referral>(e =>
+            {
+                // Code alanı zorunlu ve en fazla 32 karakter
+                e.Property(x => x.Code)
+                    .HasMaxLength(32)
+                    .IsRequired();
+
+                // Code üzerinde benzersiz indeks: aynı koddan yalnızca bir tane olabilir
+                e.HasIndex(x => x.Code)
+                    .IsUnique();
+
+                // (İsteğe bağlı) CreatedAtUtc için varsayılan değer atanabilir.
+                // Eğer DB tarafında default istersen:
+                // e.Property(x => x.CreatedAtUtc)
+                //  .HasDefaultValueSql("GETUTCDATE()");
+            });
         }
     }
 }

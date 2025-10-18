@@ -41,82 +41,112 @@ namespace dortageDB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterVM model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(model);
-            }
-
-            // KVKK kontrolü
-            if (!model.Kvkk)
-            {
-                ModelState.AddModelError("Kvkk", "KVKK metnini onaylamanız gerekmektedir.");
-                return View(model);
-            }
-
-            // Yeni kullanıcı oluştur
-            var user = new AppUser
-            {
-                UserName = model.Email,
-                Email = model.Email,
-                PhoneNumber = model.PhoneNumber,
-                Ad = model.Ad,
-                Soyad = model.Soyad,
-                Sehir = model.Sehir,
-                Cinsiyet = model.Cinsiyet,
-                TcNo = model.TcNo,
-                Kvkk = model.Kvkk,
-                Pazarlama = model.Pazarlama,
-                EmailConfirmed = true // Geliştirme için otomatik onaylı
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
-            {
-                foreach (var error in result.Errors)
+                if (!ModelState.IsValid)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-                return View(model);
-            }
+                    // Hataları logla ve ViewBag'e ekle
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                    ViewBag.Errors = errors;
 
-            // Topraktar profili oluştur
-            if (model.TopraktarMi)
-            {
-                var topraktarProfile = new TopraktarProfile
-                {
-                    UserId = user.Id
-                };
-                _context.TopraktarProfiles.Add(topraktarProfile);
-                await _context.SaveChangesAsync();
-            }
-
-            // Roller ata
-            if (model.Roller != null && model.Roller.Any())
-            {
-                foreach (var roleName in model.Roller)
-                {
-                    // Rol yoksa oluştur
-                    if (!await _roleManager.RoleExistsAsync(roleName))
+                    foreach (var error in errors)
                     {
-                        await _roleManager.CreateAsync(new AppRole { Name = roleName });
+                        Console.WriteLine($"❌ Validation Error: {error}");
                     }
-                    await _userManager.AddToRoleAsync(user, roleName);
+                    return View(model);
                 }
-            }
-            else if (model.TopraktarMi)
-            {
-                // Varsayılan olarak topraktar rolü ata
-                const string topraktarRole = "topraktar";
-                if (!await _roleManager.RoleExistsAsync(topraktarRole))
-                {
-                    await _roleManager.CreateAsync(new AppRole { Name = topraktarRole });
-                }
-                await _userManager.AddToRoleAsync(user, topraktarRole);
-            }
 
-            TempData["SuccessMessage"] = "Kayıt başarılı! Giriş yapabilirsiniz.";
-            return RedirectToAction(nameof(Login));
+                // KVKK kontrolü
+                if (!model.Kvkk)
+                {
+                    ModelState.AddModelError("Kvkk", "KVKK metnini onaylamanız gerekmektedir.");
+                    return View(model);
+                }
+
+                Console.WriteLine("✅ Validation başarılı, kullanıcı oluşturuluyor...");
+
+                // Yeni kullanıcı oluştur
+                var user = new AppUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    Ad = model.Ad,
+                    Soyad = model.Soyad,
+                    Sehir = model.Sehir,
+                    Cinsiyet = model.Cinsiyet,
+                    TcNo = model.TcNo,
+                    Kvkk = model.Kvkk,
+                    Pazarlama = model.Pazarlama,
+                    EmailConfirmed = true
+                };
+
+                Console.WriteLine($"📝 Kullanıcı oluşturuluyor: {user.Email}");
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (!result.Succeeded)
+                {
+                    Console.WriteLine("❌ Kullanıcı oluşturma başarısız!");
+                    foreach (var error in result.Errors)
+                    {
+                        Console.WriteLine($"   - {error.Description}");
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(model);
+                }
+
+                Console.WriteLine("✅ Kullanıcı başarıyla oluşturuldu!");
+
+                // Topraktar profili oluştur
+                if (model.TopraktarMi)
+                {
+                    Console.WriteLine("📋 Topraktar profili oluşturuluyor...");
+                    var topraktarProfile = new TopraktarProfile
+                    {
+                        UserId = user.Id
+                    };
+                    _context.TopraktarProfiles.Add(topraktarProfile);
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine("✅ Topraktar profili oluşturuldu!");
+                }
+
+                // Roller ata
+                if (model.Roller != null && model.Roller.Any())
+                {
+                    foreach (var roleName in model.Roller)
+                    {
+                        if (!await _roleManager.RoleExistsAsync(roleName))
+                        {
+                            await _roleManager.CreateAsync(new AppRole { Name = roleName });
+                        }
+                        await _userManager.AddToRoleAsync(user, roleName);
+                    }
+                }
+                else if (model.TopraktarMi)
+                {
+                    Console.WriteLine("👤 Topraktar rolü atanıyor...");
+                    const string topraktarRole = "topraktar";
+                    if (!await _roleManager.RoleExistsAsync(topraktarRole))
+                    {
+                        Console.WriteLine("📝 Topraktar rolü oluşturuluyor...");
+                        await _roleManager.CreateAsync(new AppRole { Name = topraktarRole });
+                    }
+                    await _userManager.AddToRoleAsync(user, topraktarRole);
+                    Console.WriteLine("✅ Topraktar rolü atandı!");
+                }
+
+                Console.WriteLine("🎉 Kayıt işlemi tamamlandı! Login sayfasına yönlendiriliyor...");
+                TempData["SuccessMessage"] = "Kayıt başarılı! Giriş yapabilirsiniz.";
+                return RedirectToAction(nameof(Login));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"💥 HATA: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                ModelState.AddModelError(string.Empty, $"Bir hata oluştu: {ex.Message}");
+                return View(model);
+            }
         }
 
         // GET: Account/Login

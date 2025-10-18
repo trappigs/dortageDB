@@ -1,4 +1,4 @@
-﻿@model dortageDB.ViewModels.RegisterVM
+﻿@model RegisterVM
 
 @{
     ViewData["Title"] = "Kayıt Ol";
@@ -12,45 +12,81 @@
                     <h3 class="mb-0">Kayıt Ol</h3>
                 </div>
                 <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
                     <form asp-action="Register" method="post">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        @if (ViewBag.Errors != null && ViewBag.Errors.Count > 0)
+                        {
+                            <div class="alert alert-danger">
+                                <h5>❌ Lütfen aşağıdaki hataları düzeltin:</h5>
+                                <ul class="mb-0">
+                                    @foreach (var error in ViewBag.Errors)
+                                    {
+                                        <li>@error</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        <div asp-validation-summary="All" class="alert alert-danger"></div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Ad" class="form-label">Ad *</label>
-                                <input asp-for="Ad" class="form-control" />
+                                <label asp-for="Ad" class="form-label">Ad <span class="text-danger">*</span></label>
+                                <input asp-for="Ad" class="form-control" placeholder="Adınız" />
                                 <span asp-validation-for="Ad" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Soyad" class="form-label">Soyad *</label>
-                                <input asp-for="Soyad" class="form-control" />
+                                <label asp-for="Soyad" class="form-label">Soyad <span class="text-danger">*</span></label>
+                                <input asp-for="Soyad" class="form-control" placeholder="Soyadınız" />
                                 <span asp-validation-for="Soyad" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label">E-posta *</label>
-                            <input asp-for="Email" type="email" class="form-control" />
+                            <label asp-for="Email" class="form-label">E-posta <span class="text-danger">*</span></label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="ornek@email.com" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="PhoneNumber" class="form-label">Telefon *</label>
+                            <label asp-for="PhoneNumber" class="form-label">Telefon <span class="text-danger">*</span></label>
                             <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="5XX XXX XX XX" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Sehir" class="form-label">Şehir *</label>
-                            <input asp-for="Sehir" class="form-control" />
-                            <span asp-validation-for="Sehir" class="text-danger"></span>
+                            <label asp-for="TcNo" class="form-label">TC Kimlik No</label>
+                            <input asp-for="TcNo" type="text" class="form-control" placeholder="11 haneli TC No" maxlength="11" />
+                            <span asp-validation-for="TcNo" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Şifre *</label>
-                            <input asp-for="Password" type="password" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
+                            <label asp-for="Sehir" class="form-label">Şehir <span class="text-danger">*</span></label>
+                            <input asp-for="Sehir" class="form-control" placeholder="Şehir" />
+                            <span asp-validation-for="Sehir" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Password" class="form-label">Şifre <span class="text-danger">*</span></label>
+                                <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" autocomplete="new-password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                                <small class="form-text text-muted">En az 6 karakter</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label">Şifre Tekrar <span class="text-danger">*</span></label>
+                                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="••••••••" autocomplete="new-password" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -80,7 +116,7 @@
                             <div class="form-check">
                                 <input asp-for="Kvkk" type="checkbox" class="form-check-input" required />
                                 <label asp-for="Kvkk" class="form-check-label">
-                                    KVKK metnini okudum ve kabul ediyorum *
+                                    <a href="#" target="_blank">KVKK metnini</a> okudum ve kabul ediyorum <span class="text-danger">*</span>
                                 </label>
                                 <span asp-validation-for="Kvkk" class="text-danger d-block"></span>
                             </div>
@@ -90,7 +126,7 @@
                             <div class="form-check">
                                 <input asp-for="Pazarlama" type="checkbox" class="form-check-input" />
                                 <label asp-for="Pazarlama" class="form-check-label">
-                                    Pazarlama iletişimi almak istiyorum
+                                    Pazarlama ve bilgilendirme iletişimi almak istiyorum
                                 </label>
                             </div>
                         </div>
@@ -100,7 +136,7 @@
                         </div>
 
                         <div class="text-center mt-3">
-                            <p class="mb-0">Zaten hesabınız var mı? <a asp-action="Login">Giriş yapın</a></p>
+                            <p class="mb-0">Zaten hesabınız var mı? <a asp-action="Login" class="fw-bold">Giriş yapın</a></p>
                         </div>
                     </form>
                 </div>
@@ -111,4 +147,16 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // TC No sadece rakam kabul etsin
+        document.querySelector('input[name="TcNo"]').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Telefon formatı
+        document.querySelector('input[name="PhoneNumber"]').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
 }
