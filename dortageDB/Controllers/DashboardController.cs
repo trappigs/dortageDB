@@ -1,6 +1,14 @@
-﻿namespace dortageDB.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace dortageDB.Controllers
 {
-    public class DashboardController
+    [Authorize]
+    public class DashboardController : Controller
     {
+        public IActionResult Index()
+        {
+            return View();
+        }
     }
 }

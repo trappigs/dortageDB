@@ -1,10 +1,14 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using dortageDB.Entities
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+<!DOCTYPE html>
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - dortageDB</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/dortageDB.styles.css" asp-append-version="true" />
@@ -20,12 +24,67 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                            </li>
+                            @if (User.IsInRole("admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="User" asp-action="Index">Kullanıcılar</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("topraktar") || User.IsInRole("admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Musteri" asp-action="Index">Müşteriler</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Randevu" asp-action="Index">Randevular</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Satis" asp-action="Index">Satışlar</a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Gizlilik</a>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Profilim</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                            <button type="submit" class="dropdown-item">Çıkış Yap</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Giriş Yap</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-primary text-white ms-2" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -39,7 +98,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - dortageDB - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - dortageDB - <a asp-area="" asp-controller="Home" asp-action="Privacy">Gizlilik Politikası</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

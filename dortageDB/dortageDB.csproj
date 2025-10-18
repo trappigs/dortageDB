@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Musteri\" />
-    <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\Role\" />
     <Folder Include="Views\Satis\" />
     <Folder Include="Views\Randevu\" />

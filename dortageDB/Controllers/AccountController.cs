@@ -1,205 +1,181 @@
-﻿using dortageDB.Data;
-using dortageDB.Entities;
-using dortageDB.ViewModels;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using dortageDB.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
-public class AccountController : Controller
+namespace dortageDB.Controllers
 {
-    private readonly AppDbContext _context;
-
-    public AccountController(AppDbContext context)
+    public class AccountController : Controller
     {
-        _context = context;
-    }
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly RoleManager<AppRole> _roleManager;
+        private readonly AppDbContext _context;
 
-    // GET: Account/Register
-    [HttpGet]
-    public IActionResult Register()
-    {
-        return View();
-    }
-
-    // POST: Account/Register
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(UserCreateVM model)
-    {
-        if (!ModelState.IsValid)
+        public AccountController(
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            RoleManager<AppRole> roleManager,
+            AppDbContext context)
         {
-            return View(model);
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
+            _context = context;
         }
 
-        // KVKK kontrolü
-        if (!model.Kvkk)
+        // GET: Account/Register
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Register()
         {
-            ModelState.AddModelError("Kvkk", "KVKK metnini onaylamanız gerekmektedir.");
-            return View(model);
-        }
-
-        // E-posta kontrolü
-        if (await _context.Users.AnyAsync(u => u.Eposta == model.Eposta))
-        {
-            ModelState.AddModelError("Eposta", "Bu e-posta adresi zaten kullanılıyor.");
-            return View(model);
-        }
-
-        // Telefon kontrolü
-        if (await _context.Users.AnyAsync(u => u.Telefon == model.Telefon))
-        {
-            ModelState.AddModelError("Telefon", "Bu telefon numarası zaten kullanılıyor.");
-            return View(model);
-        }
-
-        // Yeni kullanıcı oluştur
-        var user = new User
-        {
-            Ad = model.Ad,
-            Soyad = model.Soyad,
-            Telefon = model.Telefon,
-            Eposta = model.Eposta,
-            Sehir = model.Sehir,
-            Cinsiyet = model.Cinsiyet,
-            Kvkk = model.Kvkk,
-            Pazarlama = model.Pazarlama,
-            Sifre = HashPassword(model.Sifre)
-        };
-
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-
-        // Topraktar profili oluştur
-        if (model.TopraktarMi)
-        {
-            var topraktarProfile = new TopraktarProfile
-            {
-                UserId = user.Id
-            };
-            _context.TopraktarProfiles.Add(topraktarProfile);
-        }
-
-        // Roller ata
-        if (model.Roller != null && model.Roller.Any())
-        {
-            foreach (var roleName in model.Roller)
-            {
-                var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
-                if (role != null)
-                {
-                    var userRole = new UserRole
-                    {
-                        UserId = user.Id,
-                        RoleId = role.Id
-                    };
-                    _context.UserRoles.Add(userRole);
-                }
-            }
-        }
-        else if (model.TopraktarMi)
-        {
-            // Varsayılan olarak topraktar rolü ata
-            var topraktarRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "topraktar");
-            if (topraktarRole != null)
-            {
-                var userRole = new UserRole
-                {
-                    UserId = user.Id,
-                    RoleId = topraktarRole.Id
-                };
-                _context.UserRoles.Add(userRole);
-            }
-        }
-
-        await _context.SaveChangesAsync();
-
-        TempData["SuccessMessage"] = "Kayıt başarılı! Giriş yapabilirsiniz.";
-        return RedirectToAction(nameof(Login));
-    }
-
-    // GET: Account/Login
-    [HttpGet]
-    public IActionResult Login()
-    {
-        return View();
-    }
-
-    // POST: Account/Login
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(string eposta, string sifre)
-    {
-        if (string.IsNullOrEmpty(eposta) || string.IsNullOrEmpty(sifre))
-        {
-            ModelState.AddModelError("", "E-posta ve şifre gereklidir.");
             return View();
         }
 
-        var user = await _context.Users
-            .Include(u => u.UserRoles)
-            .ThenInclude(ur => ur.Role)
-            .FirstOrDefaultAsync(u => u.Eposta == eposta);
-
-        if (user == null || !VerifyPassword(sifre, user.Sifre))
+        // POST: Account/Register
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterVM model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // KVKK kontrolü
+            if (!model.Kvkk)
+            {
+                ModelState.AddModelError("Kvkk", "KVKK metnini onaylamanız gerekmektedir.");
+                return View(model);
+            }
+
+            // Yeni kullanıcı oluştur
+            var user = new AppUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                Ad = model.Ad,
+                Soyad = model.Soyad,
+                Sehir = model.Sehir,
+                Cinsiyet = model.Cinsiyet,
+                TcNo = model.TcNo,
+                Kvkk = model.Kvkk,
+                Pazarlama = model.Pazarlama,
+                EmailConfirmed = true // Geliştirme için otomatik onaylı
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(model);
+            }
+
+            // Topraktar profili oluştur
+            if (model.TopraktarMi)
+            {
+                var topraktarProfile = new TopraktarProfile
+                {
+                    UserId = user.Id
+                };
+                _context.TopraktarProfiles.Add(topraktarProfile);
+                await _context.SaveChangesAsync();
+            }
+
+            // Roller ata
+            if (model.Roller != null && model.Roller.Any())
+            {
+                foreach (var roleName in model.Roller)
+                {
+                    // Rol yoksa oluştur
+                    if (!await _roleManager.RoleExistsAsync(roleName))
+                    {
+                        await _roleManager.CreateAsync(new AppRole { Name = roleName });
+                    }
+                    await _userManager.AddToRoleAsync(user, roleName);
+                }
+            }
+            else if (model.TopraktarMi)
+            {
+                // Varsayılan olarak topraktar rolü ata
+                const string topraktarRole = "topraktar";
+                if (!await _roleManager.RoleExistsAsync(topraktarRole))
+                {
+                    await _roleManager.CreateAsync(new AppRole { Name = topraktarRole });
+                }
+                await _userManager.AddToRoleAsync(user, topraktarRole);
+            }
+
+            TempData["SuccessMessage"] = "Kayıt başarılı! Giriş yapabilirsiniz.";
+            return RedirectToAction(nameof(Login));
+        }
+
+        // GET: Account/Login
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login(string? returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
+        // POST: Account/Login
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(string email, string password, bool rememberMe = false, string? returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                ModelState.AddModelError("", "E-posta ve şifre gereklidir.");
+                return View();
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            if (result.IsLockedOut)
+            {
+                ModelState.AddModelError("", "Hesabınız kilitlenmiştir. Lütfen daha sonra tekrar deneyin.");
+                return View();
+            }
+
             ModelState.AddModelError("", "E-posta veya şifre hatalı.");
             return View();
         }
 
-        // Claims oluştur
-        var claims = new List<Claim>
+        // POST: Account/Logout
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Logout()
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, $"{user.Ad} {user.Soyad}"),
-            new Claim(ClaimTypes.Email, user.Eposta)
-        };
-
-        // Rolleri ekle
-        foreach (var userRole in user.UserRoles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, userRole.Role.Name));
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
-        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var authProperties = new AuthenticationProperties
+        // GET: Account/AccessDenied
+        [HttpGet]
+        public IActionResult AccessDenied()
         {
-            IsPersistent = true,
-            ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
-        };
-
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(claimsIdentity),
-            authProperties);
-
-        return RedirectToAction("Index", "Dashboard");
-    }
-
-    // POST: Account/Logout
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Logout()
-    {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return RedirectToAction(nameof(Login));
-    }
-
-    // Şifre hashleme
-    private string HashPassword(string password)
-    {
-        using var sha256 = SHA256.Create();
-        var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-        return Convert.ToBase64String(hashedBytes);
-    }
-
-    // Şifre doğrulama
-    private bool VerifyPassword(string password, string hashedPassword)
-    {
-        var hashOfInput = HashPassword(password);
-        return hashOfInput == hashedPassword;
+            return View();
+        }
     }
 }
