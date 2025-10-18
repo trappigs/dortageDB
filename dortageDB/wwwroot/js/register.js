@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function initializeForm() {
-    loadFormData();
     attachEventListeners();
 }
 
@@ -62,8 +61,8 @@ function attachEventListeners() {
     submitBtn.addEventListener('click', handleSubmit);
 
     // Field validations
-    document.getElementById('Ad').addEventListener('blur', () => validateField('Ad', 'firstNameError'));
-    document.getElementById('Soyad').addEventListener('blur', () => validateField('Soyad', 'lastNameError'));
+    document.getElementById('Ad').addEventListener('blur', () => validateField('Ad', 'AdError'));
+    document.getElementById('Soyad').addEventListener('blur', () => validateField('Soyad', 'SoyadError'));
     document.getElementById('Sehir').addEventListener('blur', () => validateField('Sehir', 'cityError'));
 
     // Checkboxes
@@ -251,20 +250,21 @@ function handleSubmit() {
 function validateForm() {
     let valid = true;
 
+    // ✅ YENİ
     const firstName = document.getElementById('Ad');
     if (!firstName.value.trim()) {
-        showError('Ad', 'firstNameError');
+        showError('Ad', 'AdError');  // ✅
         valid = false;
     } else {
-        hideError('Ad', 'firstNameError');
+        hideError('Ad', 'AdError');  // ✅
     }
 
     const lastName = document.getElementById('Soyad');
     if (!lastName.value.trim()) {
-        showError('Soyad', 'lastNameError');
+        showError('Soyad', 'SoyadError');  // ✅
         valid = false;
     } else {
-        hideError('Soyad', 'lastNameError');
+        hideError('Soyad', 'SoyadError');  // ✅
     }
 
     const email = document.getElementById('Email');
