@@ -12,7 +12,7 @@ namespace dortageDB.Data
         public DbSet<Musteri> Musteriler => Set<Musteri>();
         public DbSet<Randevu> Randevular => Set<Randevu>();
         public DbSet<Satis> Satislar => Set<Satis>();
-
+        public DbSet<Referral> Referrals => Set<Referral>();
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }

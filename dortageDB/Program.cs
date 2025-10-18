@@ -1,5 +1,6 @@
 using dortageDB.Data;
 using dortageDB.Entities;
+using dortageDB.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,9 @@ builder.Services.AddControllersWithViews();
 // EF Core DbContext
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<IReferralService, ReferralService>();
 
 // Identity yapýlandýrmasý - BU ZATEN AUTHENTICATION'I EKLÝYOR!
 builder.Services.AddIdentity<AppUser, AppRole>(opt =>

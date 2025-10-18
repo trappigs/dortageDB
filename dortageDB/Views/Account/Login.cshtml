@@ -1,5 +1,182 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@* Views/Account/Login.cshtml *@
+@model LoginVM
+
 @{
+    ViewData["Title"] = "Giriş Yap";
 }
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0 text-center">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">
+                                <i class="bi bi-envelope me-1"></i>E-posta Adresi
+                            </label>
+                            <input asp-for="Email"
+                                   type="email"
+                                   class="form-control form-control-lg"
+                                   placeholder="ornek@email.com"
+                                   autofocus
+                                   autocomplete="email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">
+                                <i class="bi bi-lock me-1"></i>Şifre
+                            </label>
+                            <div class="input-group">
+                                <input asp-for="Password"
+                                       type="password"
+                                       class="form-control form-control-lg"
+                                       id="passwordInput"
+                                       placeholder="••••••••"
+                                       autocomplete="current-password" />
+                                <button class="btn btn-outline-secondary"
+                                        type="button"
+                                        id="togglePassword"
+                                        title="Şifreyi göster/gizle">
+                                    <i class="bi bi-eye" id="toggleIcon"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="RememberMe"
+                                   type="checkbox"
+                                   class="form-check-input"
+                                   id="rememberMe" />
+                            <label class="form-check-label" for="rememberMe">
+                                Beni hatırla
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap
+                            </button>
+                        </div>
+
+                        <div class="text-center">
+                            @* <a asp-action="ForgotPassword" class="text-decoration-none small">
+                                Şifremi unuttum
+                            </a> *@
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer bg-light text-center py-3">
+                    <p class="mb-0">
+                        Hesabınız yok mu?
+                        <a asp-action="Register" class="fw-bold text-decoration-none">
+                            Kayıt olun
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="card-footer bg-light text-center py-3">
+                    <p class="mb-0">
+                        Şifrenizi mi unuttunuz?
+                        <a asp-action="ForgotPassword" class="fw-bold text-decoration-none">
+                            Şifrenizi sıfırlayın
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            @* Alternatif giriş yöntemleri (ileride eklenebilir) *@
+            @* <div class="text-center mt-4">
+                <p class="text-muted mb-3">veya</p>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-dark">
+                        <i class="bi bi-google me-2"></i>Google ile giriş yap
+                    </button>
+                </div>
+            </div> *@
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Şifre göster/gizle
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('passwordInput');
+            const toggleIcon = document.getElementById('toggleIcon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            }
+        });
+
+        // Email input otomatik küçük harf
+        document.querySelector('input[name="Email"]').addEventListener('input', function(e) {
+            this.value = this.value.toLowerCase();
+        });
+    </script>
+}
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.5rem;
+    }
+
+    .form-control:focus {
+        border-color: #1b6ec2;
+        box-shadow: 0 0 0 0.2rem rgba(27, 110, 194, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #1b6ec2;
+        border-color: #1b6ec2;
+    }
+
+    .btn-primary:hover {
+        background-color: #155a9c;
+        border-color: #155a9c;
+    }
+
+    .input-group .btn-outline-secondary:focus {
+        box-shadow: none;
+    }
+</style>

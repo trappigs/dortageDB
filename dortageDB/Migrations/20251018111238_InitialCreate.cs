@@ -79,6 +79,25 @@ namespace dortageDB.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Referrals",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    MaxUses = table.Column<int>(type: "int", nullable: true),
+                    UsedCount = table.Column<int>(type: "int", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedByUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Referrals", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -356,6 +375,12 @@ namespace dortageDB.Migrations
                 column: "TopraktarID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Referrals_Code",
+                table: "Referrals",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Satislar_SatilanMusteriID",
                 table: "Satislar",
                 column: "SatilanMusteriID");
@@ -386,6 +411,9 @@ namespace dortageDB.Migrations
 
             migrationBuilder.DropTable(
                 name: "Randevular");
+
+            migrationBuilder.DropTable(
+                name: "Referrals");
 
             migrationBuilder.DropTable(
                 name: "Satislar");

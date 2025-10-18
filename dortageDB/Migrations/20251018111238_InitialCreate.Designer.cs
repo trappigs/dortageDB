@@ -12,7 +12,7 @@ using dortageDB.Data;
 namespace dortageDB.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251018100338_InitialCreate")]
+    [Migration("20251018111238_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -359,6 +359,45 @@ namespace dortageDB.Migrations
                     b.HasIndex("RandevuDurum", "RandevuZaman");
 
                     b.ToTable("Randevular");
+                });
+
+            modelBuilder.Entity("dortageDB.Entities.Referral", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("MaxUses")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsedCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("Referrals");
                 });
 
             modelBuilder.Entity("dortageDB.Entities.Satis", b =>

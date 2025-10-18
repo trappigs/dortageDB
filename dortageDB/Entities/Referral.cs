@@ -8,7 +8,7 @@
         public string Code { get; set; } = string.Empty;
 
         public bool IsActive { get; set; } = true;
-        public int MaxUses { get; set; } = 1;          // null = sınırsız
+        public int? MaxUses { get; set; } = 1;          // null = sınırsız
         public int UsedCount { get; set; } = 0;
         public DateTime? ExpiresAt { get; set; }
 

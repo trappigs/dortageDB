@@ -130,7 +130,11 @@
                                 </label>
                             </div>
                         </div>
-
+                        <div class="mb-3">
+                            <label asp-for="ReferralCode" class="form-label">Referans Kodu (Opsiyonel)</label>
+                            <input asp-for="ReferralCode" class="form-control" placeholder="Referans kodunuz varsa girin" />
+                            <span asp-validation-for="ReferralCode" class="text-danger"></span>
+                        </div>
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary btn-lg">Kayıt Ol</button>
                         </div>
