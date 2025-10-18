@@ -1,7 +1,11 @@
 ﻿@model dortageDB.ViewModels.RegisterVM
+@{
+    ViewData["Title"] = "Kayıt Ol";
+}
+
 <div class="register-form">
     <div class="container">
-        <!-- Sol taraf aynı kalır -->
+        <!-- Sol taraf -->
         <div class="left-section">
             <div class="logo">DORTAGE</div>
             <h1 class="headline">Topraktar Ailesine Katıl</h1>
@@ -58,8 +62,23 @@
                     <p>Bilgilerinizi doldurun ve hemen başlayın</p>
                 </div>
 
+                @if (ViewBag.Errors != null)
+                {
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach (var error in ViewBag.Errors)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
                 <form asp-action="Register" asp-controller="Account" method="post" id="registrationForm">
                     @Html.AntiForgeryToken()
+
+                    <!-- Hidden fields -->
+                    <input type="hidden" asp-for="TopraktarMi" value="true" />
 
                     <div class="form-row">
                         <div class="form-group half">
@@ -71,8 +90,9 @@
                                 <input asp-for="Ad" type="text" placeholder="Adınız" autocomplete="given-name" />
                             </div>
                             <div class="error-message" id="AdError" style="display: none;">
-                                <span>⚠</span> Bu alan zorunludur<span asp-validation-for="Ad"></span>
+                                <span>⚠</span> Bu alan zorunludur
                             </div>
+                            <span asp-validation-for="Ad" class="text-danger"></span>
                         </div>
                         <div class="form-group half">
                             <label asp-for="Soyad">Soyad <span class="required">*</span></label>
@@ -83,8 +103,9 @@
                                 <input asp-for="Soyad" type="text" placeholder="Soyadınız" autocomplete="family-name" />
                             </div>
                             <div class="error-message" id="SoyadError" style="display: none;">
-                                <span>⚠</span> Bu alan zorunludur<span asp-validation-for="Soyad"></span>
+                                <span>⚠</span> Bu alan zorunludur
                             </div>
+                            <span asp-validation-for="Soyad" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -100,8 +121,9 @@
                             </svg>
                         </div>
                         <div class="error-message" id="emailError" style="display: none;">
-                            <span>⚠</span> Bu alan zorunludur<span asp-validation-for="Email"></span>
+                            <span>⚠</span> Geçerli bir e-posta adresi giriniz
                         </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
@@ -113,39 +135,61 @@
                             <input asp-for="PhoneNumber" type="tel" placeholder="(5XX) XXX XX XX" autocomplete="tel" />
                         </div>
                         <div class="error-message" id="phoneError" style="display: none;">
-                            <span>⚠</span> Bu alan zorunludur<span asp-validation-for="PhoneNumber"></span>
+                            <span>⚠</span> Geçerli bir telefon numarası giriniz
                         </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
-                    <!-- TC NO ALANI BURAYA EKLENMELİ -->
+
                     <div class="form-group">
-                        <label asp-for="TcNo">TC Kimlik No <span class="required">*</span></label>
+                        <label asp-for="TcNo">TC Kimlik No</label>
                         <div class="input-wrapper">
                             <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                             </svg>
-                            <input asp-for="TcNo" type="text" placeholder="11 haneli TC No" maxlength="11" autocomplete="off" />
+                            <input asp-for="TcNo" type="text" placeholder="11 haneli TC No (opsiyonel)" maxlength="11" autocomplete="off" />
                         </div>
                         <div class="error-message" id="tcNoError" style="display: none;">
-                            <span>⚠</span> Geçerli bir TC Kimlik No girin<span asp-validation-for="TcNo"></span>
+                            <span>⚠</span> Geçerli bir TC Kimlik No girin
                         </div>
+                        <span asp-validation-for="TcNo" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Sehir">Şehir <span class="required">*</span></label>
-                        <div class="input-wrapper">
-                            <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <select asp-for="Sehir" style="padding-left: 48px;" autocomplete="address-level1">
-                                <option value="">Şehir seçin</option>
-                                <option value="İstanbul">İstanbul</option>
-                                <option value="Ankara">Ankara</option>
-                                <option value="İzmir">İzmir</option>
-                                <!-- Diğer şehirler... -->
-                            </select>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label asp-for="Cinsiyet">Cinsiyet <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <select asp-for="Cinsiyet" style="padding-left: 48px;">
+                                    <option value="">Cinsiyet seçin</option>
+                                    <option value="false">Kadın</option>
+                                    <option value="true">Erkek</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="Cinsiyet" class="text-danger"></span>
                         </div>
-                        <div class="error-message" id="cityError" style="display: none;">
-                            <span>⚠</span> Bu alan zorunludur<span asp-validation-for="Sehir"></span>
+
+                        <div class="form-group half">
+                            <label asp-for="Sehir">Şehir <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <select asp-for="Sehir" style="padding-left: 48px;" autocomplete="address-level1">
+                                    <option value="">Şehir seçin</option>
+                                    <option value="İstanbul">İstanbul</option>
+                                    <option value="Ankara">Ankara</option>
+                                    <option value="İzmir">İzmir</option>
+                                    <option value="Bursa">Bursa</option>
+                                    <option value="Antalya">Antalya</option>
+                                </select>
+                            </div>
+                            <div class="error-message" id="cityError" style="display: none;">
+                                <span>⚠</span> Şehir seçimi zorunludur
+                            </div>
+                            <span asp-validation-for="Sehir" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -159,7 +203,7 @@
                             <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
-                            <input asp-for="Password" type="password" placeholder="En az 8 karakter" autocomplete="new-password" />
+                            <input asp-for="Password" type="password" placeholder="En az 6 karakter" autocomplete="new-password" />
                             <svg class="password-toggle" id="passwordToggle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -171,7 +215,7 @@
                         <div class="password-requirements show">
                             <div class="requirement" id="req-length">
                                 <span class="requirement-icon">✓</span>
-                                <span>En az 8 karakter</span>
+                                <span>En az 6 karakter</span>
                             </div>
                             <div class="requirement" id="req-uppercase">
                                 <span class="requirement-icon">✓</span>
@@ -186,6 +230,7 @@
                                 <span>En az 1 özel karakter</span>
                             </div>
                         </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
@@ -200,8 +245,9 @@
                             </svg>
                         </div>
                         <div class="error-message" id="confirmPasswordError" style="display: none;">
-                            <span>⚠</span> Şifreler eşleşmiyor<span asp-validation-for="ConfirmPassword"></span>
+                            <span>⚠</span> Şifreler eşleşmiyor
                         </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
@@ -213,8 +259,9 @@
                             <input asp-for="Code" type="text" placeholder="Referans kodunuzu girin" />
                         </div>
                         <div class="error-message" id="referralError" style="display: none;">
-                            <span>⚠</span> Bu alan zorunludur<span asp-validation-for="Code"></span>
+                            <span>⚠</span> Referans kodu gereklidir
                         </div>
+                        <span asp-validation-for="Code" class="text-danger"></span>
                     </div>
 
                     <div class="checkbox-group">
@@ -226,8 +273,9 @@
                             </label>
                         </div>
                         <div class="error-message" id="termsError" style="display: none;">
-                            <span>⚠</span> Bu alan zorunludur<span asp-validation-for="Pazarlama"></span>
+                            <span>⚠</span> Kullanım koşullarını kabul etmelisiniz
                         </div>
+                        <span asp-validation-for="Pazarlama" class="text-danger"></span>
                     </div>
 
                     <div class="checkbox-group">
@@ -238,8 +286,9 @@
                             </label>
                         </div>
                         <div class="error-message" id="kvkkError" style="display: none;">
-                            <span>⚠</span> Bu alan zorunludur<span asp-validation-for="Kvkk"></span>
+                            <span>⚠</span> KVKK onayı gereklidir
                         </div>
+                        <span asp-validation-for="Kvkk" class="text-danger"></span>
                     </div>
 
                     <button type="button" class="submit-btn" id="submitBtn">Hesap Oluştur</button>
@@ -252,5 +301,10 @@
         </div>
     </div>
 </div>
-<script src="~/js/register.js"></script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/register.js" asp-append-version="true"></script>
+}
+
 <link rel="stylesheet" href="~/css/register-form.css" asp-append-version="true" />

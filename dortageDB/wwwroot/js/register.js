@@ -1,5 +1,4 @@
-﻿// DOMContentLoaded event
-document.addEventListener('DOMContentLoaded', function () {
+﻿document.addEventListener('DOMContentLoaded', function () {
     initializeForm();
 });
 
@@ -9,27 +8,33 @@ function initializeForm() {
 
 function attachEventListeners() {
     const form = document.getElementById('registrationForm');
-    const inputs = form.querySelectorAll('input, select');
-
 
     // TC No validation
     const tcNoInput = document.getElementById('TcNo');
-    tcNoInput.addEventListener('input', handleTcNoInput);
-    tcNoInput.addEventListener('blur', handleTcNoBlur);
+    if (tcNoInput) {
+        tcNoInput.addEventListener('input', handleTcNoInput);
+        tcNoInput.addEventListener('blur', handleTcNoBlur);
+    }
 
     // Email validation
     const emailInput = document.getElementById('Email');
-    emailInput.addEventListener('blur', handleEmailBlur);
-    emailInput.addEventListener('input', handleEmailInput);
+    if (emailInput) {
+        emailInput.addEventListener('blur', handleEmailBlur);
+        emailInput.addEventListener('input', handleEmailInput);
+    }
 
     // Phone formatting
     const phoneInput = document.getElementById('PhoneNumber');
-    phoneInput.addEventListener('input', handlePhoneInput);
-    phoneInput.addEventListener('blur', handlePhoneBlur);
+    if (phoneInput) {
+        phoneInput.addEventListener('input', handlePhoneInput);
+        phoneInput.addEventListener('blur', handlePhoneBlur);
+    }
 
     // Password strength
     const passwordInput = document.getElementById('Password');
-    passwordInput.addEventListener('input', handlePasswordInput);
+    if (passwordInput) {
+        passwordInput.addEventListener('input', handlePasswordInput);
+    }
 
     // Password toggle
     const passwordToggle = document.getElementById('passwordToggle');
@@ -37,49 +42,68 @@ function attachEventListeners() {
         passwordToggle.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+        });
+    }
 
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-            } else {
-                passwordInput.type = 'password';
+    // Confirm password
+    const confirmPasswordInput = document.getElementById('ConfirmPassword');
+    if (confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('input', handleConfirmPasswordInput);
+        confirmPasswordInput.addEventListener('blur', handleConfirmPasswordBlur);
+    }
+
+    // Referral code
+    const referralInput = document.getElementById('Code');
+    if (referralInput) {
+        referralInput.addEventListener('blur', handleReferralBlur);
+        referralInput.addEventListener('input', function () {
+            if (this.value.trim()) {
+                hideError('Code', 'referralError');
             }
         });
     }
 
-
-    // Confirm password
-    const confirmPasswordInput = document.getElementById('ConfirmPassword');
-    confirmPasswordInput.addEventListener('input', handleConfirmPasswordInput);
-    confirmPasswordInput.addEventListener('blur', handleConfirmPasswordBlur);
-
-    // Referral code
-    const referralInput = document.getElementById('Code');
-    referralInput.addEventListener('blur', handleReferralBlur);
-
     // Submit button
     const submitBtn = document.getElementById('submitBtn');
-    submitBtn.addEventListener('click', handleSubmit);
+    if (submitBtn) {
+        submitBtn.addEventListener('click', handleSubmit);
+    }
 
     // Field validations
-    document.getElementById('Ad').addEventListener('blur', () => validateField('Ad', 'AdError'));
-    document.getElementById('Soyad').addEventListener('blur', () => validateField('Soyad', 'SoyadError'));
-    document.getElementById('Sehir').addEventListener('blur', () => validateField('Sehir', 'cityError'));
+    ['Ad', 'Soyad', 'Sehir'].forEach(field => {
+        const input = document.getElementById(field);
+        if (input) {
+            input.addEventListener('blur', () => {
+                const errorId = field === 'Ad' ? 'AdError' :
+                    field === 'Soyad' ? 'SoyadError' : 'cityError';
+                validateField(field, errorId);
+            });
+        }
+    });
 
     // Checkboxes
-    document.getElementById('Pazarlama').addEventListener('change', () => {
-        if (document.getElementById('Pazarlama').checked) {
-            document.getElementById('termsError').style.display = 'none';
-        }
-    });
+    const pazarlamaCheckbox = document.getElementById('Pazarlama');
+    if (pazarlamaCheckbox) {
+        pazarlamaCheckbox.addEventListener('change', () => {
+            if (pazarlamaCheckbox.checked) {
+                document.getElementById('termsError').style.display = 'none';
+            }
+        });
+    }
 
-    document.getElementById('Kvkk').addEventListener('change', () => {
-        if (document.getElementById('Kvkk').checked) {
-            document.getElementById('kvkkError').style.display = 'none';
-        }
-    });
+    const kvkkCheckbox = document.getElementById('Kvkk');
+    if (kvkkCheckbox) {
+        kvkkCheckbox.addEventListener('change', () => {
+            if (kvkkCheckbox.checked) {
+                document.getElementById('kvkkError').style.display = 'none';
+            }
+        });
+    }
 
     // Focus first input
-    document.getElementById('Ad').focus();
+    const firstInput = document.getElementById('Ad');
+    if (firstInput) firstInput.focus();
 }
 
 function validateField(fieldId, errorId) {
@@ -94,7 +118,9 @@ function validateField(fieldId, errorId) {
 function handleEmailBlur() {
     const emailInput = document.getElementById('Email');
     if (isValidEmail(emailInput.value)) {
-        checkEmailAvailability(emailInput.value);
+        hideError('Email', 'emailError');
+    } else {
+        showError('Email', 'emailError');
     }
 }
 
@@ -103,20 +129,26 @@ function handleEmailInput() {
     const emailValidIcon = document.getElementById('emailValidIcon');
 
     if (isValidEmail(emailInput.value)) {
-        emailValidIcon.style.display = 'block';
+        if (emailValidIcon) {
+            emailValidIcon.style.display = 'block';
+        }
         emailInput.classList.add('success');
         emailInput.classList.remove('error');
         hideError('Email', 'emailError');
     } else {
-        emailValidIcon.style.display = 'none';
+        if (emailValidIcon) {
+            emailValidIcon.style.display = 'none';
+        }
         emailInput.classList.remove('success');
     }
 }
+
 function handleTcNoInput(e) {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 11) value = value.slice(0, 11);
     e.target.value = value;
 }
+
 function handlePhoneInput(e) {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 10) value = value.slice(0, 10);
@@ -144,9 +176,10 @@ function handlePhoneBlur() {
         hideError('PhoneNumber', 'phoneError');
     }
 }
+
 function handleTcNoBlur() {
     const tcNoInput = document.getElementById('TcNo');
-    if (!isValidTcNo(tcNoInput.value)) {
+    if (tcNoInput.value.trim() && !isValidTcNo(tcNoInput.value)) {
         showError('TcNo', 'tcNoError');
     } else {
         hideError('TcNo', 'tcNoError');
@@ -158,52 +191,67 @@ function handlePasswordInput() {
     const password = passwordInput.value;
     let strength = 0;
 
+    // Length requirement
     const lengthReq = document.getElementById('req-length');
-    if (password.length >= 8) {
-        lengthReq.classList.add('met');
-        strength += 25;
-    } else {
-        lengthReq.classList.remove('met');
+    if (lengthReq) {
+        if (password.length >= 8) {
+            lengthReq.classList.add('met');
+            strength += 25;
+        } else {
+            lengthReq.classList.remove('met');
+        }
     }
 
+    // Uppercase requirement
     const uppercaseReq = document.getElementById('req-uppercase');
-    if (/[A-Z]/.test(password)) {
-        uppercaseReq.classList.add('met');
-        strength += 25;
-    } else {
-        uppercaseReq.classList.remove('met');
+    if (uppercaseReq) {
+        if (/[A-Z]/.test(password)) {
+            uppercaseReq.classList.add('met');
+            strength += 25;
+        } else {
+            uppercaseReq.classList.remove('met');
+        }
     }
 
+    // Number requirement
     const numberReq = document.getElementById('req-number');
-    if (/[0-9]/.test(password)) {
-        numberReq.classList.add('met');
-        strength += 25;
-    } else {
-        numberReq.classList.remove('met');
+    if (numberReq) {
+        if (/[0-9]/.test(password)) {
+            numberReq.classList.add('met');
+            strength += 25;
+        } else {
+            numberReq.classList.remove('met');
+        }
     }
 
+    // Special character requirement
     const specialReq = document.getElementById('req-special');
-    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-        specialReq.classList.add('met');
-        strength += 25;
-    } else {
-        specialReq.classList.remove('met');
+    if (specialReq) {
+        if (/[+!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            specialReq.classList.add('met');
+            strength += 25;
+        } else {
+            specialReq.classList.remove('met');
+        }
     }
 
+    // Update strength bar
     const passwordStrengthBar = document.getElementById('passwordStrengthBar');
-    passwordStrengthBar.classList.remove('weak', 'medium', 'strong');
+    if (passwordStrengthBar) {
+        passwordStrengthBar.classList.remove('weak', 'medium', 'strong');
 
-    if (password.length === 0) {
-        passwordStrengthBar.style.width = '0%';
-    } else if (strength <= 50) {
-        passwordStrengthBar.classList.add('weak');
-        passwordStrengthBar.style.width = '';
-    } else if (strength <= 75) {
-        passwordStrengthBar.classList.add('medium');
-        passwordStrengthBar.style.width = '';
-    } else {
-        passwordStrengthBar.classList.add('strong');
-        passwordStrengthBar.style.width = '';
+        if (password.length === 0) {
+            passwordStrengthBar.style.width = '0%';
+        } else if (strength <= 50) {
+            passwordStrengthBar.classList.add('weak');
+            passwordStrengthBar.style.width = '';
+        } else if (strength <= 75) {
+            passwordStrengthBar.classList.add('medium');
+            passwordStrengthBar.style.width = '';
+        } else {
+            passwordStrengthBar.classList.add('strong');
+            passwordStrengthBar.style.width = '';
+        }
     }
 }
 
@@ -213,12 +261,16 @@ function handleConfirmPasswordInput() {
     const passwordMatchIcon = document.getElementById('passwordMatchIcon');
 
     if (confirmPasswordInput.value === passwordInput.value && confirmPasswordInput.value !== '') {
-        passwordMatchIcon.style.display = 'block';
+        if (passwordMatchIcon) {
+            passwordMatchIcon.style.display = 'block';
+        }
         confirmPasswordInput.classList.add('success');
         confirmPasswordInput.classList.remove('error');
         hideError('ConfirmPassword', 'confirmPasswordError');
     } else {
-        passwordMatchIcon.style.display = 'none';
+        if (passwordMatchIcon) {
+            passwordMatchIcon.style.display = 'none';
+        }
         confirmPasswordInput.classList.remove('success');
     }
 }
@@ -234,39 +286,51 @@ function handleConfirmPasswordBlur() {
 
 function handleReferralBlur() {
     const referralInput = document.getElementById('Code');
-    if (referralInput.value.trim() && referralInput.value.length >= 6) {
-        hideError('Code', 'referralError');
-    } else if (referralInput.value.trim()) {
+    if (!referralInput.value.trim()) {
         showError('Code', 'referralError');
+    } else if (referralInput.value.length < 6) {
+        document.getElementById('referralError').innerHTML = '<span>⚠</span> Referans kodu en az 6 karakter olmalıdır';
+        showError('Code', 'referralError');
+    } else {
+        hideError('Code', 'referralError');
     }
 }
 
-function handleSubmit() {
+function handleSubmit(e) {
+    e.preventDefault();
+
+    console.log('=== FORM GÖNDERİLİYOR ===');
+
     if (validateForm()) {
+        console.log('✅ Validation başarılı, form gönderiliyor...');
         submitForm();
+    } else {
+        console.log('❌ Validation başarısız');
     }
 }
 
 function validateForm() {
     let valid = true;
 
-    // ✅ YENİ
+    // Ad
     const firstName = document.getElementById('Ad');
     if (!firstName.value.trim()) {
-        showError('Ad', 'AdError');  // ✅
+        showError('Ad', 'AdError');
         valid = false;
     } else {
-        hideError('Ad', 'AdError');  // ✅
+        hideError('Ad', 'AdError');
     }
 
+    // Soyad
     const lastName = document.getElementById('Soyad');
     if (!lastName.value.trim()) {
-        showError('Soyad', 'SoyadError');  // ✅
+        showError('Soyad', 'SoyadError');
         valid = false;
     } else {
-        hideError('Soyad', 'SoyadError');  // ✅
+        hideError('Soyad', 'SoyadError');
     }
 
+    // Email
     const email = document.getElementById('Email');
     if (!isValidEmail(email.value)) {
         showError('Email', 'emailError');
@@ -275,6 +339,7 @@ function validateForm() {
         hideError('Email', 'emailError');
     }
 
+    // Phone
     const phone = document.getElementById('PhoneNumber');
     if (!isValidPhone(phone.value)) {
         showError('PhoneNumber', 'phoneError');
@@ -283,15 +348,16 @@ function validateForm() {
         hideError('PhoneNumber', 'phoneError');
     }
 
+    // TC No (opsiyonel ama doldurulduysa geçerli olmalı)
     const tcNo = document.getElementById('TcNo');
-    if (!isValidTcNo(tcNo.value)) {
+    if (tcNo.value.trim() && !isValidTcNo(tcNo.value)) {
         showError('TcNo', 'tcNoError');
         valid = false;
     } else {
         hideError('TcNo', 'tcNoError');
     }
 
-
+    // Şehir
     const city = document.getElementById('Sehir');
     if (!city.value) {
         showError('Sehir', 'cityError');
@@ -300,11 +366,13 @@ function validateForm() {
         hideError('Sehir', 'cityError');
     }
 
+    // Şifre
     const password = document.getElementById('Password');
     if (!isStrongPassword(password.value)) {
         valid = false;
     }
 
+    // Şifre tekrar
     const confirmPassword = document.getElementById('ConfirmPassword');
     if (password.value !== confirmPassword.value) {
         showError('ConfirmPassword', 'confirmPasswordError');
@@ -313,14 +381,21 @@ function validateForm() {
         hideError('ConfirmPassword', 'confirmPasswordError');
     }
 
+    // Referans kodu
     const referralCode = document.getElementById('Code');
-    if (!referralCode.value.trim() || referralCode.value.length < 6) {
+    if (!referralCode.value.trim()) {
+        document.getElementById('referralError').innerHTML = '<span>⚠</span> Referans kodu gereklidir';
+        showError('Code', 'referralError');
+        valid = false;
+    } else if (referralCode.value.length < 6) {
+        document.getElementById('referralError').innerHTML = '<span>⚠</span> Referans kodu en az 6 karakter olmalıdır';
         showError('Code', 'referralError');
         valid = false;
     } else {
         hideError('Code', 'referralError');
     }
 
+    // Kullanım koşulları (Pazarlama checkbox)
     const terms = document.getElementById('Pazarlama');
     if (!terms.checked) {
         document.getElementById('termsError').style.display = 'flex';
@@ -329,6 +404,7 @@ function validateForm() {
         document.getElementById('termsError').style.display = 'none';
     }
 
+    // KVKK
     const kvkk = document.getElementById('Kvkk');
     if (!kvkk.checked) {
         document.getElementById('kvkkError').style.display = 'flex';
@@ -340,36 +416,23 @@ function validateForm() {
     return valid;
 }
 
-// ✅ YENİ submitForm
 function submitForm() {
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.disabled = true;
     submitBtn.classList.add('loading');
+    submitBtn.textContent = 'Gönderiliyor...';
 
     const form = document.getElementById('registrationForm');
-    form.submit(); // Direkt form submit
-}
 
-function checkEmailAvailability(email) {
-    fetch('/Account/CheckEmailAvailability', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(email)
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.available) {
-                const emailInput = document.getElementById('Email');
-                document.getElementById('emailError').innerHTML = '<span>⚠</span> Bu e-posta adresi zaten kayıtlı. <a href="/Account/Login" style="color: #000a68; text-decoration: underline;">Giriş Yap</a>';
-                document.getElementById('emailError').style.display = 'flex';
-                emailInput.classList.add('error');
-                emailInput.classList.remove('success');
-            }
-        });
-}
+    // Form verilerini logla
+    const formData = new FormData(form);
+    console.log('Form verileri:');
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
 
+    form.submit();
+}
 
 function showError(inputId, errorId) {
     const input = document.getElementById(inputId);
@@ -414,10 +477,10 @@ function isValidTcNo(tcNo) {
 }
 
 function isStrongPassword(password) {
-    return password.length >= 8 &&
+    return password.length >= 6 &&
         /[A-Z]/.test(password) &&
         /[0-9]/.test(password) &&
-        /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        /[+!@#$%^&*(),.?":{}|<>]/.test(password);
 }
 
-console.log('DORTAGE Registration Form initialized successfully');
+console.log('✅ DORTAGE Registration Form initialized successfully');

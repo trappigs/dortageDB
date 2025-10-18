@@ -46,6 +46,7 @@ namespace dortageDB.Controllers
         }
 
         // POST: Account/Register
+        // POST: Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -53,50 +54,70 @@ namespace dortageDB.Controllers
         {
             try
             {
+                Console.WriteLine("=== KAYIT İŞLEMİ BAŞLADI ===");
+                Console.WriteLine($"📧 Email: {model.Email}");
+                Console.WriteLine($"📱 Telefon: {model.PhoneNumber}");
+                Console.WriteLine($"🆔 TC No: {model.TcNo}");
+                Console.WriteLine($"🔑 Referans Kodu: {model.Code}");
+
                 if (!ModelState.IsValid)
                 {
-                    // Hataları logla ve ViewBag'e ekle
                     var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                    ViewBag.Errors = errors;
-
-                    foreach (var error in errors)
+                    Console.WriteLine("❌ ModelState geçersiz:");
+                    foreach (var error1 in errors)
                     {
-                        Console.WriteLine($"❌ Validation Error: {error}");
+                        Console.WriteLine($"   - {error1}");
                     }
+                    ViewBag.Errors = errors;
                     return View(model);
                 }
 
                 // KVKK kontrolü
                 if (!model.Kvkk)
                 {
+                    Console.WriteLine("❌ KVKK onayı eksik");
                     ModelState.AddModelError("Kvkk", "KVKK metnini onaylamanız gerekmektedir.");
                     return View(model);
                 }
 
-                // Referral kodu kontrolü (varsa)
-                if (!string.IsNullOrWhiteSpace(model.Code))
+                // Pazarlama kontrolü (Kullanım Koşulları)
+                if (!model.Pazarlama)
                 {
-                    Console.WriteLine($"🔍 Referans kodu kontrol ediliyor: {model.Code}");
-                    var (isValid, error) = await _referralService.ValidateAndConsumeAsync(model.Code);
-
-                    if (!isValid)
-                    {
-                        Console.WriteLine($"❌ Referans kodu geçersiz: {error}");
-                        ModelState.AddModelError("ReferralCode", error ?? "Geçersiz referans kodu.");
-                        return View(model);
-                    }
-
-                    Console.WriteLine("✅ Referans kodu doğrulandı ve tüketildi!");
+                    Console.WriteLine("❌ Kullanım koşulları onayı eksik");
+                    ModelState.AddModelError("Pazarlama", "Kullanım koşullarını kabul etmelisiniz.");
+                    return View(model);
                 }
 
-                Console.WriteLine("✅ Validation başarılı, kullanıcı oluşturuluyor...");
+                // Referral kodu kontrolü - ZORUNLU
+                if (string.IsNullOrWhiteSpace(model.Code))
+                {
+                    Console.WriteLine("❌ Referans kodu boş");
+                    ModelState.AddModelError("Code", "Referans kodu zorunludur.");
+                    return View(model);
+                }
+
+                Console.WriteLine($"🔍 Referans kodu kontrol ediliyor: {model.Code}");
+                var (isValid, error) = await _referralService.ValidateAndConsumeAsync(model.Code);
+
+                if (!isValid)
+                {
+                    Console.WriteLine($"❌ Referans kodu geçersiz: {error}");
+                    ModelState.AddModelError("Code", error ?? "Geçersiz referans kodu.");
+                    return View(model);
+                }
+
+                Console.WriteLine("✅ Referans kodu doğrulandı!");
+
+                // Telefon numarasını temizle (formatı kaldır)
+                var cleanPhone = model.PhoneNumber.Replace("(", "").Replace(")", "").Replace(" ", "").Trim();
+                Console.WriteLine($"📱 Temizlenmiş telefon: {cleanPhone}");
 
                 // Yeni kullanıcı oluştur
                 var user = new AppUser
                 {
                     UserName = model.Email,
                     Email = model.Email,
-                    PhoneNumber = model.PhoneNumber,
+                    PhoneNumber = cleanPhone,
                     Ad = model.Ad,
                     Soyad = model.Soyad,
                     Sehir = model.Sehir,
@@ -114,10 +135,25 @@ namespace dortageDB.Controllers
                 if (!result.Succeeded)
                 {
                     Console.WriteLine("❌ Kullanıcı oluşturma başarısız!");
-                    foreach (var error in result.Errors)
+                    foreach (var err in result.Errors)
                     {
-                        Console.WriteLine($"   - {error.Description}");
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        Console.WriteLine($"   - {err.Code}: {err.Description}");
+
+                        // Türkçe hata mesajları
+                        if (err.Code == "DuplicateUserName")
+                            ModelState.AddModelError("Email", "Bu e-posta adresi zaten kayıtlı.");
+                        else if (err.Code == "DuplicateEmail")
+                            ModelState.AddModelError("Email", "Bu e-posta adresi zaten kayıtlı.");
+                        else if (err.Code == "PasswordTooShort")
+                            ModelState.AddModelError("Password", "Şifre en az 6 karakter olmalıdır.");
+                        else if (err.Code == "PasswordRequiresNonAlphanumeric")
+                            ModelState.AddModelError("Password", "Şifre en az bir özel karakter içermelidir.");
+                        else if (err.Code == "PasswordRequiresDigit")
+                            ModelState.AddModelError("Password", "Şifre en az bir rakam içermelidir.");
+                        else if (err.Code == "PasswordRequiresUpper")
+                            ModelState.AddModelError("Password", "Şifre en az bir büyük harf içermelidir.");
+                        else
+                            ModelState.AddModelError(string.Empty, err.Description);
                     }
                     return View(model);
                 }
@@ -167,23 +203,20 @@ namespace dortageDB.Controllers
 
                 Console.WriteLine("🎉 Kayıt işlemi tamamlandı! Login sayfasına yönlendiriliyor...");
 
-                // Referral kodu kullanıldıysa başarı mesajına ekle
-                if (!string.IsNullOrWhiteSpace(model.Code))
-                {
-                    TempData["SuccessMessage"] = "Kayıt başarılı! Referans kodunuz kullanıldı. Giriş yapabilirsiniz.";
-                }
-                else
-                {
-                    TempData["SuccessMessage"] = "Kayıt başarılı! Giriş yapabilirsiniz.";
-                }
-
+                TempData["SuccessMessage"] = "Kayıt başarılı! Referans kodunuz kullanıldı. Giriş yapabilirsiniz.";
                 return RedirectToAction(nameof(Login));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"💥 HATA: {ex.Message}");
                 Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                ModelState.AddModelError(string.Empty, $"Bir hata oluştu: {ex.Message}");
+
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+
+                ModelState.AddModelError(string.Empty, "Bir hata oluştu. Lütfen tekrar deneyin.");
                 return View(model);
             }
         }

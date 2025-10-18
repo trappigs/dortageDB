@@ -6,44 +6,53 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Console.WriteLine("=== UYGULAMA BAÞLATILIYOR ===");
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// EF Core DbContext
-builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+// DbContext
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-builder.Services.AddTransient<IEmailService, EmailService>();
-builder.Services.AddScoped<IReferralService, ReferralService>();
+// Identity
+builder.Services.AddIdentity<AppUser, AppRole>(options =>
+{
+    // Þifre gereksinimleri
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
 
-// Identity yapýlandýrmasý - BU ZATEN AUTHENTICATION'I EKLÝYOR!
-builder.Services.AddIdentity<AppUser, AppRole>(opt =>
-    {
-        opt.User.RequireUniqueEmail = true;
-        opt.Password.RequireNonAlphanumeric = false;
-        opt.Password.RequireUppercase = false;
-        opt.Password.RequireDigit = false;
-        opt.Password.RequiredLength = 6;
+    // Kullanýcý ayarlarý
+    options.User.RequireUniqueEmail = true;
 
-        // Lockout ayarlarý
-        opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-        opt.Lockout.MaxFailedAccessAttempts = 5;
-        opt.Lockout.AllowedForNewUsers = true;
-    })
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+    // Lockout ayarlarý
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
 
-// Cookie ayarlarý (Identity içinde yapýlandýrýlýyor)
+    // SignIn ayarlarý
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
+
+// Cookie ayarlarý
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
     options.LogoutPath = "/Account/Logout";
     options.AccessDeniedPath = "/Account/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
     options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromDays(7);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
 });
+
+// Services
+builder.Services.AddScoped<IReferralService, ReferralService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 
@@ -56,9 +65,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 
-// Authentication ve Authorization middleware'leri
 app.UseAuthentication();
 app.UseAuthorization();
 
