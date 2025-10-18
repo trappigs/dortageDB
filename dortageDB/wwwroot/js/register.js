@@ -12,16 +12,6 @@ function attachEventListeners() {
     const form = document.getElementById('registrationForm');
     const inputs = form.querySelectorAll('input, select');
 
-    // Auto-save
-    inputs.forEach(input => {
-        input.addEventListener('input', () => {
-            clearTimeout(window.saveTimeout);
-            window.saveTimeout = setTimeout(() => {
-                saveFormData();
-                showAutosaveIndicator();
-            }, 1000);
-        });
-    });
 
     // TC No validation
     const tcNoInput = document.getElementById('TcNo');
@@ -86,33 +76,6 @@ function attachEventListeners() {
     document.getElementById('Kvkk').addEventListener('change', () => {
         if (document.getElementById('Kvkk').checked) {
             document.getElementById('kvkkError').style.display = 'none';
-        }
-    });
-
-    // Modal events
-    document.getElementById('closePreview').addEventListener('click', () => {
-        document.getElementById('previewModal').classList.remove('show');
-    });
-
-    document.getElementById('editBtn').addEventListener('click', () => {
-        document.getElementById('previewModal').classList.remove('show');
-    });
-
-    document.getElementById('confirmSubmit').addEventListener('click', submitForm);
-
-    // Modal backdrop close
-    window.addEventListener('click', (e) => {
-        if (e.target.classList.contains('modal')) {
-            e.target.classList.remove('show');
-        }
-    });
-
-    // Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.classList.remove('show');
-            });
         }
     });
 
@@ -281,7 +244,7 @@ function handleReferralBlur() {
 
 function handleSubmit() {
     if (validateForm()) {
-        showPreview();
+        submitForm();
     }
 }
 
@@ -377,48 +340,14 @@ function validateForm() {
     return valid;
 }
 
-function showPreview() {
-    document.getElementById('previewName').textContent =
-        document.getElementById('Ad').value + ' ' + document.getElementById('Soyad').value;
-    document.getElementById('previewEmail').textContent = document.getElementById('Email').value;
-    document.getElementById('previewPhone').textContent = '+90 ' + document.getElementById('PhoneNumber').value;
-    const citySelect = document.getElementById('Sehir');
-    document.getElementById('previewCity').textContent = citySelect.options[citySelect.selectedIndex].text;
-    document.getElementById('previewReferral').textContent = document.getElementById('Code').value;
-
-    document.getElementById('previewModal').classList.add('show');
-}
-
+// ✅ YENİ submitForm
 function submitForm() {
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.disabled = true;
     submitBtn.classList.add('loading');
 
     const form = document.getElementById('registrationForm');
-    const formData = new FormData(form);
-
-    fetch('/Account/Register', {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById('previewModal').classList.remove('show');
-                document.getElementById('successModal').classList.add('show');
-                localStorage.removeItem('dortageFormData');
-            } else {
-                alert(data.message || 'Bir hata oluştu');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
-        })
-        .finally(() => {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('loading');
-        });
+    form.submit(); // Direkt form submit
 }
 
 function checkEmailAvailability(email) {
@@ -441,42 +370,6 @@ function checkEmailAvailability(email) {
         });
 }
 
-function saveFormData() {
-    const data = {
-        firstName: document.getElementById('Ad').value,
-        lastName: document.getElementById('Soyad').value,
-        email: document.getElementById('Email').value,
-        phone: document.getElementById('PhoneNumber').value,
-        city: document.getElementById('Sehir').value,
-        referralCode: document.getElementById('Code').value,
-        timestamp: new Date().getTime()
-    };
-    localStorage.setItem('dortageFormData', JSON.stringify(data));
-}
-
-function loadFormData() {
-    const saved = localStorage.getItem('dortageFormData');
-    if (saved) {
-        const data = JSON.parse(saved);
-        const sevenDays = 7 * 24 * 60 * 60 * 1000;
-        if (new Date().getTime() - data.timestamp < sevenDays) {
-            document.getElementById('Ad').value = data.firstName || '';
-            document.getElementById('Soyad').value = data.lastName || '';
-            document.getElementById('Email').value = data.email || '';
-            document.getElementById('PhoneNumber').value = data.phone || '';
-            document.getElementById('Sehir').value = data.city || '';
-            document.getElementById('Code').value = data.referralCode || '';
-        }
-    }
-}
-
-function showAutosaveIndicator() {
-    const indicator = document.getElementById('autosaveIndicator');
-    indicator.classList.add('show');
-    setTimeout(() => {
-        indicator.classList.remove('show');
-    }, 2000);
-}
 
 function showError(inputId, errorId) {
     const input = document.getElementById(inputId);
