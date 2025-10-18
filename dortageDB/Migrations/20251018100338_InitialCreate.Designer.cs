@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using dortageDB.Data;
 
 #nullable disable
 
 namespace dortageDB.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251018094636_InitialCreate")]
+    [Migration("20251018100338_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

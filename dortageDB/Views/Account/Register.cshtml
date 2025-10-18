@@ -1,4 +1,4 @@
-﻿@model dortageDB.ViewModels.UserCreateVM
+﻿@model dortageDB.ViewModels.RegisterVM
 
 @{
     ViewData["Title"] = "Kayıt Ol";
@@ -30,15 +30,15 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Eposta" class="form-label">E-posta *</label>
-                            <input asp-for="Eposta" type="email" class="form-control" />
-                            <span asp-validation-for="Eposta" class="text-danger"></span>
+                            <label asp-for="Email" class="form-label">E-posta *</label>
+                            <input asp-for="Email" type="email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Telefon" class="form-label">Telefon *</label>
-                            <input asp-for="Telefon" type="tel" class="form-control" placeholder="5XX XXX XX XX" />
-                            <span asp-validation-for="Telefon" class="text-danger"></span>
+                            <label asp-for="PhoneNumber" class="form-label">Telefon *</label>
+                            <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="5XX XXX XX XX" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
@@ -48,9 +48,9 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Sifre" class="form-label">Şifre *</label>
-                            <input asp-for="Sifre" type="password" class="form-control" />
-                            <span asp-validation-for="Sifre" class="text-danger"></span>
+                            <label asp-for="Password" class="form-label">Şifre *</label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">

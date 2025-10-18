@@ -1,4 +1,6 @@
-﻿using dortageDB.Entities;
+﻿using dortageDB.Data;
+using dortageDB.Entities;
+using dortageDB.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

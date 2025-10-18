@@ -3,63 +3,68 @@ using dortageDB.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>
+namespace dortageDB.Data
 {
-    public DbSet<TopraktarProfile> TopraktarProfiles => Set<TopraktarProfile>();
-    public DbSet<Musteri> Musteriler => Set<Musteri>();
-    public DbSet<Randevu> Randevular => Set<Randevu>();
-    public DbSet<Satis> Satislar => Set<Satis>();
-
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
-    protected override void OnModelCreating(ModelBuilder b)
+    public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>
     {
-        base.OnModelCreating(b);
+        public DbSet<TopraktarProfile> TopraktarProfiles => Set<TopraktarProfile>();
+        public DbSet<Musteri> Musteriler => Set<Musteri>();
+        public DbSet<Randevu> Randevular => Set<Randevu>();
+        public DbSet<Satis> Satislar => Set<Satis>();
 
-        // AppUser
-        b.Entity<AppUser>().HasIndex(x => x.TcNo).IsUnique();
-        b.Entity<AppUser>().HasIndex(x => x.PhoneNumber).IsUnique();
-        b.Entity<AppUser>().HasIndex(x => x.Email).IsUnique();
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
 
-        // Musteri
-        b.Entity<Musteri>().HasKey(x => x.IdMusteri);
-        b.Entity<Musteri>().HasIndex(x => x.Telefon).IsUnique();
-        b.Entity<Musteri>().HasIndex(x => x.TcNo).IsUnique();
-        b.Entity<Musteri>().HasIndex(x => x.Eposta).IsUnique(false);
+        protected override void OnModelCreating(ModelBuilder b)
+        {
+            base.OnModelCreating(b);
 
-        // Profile
-        b.Entity<TopraktarProfile>()
-            .HasOne(tp => tp.User).WithOne(u => u.TopraktarProfile)
-            .HasForeignKey<TopraktarProfile>(tp => tp.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            // AppUser
+            b.Entity<AppUser>().HasIndex(x => x.TcNo).IsUnique();
+            b.Entity<AppUser>().HasIndex(x => x.PhoneNumber).IsUnique();
+            b.Entity<AppUser>().HasIndex(x => x.Email).IsUnique();
 
-        // Randevu
-        b.Entity<Randevu>()
-            .HasOne(r => r.Musteri).WithMany(m => m.Randevular)
-            .HasForeignKey(r => r.MusteriId)
-            .OnDelete(DeleteBehavior.Cascade);
+            // Musteri
+            b.Entity<Musteri>().HasKey(x => x.IdMusteri);
+            b.Entity<Musteri>().HasIndex(x => x.Telefon).IsUnique();
+            b.Entity<Musteri>().HasIndex(x => x.TcNo).IsUnique();
+            b.Entity<Musteri>().HasIndex(x => x.Eposta).IsUnique(false);
 
-        b.Entity<Randevu>()
-            .HasOne(r => r.Topraktar).WithMany(u => u.Randevular)
-            .HasForeignKey(r => r.TopraktarID);
+            // Profile
+            b.Entity<TopraktarProfile>()
+                .HasOne(tp => tp.User).WithOne(u => u.TopraktarProfile)
+                .HasForeignKey<TopraktarProfile>(tp => tp.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-        b.Entity<Randevu>().Property(r => r.RandevuDurum).HasConversion<string>();
-        b.Entity<Randevu>().HasIndex(r => new { r.RandevuDurum, r.RandevuZaman });
+            // Randevu
+            b.Entity<Randevu>()
+                .HasOne(r => r.Musteri).WithMany(m => m.Randevular)
+                .HasForeignKey(r => r.MusteriId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-        // Satis
-        b.Entity<Satis>()
-            .Property(s => s.ToplamSatisFiyati).HasPrecision(14, 2);
-        b.Entity<Satis>()
-            .Property(s => s.OdenecekKomisyon).HasPrecision(14, 2);
+            b.Entity<Randevu>()
+                .HasOne(r => r.Topraktar).WithMany(u => u.Randevular)
+                .HasForeignKey(r => r.TopraktarID);
 
-        b.Entity<Satis>()
-            .HasOne(s => s.Musteri).WithMany(m => m.Satislar)
-            .HasForeignKey(s => s.SatilanMusteriID);
+            b.Entity<Randevu>().Property(r => r.RandevuDurum).HasConversion<string>();
+            b.Entity<Randevu>().HasIndex(r => new { r.RandevuDurum, r.RandevuZaman });
 
-        b.Entity<Satis>()
-            .HasOne(s => s.Topraktar).WithMany(u => u.Satislar)
-            .HasForeignKey(s => s.TopraktarID);
+            // Satis
+            b.Entity<Satis>()
+                .Property(s => s.ToplamSatisFiyati).HasPrecision(14, 2);
+            b.Entity<Satis>()
+                .Property(s => s.OdenecekKomisyon).HasPrecision(14, 2);
 
-        b.Entity<Satis>().HasIndex(s => new { s.TopraktarID, s.SatilmaTarihi });
+            b.Entity<Satis>()
+                .HasOne(s => s.Musteri).WithMany(m => m.Satislar)
+                .HasForeignKey(s => s.SatilanMusteriID);
+
+            b.Entity<Satis>()
+                .HasOne(s => s.Topraktar).WithMany(u => u.Satislar)
+                .HasForeignKey(s => s.TopraktarID);
+
+            b.Entity<Satis>().HasIndex(s => new { s.TopraktarID, s.SatilmaTarihi });
+        }
     }
 }
