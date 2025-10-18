@@ -74,10 +74,10 @@ namespace dortageDB.Controllers
                 }
 
                 // Referral kodu kontrolü (varsa)
-                if (!string.IsNullOrWhiteSpace(model.ReferralCode))
+                if (!string.IsNullOrWhiteSpace(model.Code))
                 {
-                    Console.WriteLine($"🔍 Referans kodu kontrol ediliyor: {model.ReferralCode}");
-                    var (isValid, error) = await _referralService.ValidateAndConsumeAsync(model.ReferralCode);
+                    Console.WriteLine($"🔍 Referans kodu kontrol ediliyor: {model.Code}");
+                    var (isValid, error) = await _referralService.ValidateAndConsumeAsync(model.Code);
 
                     if (!isValid)
                     {
@@ -168,7 +168,7 @@ namespace dortageDB.Controllers
                 Console.WriteLine("🎉 Kayıt işlemi tamamlandı! Login sayfasına yönlendiriliyor...");
 
                 // Referral kodu kullanıldıysa başarı mesajına ekle
-                if (!string.IsNullOrWhiteSpace(model.ReferralCode))
+                if (!string.IsNullOrWhiteSpace(model.Code))
                 {
                     TempData["SuccessMessage"] = "Kayıt başarılı! Referans kodunuz kullanıldı. Giriş yapabilirsiniz.";
                 }
@@ -255,8 +255,6 @@ namespace dortageDB.Controllers
         }
 
 
-        // AccountController.cs - Şifremi Unuttum metodları ekleyin
-
         // GET: Account/ForgotPassword
         [HttpGet]
         [AllowAnonymous]
@@ -266,6 +264,9 @@ namespace dortageDB.Controllers
         }
 
         // POST: Account/ForgotPassword
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordVM model)
         {
             if (!ModelState.IsValid)
@@ -273,7 +274,6 @@ namespace dortageDB.Controllers
                 return View(model);
             }
 
-            // User tipini kullanıyoruz
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
@@ -281,26 +281,27 @@ namespace dortageDB.Controllers
                 _logger.LogWarning("Şifre sıfırlama talebi - Kullanıcı bulunamadı: {Email}", model.Email);
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
+
             _logger.LogInformation("Şifre sıfırlama talebi gönderildi: {Email}", model.Email);
 
-            // Token oluştur - User tipiyle
+            // Token oluştur
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-
+            // ✅ DÜZELTME: email parametresini de ekle
             var callbackUrl = Url.Action(
                 action: "ResetPassword",
                 controller: "Account",
-                values: new { userId = user.Id, token = token },
+                values: new { token = token, email = user.Email }, // ✅ email eklendi
                 protocol: Request.Scheme);
 
             var emailBody = $@"
-        <h2>Şifre Sıfırlama Talebi</h2>
-        <p>Merhaba,</p>
-        <p>Şifrenizi sıfırlamak için aşağıdaki linke tıklayınız:</p>
-        <p><a href='{callbackUrl}'>Şifremi Sıfırla</a></p>
-        <p>Eğer bu talebi siz yapmadıysanız, bu emaili görmezden gelebilirsiniz.</p>
-        <p>Bu link 24 saat geçerlidir.</p>
-    ";
+                <h2>Şifre Sıfırlama Talebi</h2>
+                <p>Merhaba,</p>
+                <p>Şifrenizi sıfırlamak için aşağıdaki linke tıklayınız:</p>
+                <p><a href='{callbackUrl}'>Şifremi Sıfırla</a></p>
+                <p>Eğer bu talebi siz yapmadıysanız, bu emaili görmezden gelebilirsiniz.</p>
+                <p>Bu link 24 saat geçerlidir.</p>
+            ";
 
             await _emailService.SendEmailAsync(
                 to: model.Email,
@@ -323,6 +324,7 @@ namespace dortageDB.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string? token = null, string? email = null)
         {
+            // ✅ DÜZELTME: email parametresi de kontrol ediliyor
             if (token == null || email == null)
             {
                 TempData["ErrorMessage"] = "Geçersiz şifre sıfırlama linki.";
@@ -384,13 +386,6 @@ namespace dortageDB.Controllers
         {
             return View();
         }
-
-
-
-
-
-
-
 
         // GET: Account/AccessDenied
         [HttpGet]

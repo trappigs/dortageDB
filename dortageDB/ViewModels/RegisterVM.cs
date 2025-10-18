@@ -20,7 +20,7 @@ namespace dortageDB.ViewModels
         public bool TopraktarMi { get; set; } = true;
         // RegisterVM.cs
         [StringLength(32)]
-        public string? ReferralCode { get; set; }
+        public string? Code { get; set; }
         public IList<string> Roller { get; set; } = new List<string>(); // örn: "admin","topraktar"
     }
 }
