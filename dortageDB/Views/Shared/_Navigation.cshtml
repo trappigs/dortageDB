@@ -1,0 +1,466 @@
+﻿@* _Navigation.cshtml - Partial View *@
+@* CHECKED *@ 
+
+@* <style>
+    /* ========================================
+           DORTAGE - Navigation Component Styles
+           ======================================== */
+
+    /* Navbar Container */
+    .navbar {
+        position: fixed;
+        top: 24px;
+        left: 24px;
+        right: 24px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 24px;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        padding: 16px 48px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: var(--z-fixed);
+        transition: all 0.3s ease;
+    }
+
+        /* Logo */
+        .navbar .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+
+            .navbar .logo:hover {
+                transform: scale(1.05);
+            }
+
+    /* Desktop Navigation Menu */
+    .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 36px;
+        align-items: center;
+    }
+
+
+    .nav-item {
+        position: relative;
+    }
+
+    .nav-link {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            position: relative;
+        }
+
+            .nav-link.active::after {
+                content: '';
+                position: absolute;
+                bottom: -4px;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: var(--primary);
+                border-radius: 2px;
+            }
+
+    /* Dropdown Arrow */
+    .dropdown-arrow {
+        font-size: 12px;
+        transition: transform 0.3s ease;
+    }
+
+    .nav-item:hover .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+
+    /* Dropdown Menu */
+    .dropdown {
+        position: absolute;
+        top: calc(100% + 16px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        padding: 8px 0;
+        min-width: 200px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+
+    .nav-item:hover .dropdown {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .dropdown-item {
+        padding: 12px 24px;
+        color: var(--text-primary);
+        text-decoration: none;
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background 0.3s ease;
+    }
+
+        .dropdown-item:hover {
+            background: var(--bg-hover);
+        }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+        display: flex;
+        gap: 12px;
+    }
+
+    .navbar .btn-outlined {
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        background: transparent;
+    }
+
+        .navbar .btn-outlined:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+    .navbar .btn-filled {
+        background: var(--primary);
+        color: var(--white);
+    }
+
+        .navbar .btn-filled:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 10, 104, 0.3);
+        }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 8px;
+        background: none;
+        border: none;
+    }
+
+        .mobile-menu-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+    /* Mobile Menu */
+    .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 100%;
+        height: 100vh;
+        background: var(--white);
+        z-index: var(--z-modal);
+        padding: 24px;
+        transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+    }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+    /* Mobile Menu Header */
+    .mobile-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+        .mobile-menu-header .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+    .close-menu {
+        font-size: 32px;
+        cursor: pointer;
+        color: var(--primary);
+        background: none;
+        border: none;
+        line-height: 1;
+    }
+
+    /* Mobile Navigation Menu */
+    .mobile-nav-menu {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mobile-nav-item {
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .mobile-nav-link {
+        display: block;
+        padding: 20px 0;
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    /* Mobile Dropdown */
+    .mobile-dropdown-items {
+        padding-left: 20px;
+        display: none;
+    }
+
+        .mobile-dropdown-items.active {
+            display: block;
+        }
+
+    .mobile-dropdown-item {
+        padding: 12px 0;
+        color: var(--text-primary);
+        text-decoration: none;
+        display: block;
+        font-size: 16px;
+    }
+
+    /* Mobile Buttons */
+    .mobile-buttons {
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+        right: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+        .mobile-buttons .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+    @@media (max-width: 1300px) {
+        .nav-menu {
+            gap: 25px;
+        }
+    }
+
+    /* Mobile Responsive */
+    @@media (max-width: 768px) {
+        .navbar {
+            padding: 16px 24px;
+            left: 16px;
+            right: 16px;
+            top: 16px;
+        }
+
+            .navbar .logo {
+                font-size: 24px;
+            }
+
+        .nav-menu,
+        .nav-buttons {
+            display: none;
+        }
+
+        .mobile-menu-toggle {
+            display: flex;
+        }
+    }
+
+    /* Focus states for accessibility */
+    .navbar .btn:focus,
+    .nav-link:focus,
+    .mobile-menu-toggle:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+</style>
+
+ *@
+<div class="nav-menus">
+    <!-- Main Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
+        <a asp-controller="" asp-action="" class="logo" style="text-decoration: none;">DORTAGE</a>
+
+        <!-- Desktop Menu -->
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" && ViewContext.RouteData.Values["controller"]?.ToString() == "" ? "active" : "")">Ana Sayfa</a>
+            </li>
+            <li class="nav-item">
+                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "" ? "active" : "")">
+                    Projeler
+                    <span class="dropdown-arrow">▼</span>
+                </a>
+                <div class="dropdown">
+                    <a asp-controller="" asp-action="" class="dropdown-item">Tüm Projeler</a>
+                    <a asp-controller="" asp-action="" asp-route-city="Istanbul" class="dropdown-item">İstanbul Projeleri</a>
+                    <a asp-controller="" asp-action="" asp-route-city="Ankara" class="dropdown-item">Ankara Projeleri</a>
+                    <a asp-controller="" asp-action="" asp-route-city="Izmir" class="dropdown-item">İzmir Projeleri</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Topraktar Ol</a>
+            </li>
+            <li class="nav-item">
+                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Academy" ? "active" : "")">Topraktar Akademisi</a>
+            </li>
+            <li class="nav-item">
+                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Hakkımızda</a>
+            </li>
+            <li class="nav-item">
+                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">İletişim</a>
+            </li>
+        </ul>
+
+        <!-- Desktop Buttons -->
+        <div class="nav-buttons">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="" asp-action="" class="btn btn-outlined">Profilim</a>
+                <form asp-controller="" asp-action="" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-filled">Çıkış Yap</button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outlined">Giriş Yap</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-filled">Kayıt Ol →</a>
+            }
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <div class="mobile-menu-toggle" aria-label="Menüyü aç" role="button" tab="0">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <a asp-controller="" asp-action="" class="logo" style="text-decoration: none;">DORTAGE</a>
+            <button class="close-menu" aria-label="Menüyü kapat">×</button>
+        </div>
+
+        <ul class="mobile-nav-menu">
+            <li class="mobile-nav-item">
+                <a asp-controller="" asp-action="" class="mobile-nav-link">Ana Sayfa</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="#" class="mobile-nav-link" data-dropdown="projects">Projeler ▼</a>
+                <div class="mobile-dropdown-items" id="projects">
+                    <a asp-controller="" asp-action="" class="mobile-dropdown-item">Tüm Projeler</a>
+                    <a asp-controller="" asp-action="" asp-route-city="Istanbul" class="mobile-dropdown-item">İstanbul Projeleri</a>
+                    <a asp-controller="" asp-action="" asp-route-city="Ankara" class="mobile-dropdown-item">Ankara Projeleri</a>
+                    <a asp-controller="" asp-action="" asp-route-city="Izmir" class="mobile-dropdown-item">İzmir Projeleri</a>
+                </div>
+            </li>
+            <li class="mobile-nav-item">
+                <a asp-controller="" asp-action="" class="mobile-nav-link">Topraktar Ol</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a asp-controller="" asp-action="" class="mobile-nav-link">Topraktar Akademisi</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a asp-controller="" asp-action="" class="mobile-nav-link">Hakkımızda</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a asp-controller="" asp-action="" class="mobile-nav-link">İletişim</a>
+            </li>
+        </ul>
+
+        <div class="mobile-buttons">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="" asp-action="" class="btn btn-outlined">Profilim</a>
+                <form asp-controller="" asp-action="" method="post">
+                    <button type="submit" class="btn btn-filled" style="width: 100%;">Çıkış Yap</button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outlined">Giriş Yap</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-filled">Kayıt Ol →</a>
+            }
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/css/nav-menu.css" asp-append-version="true" />
+
+<script>
+    // Mobile menu toggle
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const closeMenu = document.querySelector('.close-menu');
+
+    menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.add('active');
+    });
+
+    closeMenu.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+    });
+
+    // Mobile dropdown toggle
+    document.querySelectorAll('[data-dropdown]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const dropdownId = link.getAttribute('data-dropdown');
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('active');
+        });
+    });
+
+    // Close mobile menu when clicking outside
+    mobileMenu.addEventListener('click', (e) => {
+        if (e.target === mobileMenu) {
+            mobileMenu.classList.remove('active');
+        }
+    });
+
+    // Keyboard navigation
+    menuToggle.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            mobileMenu.classList.add('active');
+        }
+    });
+</script>

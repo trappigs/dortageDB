@@ -15,80 +15,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">dortageDB</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                            </li>
-                            @if (User.IsInRole("admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="User" asp-action="Index">Kullanıcılar</a>
-                                </li>
-                            }
-                            @if (User.IsInRole("topraktar") || User.IsInRole("admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Musteri" asp-action="Index">Müşteriler</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Randevu" asp-action="Index">Randevular</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Satis" asp-action="Index">Satışlar</a>
-                                </li>
-                            }
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Gizlilik</a>
-                            </li>
-                        }
-                    </ul>
-                    <ul class="navbar-nav">
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @User.Identity.Name
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Profilim</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                            <button type="submit" class="dropdown-item">Çıkış Yap</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Giriş Yap</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link btn btn-primary text-white ms-2" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <partial name="_Navigation" />
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -96,14 +23,95 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - dortageDB - <a asp-area="" asp-controller="Home" asp-action="Privacy">Gizlilik Politikası</a>
-        </div>
-    </footer>
+    <partial name="_Footer" />
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+@* <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container-fluid">
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">dortageDB</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                    </li>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="User" asp-action="Index">Kullanıcılar</a>
+                        </li>
+                    }
+                    @if (User.IsInRole("topraktar") || User.IsInRole("admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Musteri" asp-action="Index">Müşteriler</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Randevu" asp-action="Index">Randevular</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Satis" asp-action="Index">Satışlar</a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Gizlilik</a>
+                    </li>
+                }
+            </ul>
+            <ul class="navbar-nav">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @User.Identity.Name
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Profilim</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="dropdown-item">Çıkış Yap</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Giriş Yap</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary text-white ms-2" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav> *@
