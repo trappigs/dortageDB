@@ -299,7 +299,7 @@
 
 .login-form .login-remember-me {
     display: flex;
-    align-items: center;
+    /*align-items: center;*/
     cursor: pointer;
 }
 
@@ -336,7 +336,7 @@
         }
 
 .login-form .login-remember-label {
-    font-size: 14px;
+    font-size: 17px;
     color: var(--text-primary);
     margin-left: 8px;
     font-weight: 400;

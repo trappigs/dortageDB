@@ -39,6 +39,7 @@
             @if (User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Settings" asp-action="Profile" class="btn btn-outlined">Profilim</a>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outlined">Dashboard</a>
                 <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
                     <button type="submit" class="btn btn-filled">Çıkış Yap</button>
                 </form>

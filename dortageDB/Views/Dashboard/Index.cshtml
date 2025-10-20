@@ -1,5 +1,382 @@
-﻿,@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_LayoutTopraktar";
 }
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<style>
+    .dashboard-header {
+        margin-bottom: 32px;
+    }
+
+    .dashboard-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #000a68;
+        margin-bottom: 8px;
+    }
+
+    .dashboard-subtitle {
+        color: #6b7280;
+        font-size: 16px;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        gap: 24px;
+    }
+
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .summary-card {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .summary-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .card-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .card-icon.blue {
+            background: rgba(0, 10, 104, 0.1);
+            color: #000a68;
+        }
+
+        .card-icon.orange {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .card-icon.green {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .card-icon.purple {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+
+    .card-content {
+        flex: 1;
+    }
+
+    .card-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 4px;
+    }
+
+    .card-label {
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .section {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+    .view-all {
+        color: #000a68;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+        .activity-icon.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .activity-icon.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .activity-icon.info {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        font-weight: 500;
+        color: #1f2937;
+        margin-bottom: 4px;
+    }
+
+    .activity-time {
+        font-size: 13px;
+        color: #9ca3af;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+    }
+
+    .action-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 24px;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        text-decoration: none;
+        color: #374151;
+        font-weight: 500;
+        transition: all 0.2s;
+        text-align: center;
+    }
+
+        .action-card:hover {
+            border-color: #000a68;
+            color: #000a68;
+            transform: translateY(-2px);
+            background: rgba(0, 10, 104, 0.02);
+        }
+
+        .action-card svg {
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            width: 24px;
+            height: 24px;
+        }
+
+    @@media (max-width: 768px) {
+        .dashboard-title {
+            font-size: 22px;
+        }
+
+        .summary-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .actions-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Hoş Geldiniz 👋</h1>
+            <p class="dashboard-subtitle">DORTAGE Topraktar Dashboard Paneline hoş geldiniz.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Özet Kartlar -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="card-icon blue">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-value">12</h3>
+                        <p class="card-label">Toplam Müşteri</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-icon orange">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-value">3</h3>
+                        <p class="card-label">Bekleyen Randevu</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-icon green">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                            <polyline points="16 7 22 7 22 13"></polyline>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-value">24</h3>
+                        <p class="card-label">Toplam Satış</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-icon purple">
+                        <svg viewBox="0 0 24 24">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-value">₺180K</h3>
+                        <p class="card-label">Toplam Komisyon</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Son Aktiviteler -->
+            <div class="section recent-activity">
+                <div class="section-header">
+                    <h2>Son Aktiviteler</h2>
+                    <a href="#" class="view-all">Tümünü Gör →</a>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon success">✓</div>
+                        <div class="activity-content">
+                            <p class="activity-title">Yeni satış tamamlandı</p>
+                            <p class="activity-time">2 saat önce</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon warning">⏰</div>
+                        <div class="activity-content">
+                            <p class="activity-title">Yarın randevunuz var</p>
+                            <p class="activity-time">5 saat önce</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon info">👤</div>
+                        <div class="activity-content">
+                            <p class="activity-title">Yeni müşteri eklendi</p>
+                            <p class="activity-time">1 gün önce</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hızlı İşlemler -->
+            <div class="section quick-actions">
+                <div class="section-header">
+                    <h2>Hızlı İşlemler</h2>
+                </div>
+                <div class="actions-grid">
+                    <a asp-controller="Musteri" asp-action="Create" class="action-card">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                        </svg>
+                        <span>Yeni Müşteri</span>
+                    </a>
+                    <a asp-controller="Randevu" asp-action="Create" class="action-card">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                            <line x1="12" y1="14" x2="12" y2="18"></line>
+                            <line x1="10" y1="16" x2="14" y2="16"></line>
+                        </svg>
+                        <span>Randevu Oluştur</span>
+                    </a>
+                    <a @* asp-controller="Satis" asp-action="Create"  *@class="action-card">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span>Satış Kaydet</span>
+                    </a>
+                    <a asp-controller="Settings" asp-action="Profile" class="action-card">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6"></path>
+                        </svg>
+                        <span>Ayarlar</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

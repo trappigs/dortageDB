@@ -1,0 +1,448 @@
+﻿@model Musteri
+
+@{
+    ViewData["Title"] = "Müşteri Detayları";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<style>
+    .details-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .details-header {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+    }
+
+    .customer-info-header {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+    }
+
+    .customer-avatar-large {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 32px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .customer-header-details h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 8px;
+    }
+
+    .customer-meta {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .meta-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: #f3f4f6;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-action {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+
+    .btn-edit {
+        background: #000a68;
+        color: white;
+    }
+
+        .btn-edit:hover {
+            background: #001a88;
+            transform: translateY(-2px);
+        }
+
+    .btn-delete {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+    }
+
+        .btn-delete:hover {
+            background: #fecaca;
+        }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+        .info-card h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+    .info-label {
+        font-weight: 600;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .info-value {
+        color: #1f2937;
+        font-size: 14px;
+        text-align: right;
+    }
+
+    .timeline-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        grid-column: 1 / -1;
+    }
+
+    .timeline-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+        border-left: 3px solid #e5e7eb;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        background: #f9fafb;
+    }
+
+        .timeline-item:hover {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+    .timeline-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+        .timeline-icon.randevu {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .timeline-icon.satis {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+    .timeline-content {
+        flex: 1;
+    }
+
+    .timeline-title {
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 4px;
+    }
+
+    .timeline-date {
+        font-size: 13px;
+        color: #9ca3af;
+    }
+
+    .timeline-details {
+        font-size: 14px;
+        color: #6b7280;
+        margin-top: 8px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #9ca3af;
+    }
+
+    @@media (max-width: 768px) {
+        .details-header
+
+    {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .customer-info-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .action-buttons {
+        width: 100%;
+    }
+
+    .btn-action {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .customer-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    }
+</style>
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+        <div class="details-container">
+            <div class="details-header">
+                <div class="customer-info-header">
+                    <div class="customer-avatar-large">
+                        @Model.Ad.Substring(0, 1)@Model.Soyad.Substring(0, 1)
+                    </div>
+                    <div class="customer-header-details">
+                        <h1>@Model.Ad @Model.Soyad</h1>
+                        <div class="customer-meta">
+                            <span class="meta-badge">
+                                @(Model.Cinsiyet ? "👨 Erkek" : "👩 Kadın")
+                            </span>
+                            <span class="meta-badge">
+                                📍 @Model.Sehir
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a asp-action="Edit" asp-route-id="@Model.IdMusteri" class="btn-action btn-edit">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Düzenle
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.IdMusteri" class="btn-action btn-delete">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Sil
+                    </a>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="info-card">
+                    <h2>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                        </svg>
+                        İletişim Bilgileri
+                    </h2>
+                    <div class="info-row">
+                        <span class="info-label">Telefon:</span>
+                        <span class="info-value">@Model.Telefon</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Eposta))
+                    {
+                        <div class="info-row">
+                            <span class="info-label">E-posta:</span>
+                            <span class="info-value">@Model.Eposta</span>
+                        </div>
+                    }
+                    <div class="info-row">
+                        <span class="info-label">Şehir:</span>
+                        <span class="info-value">@Model.Sehir</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.TcNo))
+                    {
+                        <div class="info-row">
+                            <span class="info-label">TC No:</span>
+                            <span class="info-value">@Model.TcNo</span>
+                        </div>
+                    }
+                </div>
+
+                <div class="info-card">
+                    <h2>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                        Özet İstatistikler
+                    </h2>
+                    <div class="info-row">
+                        <span class="info-label">Toplam Randevu:</span>
+                        <span class="info-value">@Model.Randevular.Count</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Tamamlanan Randevu:</span>
+                        <span class="info-value">@Model.Randevular.Count(r => r.RandevuDurum == RandevuDurum.completed)</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Toplam Satış:</span>
+                        <span class="info-value">@Model.Satislar.Count</span>
+                    </div>
+                    @if (Model.Satislar.Any())
+                    {
+                        <div class="info-row">
+                            <span class="info-label">Toplam Satış Tutarı:</span>
+                            <span class="info-value">₺@Model.Satislar.Sum(s => s.ToplamSatisFiyati).ToString("N0")</span>
+                        </div>
+                    }
+                </div>
+
+                <div class="timeline-card">
+                    <h2>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        Aktivite Geçmişi
+                    </h2>
+
+                    @if (Model.Randevular.Any() || Model.Satislar.Any())
+                    {
+                        var activities = Model.Randevular
+                        .Select(r => new { Type = "Randevu", Date = r.RandevuZaman, Item = (object)r })
+                        .Concat(Model.Satislar.Select(s => new { Type = "Satis", Date = s.SatilmaTarihi, Item = (object)s }))
+                        .OrderByDescending(a => a.Date)
+                        .Take(10);
+
+                        @foreach (var activity in activities)
+                        {
+                            if (activity.Type == "Randevu")
+                            {
+                                var randevu = (Randevu)activity.Item;
+                                <div class="timeline-item">
+                                    <div class="timeline-icon randevu">📅</div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Randevu - @randevu.RandevuTipi</div>
+                                        <div class="timeline-date">@randevu.RandevuZaman.ToString("dd MMMM yyyy, HH:mm")</div>
+                                        <div class="timeline-details">
+                                            📍 @randevu.Bolge | Topraktar: @randevu.Topraktar.Ad @randevu.Topraktar.Soyad
+                                            <br />
+                                            Durum: @switch (randevu.RandevuDurum)
+                                            {
+                                                                case RandevuDurum.pending:
+                                                    <span style="color: #f59e0b;">⏳ Bekliyor</span>
+                                                    break;
+                                                case RandevuDurum.confirmed:
+                                                    <span style="color: #3b82f6;">✓ Onaylandı</span>
+                                                    break;
+                                                case RandevuDurum.completed:
+                                                    <span style="color: #10b981;">✓ Tamamlandı</span>
+                                                    break;
+                                                case RandevuDurum.cancelled:
+                                                    <span style="color: #ef4444;">✗ İptal</span>
+                                                    break;
+                                                case RandevuDurum.no_show:
+                                                    <span style="color: #6b7280;">⊘ Gelmedi</span>
+                                                    break;
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                        else
+                                {
+                                    var satis = (Satis)activity.Item;
+                                    <div class="timeline-item">
+                                        <div class="timeline-icon satis">💰</div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-title">Satış Gerçekleşti</div>
+                                            <div class="timeline-date">@satis.SatilmaTarihi.ToString("dd MMMM yyyy")</div>
+                                            <div class="timeline-details">
+                                                💵 Tutar: ₺@satis.ToplamSatisFiyati.ToString("N0") |
+                                                @(satis.Taksit ? "Taksitli" : "Peşin") |
+                                                Komisyon: ₺@satis.OdenecekKomisyon.ToString("N0")
+                                                <br />
+                                                📍 @satis.Bolge | Topraktar: @satis.Topraktar.Ad @satis.Topraktar.Soyad
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                                        else
+                        {
+                            <div class="empty-state">
+                                <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                                <p>Henüz aktivite bulunmuyor</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <a asp-action="Index" class="btn-action" style="background: #f3f4f6; color: #374151;">
+                        ← Müşteri Listesine Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
