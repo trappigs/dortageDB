@@ -1,0 +1,682 @@
+.topraktar-main-panel * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Sidebar Container */
+
+.topraktar-main-panel .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 280px;
+    height: 100vh;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    padding-top: 20px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.topraktar-main-panel .sidebar.collapsed {
+        width: 80px;
+    }
+
+/* Scrollbar styling */
+
+.topraktar-main-panel .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+.topraktar-main-panel .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+.topraktar-main-panel .sidebar::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 3px;
+    }
+
+.topraktar-main-panel .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+/* User Profile Card */
+
+.topraktar-main-panel .user-profile {
+    background: linear-gradient(135deg, #000a68 0%, #001a88 100%);
+    border-radius: 16px;
+    padding: 24px 20px;
+    margin: 0 16px 32px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.topraktar-main-panel .sidebar.collapsed .user-profile {
+    padding: 16px 10px;
+}
+
+.topraktar-main-panel .user-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 3px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.topraktar-main-panel .sidebar.collapsed .user-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+}
+
+.topraktar-main-panel .user-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    margin-top: 12px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.topraktar-main-panel .sidebar.collapsed .user-name {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+}
+
+.topraktar-main-panel .user-role {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: white;
+    margin-top: 8px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.topraktar-main-panel .sidebar.collapsed .user-role {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.topraktar-main-panel .user-code {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 8px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.topraktar-main-panel .sidebar.collapsed .user-code {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+}
+
+/* Navigation Menu */
+
+.topraktar-main-panel .nav-menu {
+    list-style: none;
+    padding: 0 0 180px 0;
+}
+
+.topraktar-main-panel .nav-item {
+    position: relative;
+    margin: 4px 16px;
+}
+
+.topraktar-main-panel .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    color: #374151;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.topraktar-main-panel .sidebar.collapsed .nav-link {
+    justify-content: center;
+    padding: 14px 10px;
+}
+
+.topraktar-main-panel .nav-link:hover {
+    background: #f3f4f6;
+    color: #000a68;
+    transform: translateX(4px);
+}
+
+.topraktar-main-panel .sidebar.collapsed .nav-link:hover {
+    transform: translateX(0);
+    background: #f3f4f6;
+}
+
+.topraktar-main-panel .nav-link.active {
+    background: linear-gradient(135deg, #000a68 0%, #001a88 100%);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 10, 104, 0.3);
+}
+
+.topraktar-main-panel .nav-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.topraktar-main-panel .nav-text {
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+    overflow: hidden;
+}
+
+.topraktar-main-panel .sidebar.collapsed .nav-text {
+    opacity: 0;
+    width: 0;
+}
+
+/* Badges */
+
+.topraktar-main-panel .nav-badge {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.topraktar-main-panel .sidebar.collapsed .nav-badge {
+    right: 6px;
+    top: 6px;
+    transform: none;
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 0;
+}
+
+.topraktar-main-panel .badge-red {
+    background: #ef4444;
+    color: white;
+}
+
+.topraktar-main-panel .badge-orange {
+    background: #f59e0b;
+    color: white;
+}
+
+.topraktar-main-panel .badge-green {
+    background: #10b981;
+    color: white;
+}
+
+.topraktar-main-panel .badge-blue {
+    background: #3b82f6;
+    color: white;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.topraktar-main-panel .nav-badge.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Statistics Card */
+
+.topraktar-main-panel .stats-card {
+    position: fixed;
+    bottom: 24px;
+    left: 16px;
+    width: 248px;
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.topraktar-main-panel .sidebar.collapsed .stats-card {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-20px);
+}
+
+.topraktar-main-panel .stats-title {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.topraktar-main-panel .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.topraktar-main-panel .stat-item:last-child {
+        margin-bottom: 0;
+    }
+
+.topraktar-main-panel .stat-icon {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    flex-shrink: 0;
+}
+
+.topraktar-main-panel .stat-label {
+    font-size: 13px;
+    color: #6b7280;
+    flex: 1;
+}
+
+.topraktar-main-panel .stat-value {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.topraktar-main-panel .stat-value.blue {
+        color: #000a68;
+    }
+
+.topraktar-main-panel .stat-value.green {
+        color: #10b981;
+    }
+
+/* Collapse Button - Desktop */
+
+.topraktar-main-panel .collapse-btn {
+    position: fixed;
+    top: 28px;
+    left: 264px;
+    width: 32px;
+    height: 32px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.topraktar-main-panel .sidebar.collapsed .collapse-btn {
+    left: 64px;
+}
+
+.topraktar-main-panel .collapse-btn:hover {
+    background: #f3f4f6;
+    transform: scale(1.1);
+}
+
+.topraktar-main-panel .collapse-icon {
+    width: 16px;
+    height: 16px;
+    stroke: #374151;
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.3s ease;
+}
+
+.topraktar-main-panel .sidebar.collapsed .collapse-icon {
+    transform: rotate(180deg);
+}
+
+/* Tooltip */
+
+.topraktar-main-panel .tooltip {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1f2937;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    white-space: nowrap;
+    margin-left: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1002;
+}
+
+.topraktar-main-panel .tooltip::before {
+        content: '';
+        position: absolute;
+        right: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 6px solid transparent;
+        border-right-color: #1f2937;
+    }
+
+.topraktar-main-panel .sidebar.collapsed .nav-link:hover .tooltip {
+    opacity: 1;
+}
+
+/* Mobile Overlay */
+
+.topraktar-main-panel .mobile-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.topraktar-main-panel .mobile-overlay.active {
+        opacity: 1;
+    }
+
+/* Mobile Menu Button */
+
+.topraktar-main-panel .mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 48px;
+    height: 48px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    z-index: 998;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.topraktar-main-panel .mobile-menu-btn:active {
+        transform: scale(0.95);
+    }
+
+.topraktar-main-panel .mobile-menu-btn svg {
+        width: 24px;
+        height: 24px;
+        stroke: #374151;
+        fill: none;
+        stroke-width: 2;
+    }
+
+/* Mobile Close Button */
+
+.topraktar-main-panel .mobile-close {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 1001;
+    align-items: center;
+    justify-content: center;
+}
+
+.topraktar-main-panel .mobile-close:active {
+        transform: scale(0.9);
+    }
+
+.topraktar-main-panel .mobile-close svg {
+        width: 20px;
+        height: 20px;
+        stroke: white;
+        fill: none;
+        stroke-width: 2.5;
+    }
+
+/* Mobile Responsive */
+
+@media (max-width: 768px) {
+    .topraktar-main-panel .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        box-shadow: none;
+    }
+
+        .topraktar-main-panel .sidebar.mobile-open {
+            transform: translateX(0);
+            box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .topraktar-main-panel .sidebar.collapsed {
+            width: 280px;
+            transform: translateX(-100%);
+        }
+
+            .topraktar-main-panel .sidebar.collapsed.mobile-open {
+                transform: translateX(0);
+            }
+
+    .topraktar-main-panel .mobile-overlay {
+        display: block;
+    }
+
+    .topraktar-main-panel .mobile-menu-btn {
+        display: flex;
+    }
+
+    .topraktar-main-panel .mobile-close {
+        display: flex;
+    }
+
+    .topraktar-main-panel .collapse-btn {
+        display: none;
+    }
+
+    .topraktar-main-panel .stats-card {
+        left: 16px;
+        right: 16px;
+        width: auto;
+    }
+
+    .topraktar-main-panel .nav-menu {
+        padding-bottom: 200px;
+    }
+
+    /* Reset collapsed state for mobile */
+    .topraktar-main-panel .sidebar.mobile-open .nav-text {
+        opacity: 1;
+        width: auto;
+    }
+
+    .topraktar-main-panel .sidebar.mobile-open .user-name,
+    .topraktar-main-panel .sidebar.mobile-open .user-role,
+    .topraktar-main-panel .sidebar.mobile-open .user-code {
+        opacity: 1;
+        height: auto;
+        margin-top: initial;
+        padding: initial;
+    }
+
+    .topraktar-main-panel .sidebar.mobile-open .user-avatar {
+        width: 56px;
+        height: 56px;
+        font-size: 20px;
+    }
+
+    .topraktar-main-panel .sidebar.mobile-open .user-profile {
+        padding: 24px 20px;
+    }
+
+    .topraktar-main-panel .sidebar.mobile-open .nav-link {
+        justify-content: flex-start;
+        padding: 14px 20px;
+    }
+
+    .topraktar-main-panel .sidebar.mobile-open .nav-badge {
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: auto;
+        height: auto;
+        min-width: 20px;
+        padding: 2px 8px;
+        font-size: 11px;
+    }
+
+    .topraktar-main-panel .sidebar.mobile-open .stats-card {
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+    }
+}
+
+/* Tablet Responsive */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .topraktar-main-panel .sidebar {
+        width: 240px;
+    }
+
+        .topraktar-main-panel .sidebar.collapsed {
+            width: 72px;
+        }
+
+    .topraktar-main-panel .collapse-btn {
+        left: 224px;
+    }
+
+    .topraktar-main-panel .sidebar.collapsed .collapse-btn {
+        left: 56px;
+    }
+
+    .topraktar-main-panel .stats-card {
+        width: 208px;
+    }
+}
+
+/* Main Content Demo */
+
+.topraktar-main-panel .main-content {
+    margin-left: 280px;
+    padding: 40px;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 100vh;
+}
+
+.topraktar-main-panel .sidebar.collapsed ~ .main-content {
+    margin-left: 80px;
+}
+
+@media (max-width: 768px) {
+    .topraktar-main-panel .main-content {
+        margin-left: 0;
+        padding: 80px 20px 40px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .topraktar-main-panel .main-content {
+        margin-left: 240px;
+        padding: 30px;
+    }
+
+    .topraktar-main-panel .sidebar.collapsed ~ .main-content {
+        margin-left: 72px;
+    }
+}
+
+.topraktar-main-panel .demo-header {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.topraktar-main-panel .demo-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #000a68;
+    margin-bottom: 8px;
+}
+
+.topraktar-main-panel .demo-subtitle {
+    color: #6b7280;
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .topraktar-main-panel .demo-header {
+        padding: 24px;
+    }
+
+    .topraktar-main-panel .demo-title {
+        font-size: 22px;
+    }
+
+    .topraktar-main-panel .demo-subtitle {
+        font-size: 14px;
+    }
+}

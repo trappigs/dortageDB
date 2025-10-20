@@ -1,5 +1,5 @@
 ﻿/* wwwroot/css/auth-pages.css */
-
+/*
 :root {
     --primary: #000a68;
     --primary-dark: #001a88;
@@ -18,19 +18,13 @@
     --gray-700: #374151;
     --gray-900: #111827;
     --gradient-primary: linear-gradient(135deg, #000a68 0%, #001a88 100%);
-}
-
-.auth-pages * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+}*/
+/*
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background: var(--gray-50);
     min-height: 100vh;
-}
+}*/
 
 /* Auth Container */
 
@@ -660,14 +654,14 @@ body {
 .auth-pages .info-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 10px;
     margin: 40px 0;
 }
 
 .auth-pages .info-card {
     background: var(--gray-50);
     border-radius: 12px;
-    padding: 24px;
+    /*padding: 24px;*/
     text-align: center;
 }
 

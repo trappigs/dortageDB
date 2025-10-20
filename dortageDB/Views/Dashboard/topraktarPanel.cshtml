@@ -1,0 +1,277 @@
+﻿
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+
+<!-- Mobile Menu Button -->
+<button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menüyü aç">
+    <svg viewBox="0 0 24 24">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+</button>
+
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar" role="navigation" aria-label="Ana navigasyon">
+    <!-- Collapse Button (Desktop Only) -->
+    <button class="collapse-btn" id="collapseBtn" aria-label="Kenar çubuğunu daralt">
+        <svg class="collapse-icon" viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
+
+    <!-- Mobile Close Button -->
+    <button class="mobile-close" id="mobileClose" aria-label="Kapat">
+        <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- User Profile -->
+    <div class="user-profile">
+        <div class="user-avatar">AY</div>
+        <div class="user-name">Ali Yılmaz</div>
+        <span class="user-role">Topraktar</span>
+        <div class="user-code">REF: TRK2024ALI</div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="#" class="nav-link active">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span class="nav-text">Müşterilerim</span>
+                <span class="nav-badge badge-blue">12</span>
+                <span class="tooltip">Müşterilerim (12)</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span class="nav-text">Randevularım</span>
+                <span class="nav-badge badge-orange pulse">3</span>
+                <span class="tooltip">Randevularım (3)</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                <span class="nav-text">Topraktar Akademisi</span>
+                <span class="nav-badge badge-blue">%60</span>
+                <span class="tooltip">Topraktar Akademisi (%60)</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m0 6l-4.2 4.2M23 12h-6m-6 0H5m13.2 5.2l-4.2-4.2m0-6l-4.2-4.2"></path>
+                </svg>
+                <span class="nav-text">Ayarlar</span>
+                <span class="tooltip">Ayarlar</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <span class="nav-text">Yardım & Destek</span>
+                <span class="tooltip">Yardım & Destek</span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Statistics Card -->
+    <div class="stats-card">
+        <div class="stats-title">Tüm Zamanlar</div>
+        <div class="stat-item">
+            <svg class="stat-icon" viewBox="0 0 24 24">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                <polyline points="16 7 22 7 22 13"></polyline>
+            </svg>
+            <span class="stat-label">Satış</span>
+            <span class="stat-value blue">24</span>
+        </div>
+        <div class="stat-item">
+            <svg class="stat-icon" viewBox="0 0 24 24">
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+            <span class="stat-label">Komisyon</span>
+            <span class="stat-value green">₺180K</span>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content (Demo) -->
+<main class="main-content">
+    <div class="demo-header">
+        <h1 class="demo-title">Hoş Geldiniz, Ali Yılmaz 👋</h1>
+        <p class="demo-subtitle">DORTAGE Topraktar Dashboard Paneline hoş geldiniz.</p>
+    </div>
+</main>
+
+<script>
+    // DOM Elements
+    const sidebar = document.getElementById('sidebar');
+    const collapseBtn = document.getElementById('collapseBtn');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    const mobileClose = document.getElementById('mobileClose');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // Collapse/Expand Sidebar (Desktop Only)
+    if (collapseBtn) {
+        collapseBtn.addEventListener('click', () => {
+            // Only work on desktop
+            if (window.innerWidth > 768) {
+                sidebar.classList.toggle('collapsed');
+
+                // Save state to localStorage
+                const isCollapsed = sidebar.classList.contains('collapsed');
+                localStorage.setItem('sidebarCollapsed', isCollapsed);
+            }
+        });
+    }
+
+    // Load saved state (Desktop Only)
+    window.addEventListener('DOMContentLoaded', () => {
+        if (window.innerWidth > 768) {
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+            }
+        }
+    });
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+        sidebar.classList.toggle('mobile-open');
+        mobileOverlay.classList.toggle('active');
+        document.body.style.overflow = sidebar.classList.contains('mobile-open') ? 'hidden' : '';
+    }
+
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+    }
+
+    if (mobileOverlay) {
+        mobileOverlay.addEventListener('click', toggleMobileMenu);
+    }
+
+    if (mobileClose) {
+        mobileClose.addEventListener('click', toggleMobileMenu);
+    }
+
+    // Navigation Active State
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // Remove active class from all links
+            navLinks.forEach(l => l.classList.remove('active'));
+
+            // Add active class to clicked link
+            link.classList.add('active');
+
+            // Close mobile menu if open
+            if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+                toggleMobileMenu();
+            }
+        });
+    });
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+        // Toggle sidebar with Ctrl+B (Desktop only)
+        if (e.ctrlKey && e.key === 'b' && window.innerWidth > 768) {
+            e.preventDefault();
+            collapseBtn.click();
+        }
+
+        // Close mobile menu with Escape
+        if (e.key === 'Escape' && sidebar.classList.contains('mobile-open')) {
+            toggleMobileMenu();
+        }
+    });
+
+    // Responsive handling
+    let previousWidth = window.innerWidth;
+
+    window.addEventListener('resize', () => {
+        const currentWidth = window.innerWidth;
+
+        // Transitioned from mobile to desktop
+        if (previousWidth <= 768 && currentWidth > 768) {
+            sidebar.classList.remove('mobile-open');
+            mobileOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+
+            // Restore collapsed state from localStorage
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+            }
+        }
+
+        // Transitioned from desktop to mobile
+        if (previousWidth > 768 && currentWidth <= 768) {
+            sidebar.classList.remove('collapsed');
+            sidebar.classList.remove('mobile-open');
+            mobileOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        previousWidth = currentWidth;
+    });
+
+    // Smooth scroll for better UX
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href !== '#') {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    });
+
+    // Prevent body scroll when sidebar is open on mobile
+    sidebar.addEventListener('touchmove', (e) => {
+        if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+            e.stopPropagation();
+        }
+    }, { passive: false });
+
+    console.log('✅ DORTAGE Dashboard initialized successfully');
+</script>
