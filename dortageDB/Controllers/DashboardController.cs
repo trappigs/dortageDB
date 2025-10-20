@@ -10,5 +10,9 @@ namespace dortageDB.Controllers
         {
             return View();
         }
+        public IActionResult TopraktarDashboard()
+        {
+            return View();
+        }
     }
 }

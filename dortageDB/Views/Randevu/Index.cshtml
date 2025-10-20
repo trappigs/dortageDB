@@ -1,0 +1,457 @@
+﻿@model IEnumerable<Randevu>
+
+@{
+    ViewData["Title"] = "Randevularım";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+    }
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #000a68;
+    }
+
+    .btn-new {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #000a68 0%, #001a88 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.2s;
+    }
+
+        .btn-new:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 10, 104, 0.3);
+        }
+
+    .filter-tabs {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .filter-tab {
+        padding: 10px 20px;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+        .filter-tab:hover {
+            border-color: #000a68;
+        }
+
+        .filter-tab.active {
+            background: #000a68;
+            color: white;
+            border-color: #000a68;
+        }
+
+    .appointments-timeline {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .appointment-item {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        border-left: 4px solid #e5e7eb;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        background: #f9fafb;
+        transition: all 0.2s;
+    }
+
+        .appointment-item:hover {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .appointment-item.pending {
+            border-left-color: #f59e0b;
+        }
+
+        .appointment-item.confirmed {
+            border-left-color: #3b82f6;
+        }
+
+        .appointment-item.completed {
+            border-left-color: #10b981;
+        }
+
+        .appointment-item.cancelled {
+            border-left-color: #ef4444;
+        }
+
+        .appointment-item.no_show {
+            border-left-color: #9ca3af;
+        }
+
+    .appointment-time {
+        min-width: 120px;
+        text-align: center;
+    }
+
+    .time-date {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 4px;
+    }
+
+    .time-hour {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .appointment-content {
+        flex: 1;
+    }
+
+    .appointment-customer {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 8px;
+    }
+
+    .appointment-details {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .detail-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .appointment-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-confirmed {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .status-completed {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .status-no_show {
+        background: #f3f4f6;
+        color: #4b5563;
+    }
+
+    .appointment-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-edit {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+        .btn-edit:hover {
+            background: #e5e7eb;
+        }
+
+    .btn-status {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+        .btn-status:hover {
+            background: #bfdbfe;
+        }
+
+    .btn-delete {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+        .btn-delete:hover {
+            background: #fecaca;
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 12px;
+    }
+
+    .empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header
+
+    {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .btn-new {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .appointment-item {
+        flex-direction: column;
+    }
+
+    .appointment-time {
+        min-width: auto;
+        text-align: left;
+    }
+
+    .appointment-details {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    }
+</style>
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-error">@TempData["ErrorMessage"]</div>
+        }
+
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Randevularım</h1>
+                <p style="color: #6b7280;">Toplam @Model.Count() randevu</p>
+            </div>
+            <a asp-action="Create" class="btn-new">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Yeni Randevu Oluştur
+            </a>
+        </div>
+
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">
+                Tümü (@Model.Count())
+            </button>
+            <button class="filter-tab" data-filter="pending">
+                Bekleyen (@Model.Count(r => r.RandevuDurum == RandevuDurum.pending))
+            </button>
+            <button class="filter-tab" data-filter="confirmed">
+                Onaylı (@Model.Count(r => r.RandevuDurum == RandevuDurum.confirmed))
+            </button>
+            <button class="filter-tab" data-filter="completed">
+                Tamamlandı (@Model.Count(r => r.RandevuDurum == RandevuDurum.completed))
+            </button>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="appointments-timeline">
+                @foreach (var randevu in Model.OrderBy(r => r.RandevuZaman))
+                {
+                    <div class="appointment-item @randevu.RandevuDurum.ToString()" data-status="@randevu.RandevuDurum.ToString()">
+                        <div class="appointment-time">
+                            <div class="time-date">@randevu.RandevuZaman.ToString("dd MMM yyyy")</div>
+                            <div class="time-hour">@randevu.RandevuZaman.ToString("HH:mm")</div>
+                        </div>
+
+                        <div class="appointment-content">
+                            <div class="appointment-customer">
+                                @randevu.Musteri.Ad @randevu.Musteri.Soyad
+                            </div>
+
+                            <div class="appointment-details">
+                                <div class="detail-item">
+                                    <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                    @randevu.Bolge
+                                </div>
+                                <div class="detail-item">
+                                    <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                    </svg>
+                                    @randevu.RandevuTipi
+                                </div>
+                                <div class="detail-item">
+                                    <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                    @randevu.Musteri.Telefon
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                                <span class="appointment-status status-@randevu.RandevuDurum.ToString()">
+                                    @switch (randevu.RandevuDurum)
+                                    {
+                                        case RandevuDurum.pending:
+                                            <text>⏳ Bekliyor</text>
+                                            break;
+                                        case RandevuDurum.confirmed:
+                                            <text>✓ Onaylandı</text>
+                                            break;
+                                        case RandevuDurum.completed:
+                                            <text>✓ Tamamlandı</text>
+                                            break;
+                                        case RandevuDurum.cancelled:
+                                            <text>✗ İptal Edildi</text>
+                                            break;
+                                        case RandevuDurum.no_show:
+                                            <text>⊘ Gelmedi</text>
+                                            break;
+                                    }
+                                </span>
+
+                                <div class="appointment-actions">
+                                    @if (randevu.RandevuDurum == RandevuDurum.pending)
+                                    {
+                                        <form asp-action="UpdateStatus" method="post" style="display: inline;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@randevu.RandevuID" />
+                                            <input type="hidden" name="status" value="confirmed" />
+                                            <button type="submit" class="btn-action btn-status">Onayla</button>
+                                        </form>
+                                    }
+                                    @if (randevu.RandevuDurum == RandevuDurum.confirmed)
+                                    {
+                                        <form asp-action="UpdateStatus" method="post" style="display: inline;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@randevu.RandevuID" />
+                                            <input type="hidden" name="status" value="completed" />
+                                            <button type="submit" class="btn-action btn-status">Tamamla</button>
+                                        </form>
+                                    }
+                                    <a asp-action="Edit" asp-route-id="@randevu.RandevuID" class="btn-action btn-edit">
+                                        Düzenle
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@randevu.RandevuID" class="btn-action btn-delete">
+                                        Sil
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon">📅</div>
+                <h3 style="color: #1f2937; margin-bottom: 8px;">Henüz randevu oluşturmadınız</h3>
+                <p style="color: #6b7280; margin-bottom: 24px;">İlk randevunuzu oluşturarak başlayın</p>
+                <a asp-action="Create" class="btn-new" style="display: inline-flex;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Yeni Randevu Oluştur
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Filter functionality
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const appointments = document.querySelectorAll('.appointment-item');
+
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+
+            // Update active tab
+            filterTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            // Filter appointments
+            appointments.forEach(appointment => {
+                const status = appointment.getAttribute('data-status');
+                if (filter === 'all' || status === filter) {
+                    appointment.style.display = 'flex';
+                } else {
+                    appointment.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>

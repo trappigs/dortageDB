@@ -1,0 +1,342 @@
+﻿@model IEnumerable<Musteri>
+
+@{
+    ViewData["Title"] = "Müşterilerim";
+    Layout = "_LayoutTopraktar";
+
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+    }
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #000a68;
+    }
+
+    .btn-new {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #000a68 0%, #001a88 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.2s;
+    }
+
+    .btn-new:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 10, 104, 0.3);
+    }
+
+    .search-filter-bar {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 250px;
+        position: relative;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 12px 16px 12px 44px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 15px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+    }
+
+    .customers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+
+    .customer-card {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s;
+        border: 1px solid #e5e7eb;
+    }
+
+    .customer-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .customer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 16px;
+    }
+
+    .customer-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .customer-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 4px;
+    }
+
+    .customer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .info-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .info-icon {
+        width: 16px;
+        height: 16px;
+        color: #9ca3af;
+    }
+
+    .customer-actions {
+        display: flex;
+        gap: 8px;
+        padding-top: 16px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn-action {
+        flex: 1;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.2s;
+    }
+
+    .btn-edit {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .btn-edit:hover {
+        background: #e5e7eb;
+    }
+
+    .btn-delete {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+    .btn-delete:hover {
+        background: #fee2e2;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 12px;
+    }
+
+    .empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+        }
+
+        .btn-new {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .customers-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .search-filter-bar {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-error">@TempData["ErrorMessage"]</div>
+        }
+
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Müşterilerim</h1>
+                <p style="color: #6b7280;">Toplam @Model.Count() müşteri</p>
+            </div>
+            <a asp-action="Create" class="btn-new">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Yeni Müşteri Ekle
+            </a>
+        </div>
+
+        <div class="search-filter-bar">
+            <div class="search-box">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Müşteri ara (ad, telefon, email)...">
+            </div>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="customers-grid" id="customersGrid">
+                @foreach (var musteri in Model)
+                {
+                    <div class="customer-card" data-search="@musteri.Ad @musteri.Soyad @musteri.Telefon @musteri.Eposta @musteri.Sehir">
+                        <div class="customer-header">
+                            <div>
+                                <div class="customer-name">@musteri.Ad @musteri.Soyad</div>
+                                <span style="font-size: 13px; color: #9ca3af;">
+                                    @(musteri.Cinsiyet ? "Erkek" : "Kadın")
+                                </span>
+                            </div>
+                            <div class="customer-avatar">
+                                @musteri.Ad.Substring(0, 1)@musteri.Soyad.Substring(0, 1)
+                            </div>
+                        </div>
+
+                        <div class="customer-info">
+                            <div class="info-row">
+                                <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                                @musteri.Telefon
+                            </div>
+                            @if (!string.IsNullOrEmpty(musteri.Eposta))
+                            {
+                                <div class="info-row">
+                                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                    @musteri.Eposta
+                                </div>
+                            }
+                            <div class="info-row">
+                                <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                @musteri.Sehir
+                            </div>
+                        </div>
+
+                        <div class="customer-actions">
+                            <a asp-action="Details" asp-route-id="@musteri.IdMusteri" class="btn-action btn-edit">
+                                Detaylar
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@musteri.IdMusteri" class="btn-action btn-edit">
+                                Düzenle
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@musteri.IdMusteri" class="btn-action btn-delete">
+                                Sil
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon">👥</div>
+                <h3 style="color: #1f2937; margin-bottom: 8px;">Henüz müşteri eklemediniz</h3>
+                <p style="color: #6b7280; margin-bottom: 24px;">İlk müşterinizi ekleyerek başlayın</p>
+                <a asp-action="Create" class="btn-new" style="display: inline-flex;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Yeni Müşteri Ekle
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Search functionality
+    document.getElementById('searchInput')?.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.customer-card');
+
+        cards.forEach(card => {
+            const searchData = card.getAttribute('data-search').toLowerCase();
+            if (searchData.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+</script>

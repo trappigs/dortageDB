@@ -1,0 +1,265 @@
+﻿@model Randevu
+
+@{
+    ViewData["Title"] = "Randevu Sil";
+    Layout = "_LayoutTopraktar";
+
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<style>
+    .delete-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 32px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .delete-header {
+        text-align: center;
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .delete-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+        font-size: 32px;
+    }
+
+    .delete-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 8px;
+    }
+
+    .delete-message {
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+    .appointment-details {
+        background: #f9fafb;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+    .detail-label {
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .detail-value {
+        color: #6b7280;
+        text-align: right;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-confirmed {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .status-completed {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .warning-box {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        padding: 16px;
+        border-radius: 10px;
+        margin-bottom: 24px;
+        display: flex;
+        gap: 12px;
+    }
+
+    .warning-icon {
+        flex-shrink: 0;
+        font-size: 20px;
+    }
+
+    .warning-text {
+        color: #991b1b;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn {
+        flex: 1;
+        padding: 14px 24px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+    }
+
+    .btn-cancel {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+        .btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white;
+    }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+    @@media (max-width: 768px) {
+        .delete-container
+
+    {
+        padding: 24px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .detail-value {
+        text-align: left;
+    }
+
+    }
+</style>
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+        <div class="delete-container">
+            <div class="delete-header">
+                <div class="delete-icon">⚠️</div>
+                <h1 class="delete-title">Randevuyu Sil</h1>
+                <p class="delete-message">Bu işlem geri alınamaz. Emin misiniz?</p>
+            </div>
+
+            <div class="appointment-details">
+                <div class="detail-row">
+                    <span class="detail-label">Müşteri:</span>
+                    <span class="detail-value">@Model.Musteri.Ad @Model.Musteri.Soyad</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Tarih ve Saat:</span>
+                    <span class="detail-value">@Model.RandevuZaman.ToString("dd MMMM yyyy, HH:mm")</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Bölge:</span>
+                    <span class="detail-value">@Model.Bolge</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Randevu Tipi:</span>
+                    <span class="detail-value">@Model.RandevuTipi</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Durum:</span>
+                    <span class="detail-value">
+                        <span class="status-badge status-@Model.RandevuDurum.ToString()">
+                            @switch (Model.RandevuDurum)
+                            {
+                                case RandevuDurum.pending:
+                                    <text>⏳ Bekliyor</text>
+                                    break;
+                                case RandevuDurum.confirmed:
+                                    <text>✓ Onaylandı</text>
+                                    break;
+                                case RandevuDurum.completed:
+                                    <text>✓ Tamamlandı</text>
+                                    break;
+                                case RandevuDurum.cancelled:
+                                    <text>✗ İptal Edildi</text>
+                                    break;
+                                case RandevuDurum.no_show:
+                                    <text>⊘ Gelmedi</text>
+                                    break;
+                            }
+                        </span>
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Topraktar:</span>
+                    <span class="detail-value">@Model.Topraktar.Ad @Model.Topraktar.Soyad</span>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <span class="warning-icon">⚠️</span>
+                <div class="warning-text">
+                    Bu randevuyu silmek üzeresiniz. Bu işlem geri alınamaz ve tüm randevu bilgileri kalıcı olarak silinecektir.
+                </div>
+            </div>
+
+            <form asp-action="Delete" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="RandevuID" />
+                <div class="form-actions">
+                    <a asp-action="Index" class="btn btn-cancel">İptal</a>
+                    <button type="submit" class="btn btn-delete">Evet, Sil</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

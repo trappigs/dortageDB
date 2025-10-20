@@ -18,10 +18,8 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Views\Musteri\" />
     <Folder Include="Views\Role\" />
     <Folder Include="Views\Satis\" />
-    <Folder Include="Views\Randevu\" />
     <Folder Include="Views\User\" />
   </ItemGroup>
 
