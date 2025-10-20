@@ -353,8 +353,8 @@
         <div class="nav-buttons">
             @if (User.Identity.IsAuthenticated)
             {
-                <a asp-controller="" asp-action="" class="btn btn-outlined">Profilim</a>
-                <form asp-controller="" asp-action="" method="post" style="display: inline;">
+                <a asp-controller="Settings" asp-action="Profile" class="btn btn-outlined">Profilim</a>
+                <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
                     <button type="submit" class="btn btn-filled">Çıkış Yap</button>
                 </form>
             }
