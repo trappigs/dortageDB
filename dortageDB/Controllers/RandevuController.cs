@@ -198,8 +198,10 @@ namespace dortageDB.Controllers
         }
 
         // POST: Randevu/UpdateStatus/5
+        // ⚠️ SADECE ADMIN YETKİSİ - Randevu durumunu değiştirme
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")] // 🔒 SADECE ADMIN
         public async Task<IActionResult> UpdateStatus(int id, string status)
         {
             try
@@ -210,20 +212,12 @@ namespace dortageDB.Controllers
                     return NotFound();
                 }
 
-                // Yetki kontrolü
-                var user = await _userManager.GetUserAsync(User);
-                if (!User.IsInRole("admin") && randevu.TopraktarID != user.Id)
-                {
-                    TempData["ErrorMessage"] = "Bu randevu durumunu değiştirme yetkiniz yok.";
-                    return RedirectToAction(nameof(Index));
-                }
-
                 if (Enum.TryParse<RandevuDurum>(status, out var durum))
                 {
                     randevu.RandevuDurum = durum;
                     await _context.SaveChangesAsync();
 
-                    _logger.LogInformation($"✅ Randevu durumu güncellendi: {id} -> {status}");
+                    _logger.LogInformation($"✅ Randevu durumu güncellendi: {id} -> {status} (Admin: {User.Identity.Name})");
                     TempData["SuccessMessage"] = "Randevu durumu güncellendi.";
                 }
                 else

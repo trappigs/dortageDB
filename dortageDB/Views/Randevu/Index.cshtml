@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
 
 <style>
+
+    <style >
     .page-header {
         display: flex;
         justify-content: space-between;
@@ -250,33 +252,42 @@
     }
 
     @@media (max-width: 768px) {
-        .page-header
+        .page-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+        }
 
-    {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
+        .btn-new {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .appointment-item {
+            flex-direction: column;
+        }
+
+        .appointment-time {
+            min-width: auto;
+            text-align: left;
+        }
+
+        .appointment-details {
+            flex-direction: column;
+            gap: 8px;
+        }
     }
-
-    .btn-new {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .appointment-item {
-        flex-direction: column;
-    }
-
-    .appointment-time {
-        min-width: auto;
-        text-align: left;
-    }
-
-    .appointment-details {
-        flex-direction: column;
-        gap: 8px;
-    }
-
+    .admin-only-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-left: 8px;
     }
 </style>
 
@@ -381,24 +392,38 @@
                                 </span>
 
                                 <div class="appointment-actions">
-                                    @if (randevu.RandevuDurum == RandevuDurum.pending)
+                                    @* SADECE ADMIN durum değiştirebilir *@
+                                    @if (User.IsInRole("admin"))
                                     {
-                                        <form asp-action="UpdateStatus" method="post" style="display: inline;">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@randevu.RandevuID" />
-                                            <input type="hidden" name="status" value="confirmed" />
-                                            <button type="submit" class="btn-action btn-status">Onayla</button>
-                                        </form>
+                                        @if (randevu.RandevuDurum == RandevuDurum.pending)
+                                        {
+                                            <form asp-action="UpdateStatus" method="post" style="display: inline;">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@randevu.RandevuID" />
+                                                <input type="hidden" name="status" value="confirmed" />
+                                                <button type="submit" class="btn-action btn-status">
+                                                    Onayla
+                                                    <span class="admin-only-badge">Admin</span>
+                                                </button>
+                                            </form>
+                                        }
+                                        @if (randevu.RandevuDurum == RandevuDurum.confirmed)
+                                        {
+                                            <form asp-action="UpdateStatus" method="post" style="display: inline;">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@randevu.RandevuID" />
+                                                <input type="hidden" name="status" value="completed" />
+                                                <button type="submit" class="btn-action btn-status">
+                                                    Tamamla
+                                                    <span class="admin-only-badge">Admin</span>
+                                                </button>
+                                            </form>
+                                        }
                                     }
-                                    @if (randevu.RandevuDurum == RandevuDurum.confirmed)
-                                    {
-                                        <form asp-action="UpdateStatus" method="post" style="display: inline;">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@randevu.RandevuID" />
-                                            <input type="hidden" name="status" value="completed" />
-                                            <button type="submit" class="btn-action btn-status">Tamamla</button>
-                                        </form>
-                                    }
+
+                                    <a asp-action="Details" asp-route-id="@randevu.RandevuID" class="btn-action btn-edit">
+                                        Detaylar
+                                    </a>
                                     <a asp-action="Edit" asp-route-id="@randevu.RandevuID" class="btn-action btn-edit">
                                         Düzenle
                                     </a>
