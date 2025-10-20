@@ -4,6 +4,38 @@ using dortageDB.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+static async Task CreateAdminUser(IServiceProvider serviceProvider)
+{
+    var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
+    
+    // Admin rolü yoksa oluþtur
+    if (!await roleManager.RoleExistsAsync("admin"))
+    {
+        await roleManager.CreateAsync(new AppRole { Name = "admin" });
+    }
+    
+    // Admin kullanýcýsý yoksa oluþtur
+    var adminUser = await userManager.FindByEmailAsync("admin@dortage.com");
+    if (adminUser == null)
+    {
+        adminUser = new AppUser
+        {
+            UserName = "admin@dortage.com",
+            Email = "admin@dortage.com",
+            EmailConfirmed = true,
+            Ad = "Admin",
+            Soyad = "User",
+            Sehir = "Ýstanbul",
+            Cinsiyet = true,
+            Kvkk = true,
+            Pazarlama = false
+        };
+        
+        await userManager.CreateAsync(adminUser, "Admin123!");
+        await userManager.AddToRoleAsync(adminUser, "Admin");
+    }
+}
 var builder = WebApplication.CreateBuilder(args);
 
 Console.WriteLine("=== UYGULAMA BAÞLATILIYOR ===");
@@ -55,6 +87,12 @@ builder.Services.AddScoped<IReferralService, ReferralService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await CreateAdminUser(services);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
