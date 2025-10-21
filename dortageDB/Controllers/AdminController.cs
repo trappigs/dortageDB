@@ -377,6 +377,55 @@ namespace dortageDB.Controllers
             return View();
         }
 
+        // POST: Admin/CreateRandevu
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateRandevu(int MusteriId, int TopraktarID,
+            DateTime RandevuZaman, string Bolge, string RandevuTipi)
+        {
+            try
+            {
+                // Validate inputs
+                if (string.IsNullOrWhiteSpace(Bolge) || string.IsNullOrWhiteSpace(RandevuTipi))
+                {
+                    TempData["ErrorMessage"] = "Geçersiz veri girişi.";
+                    return RedirectToAction(nameof(AllRandevular));
+                }
+
+                // Müşteri ve Topraktar kontrolü
+                var musteri = await _context.Musteriler.FindAsync(MusteriId);
+                var topraktar = await _userManager.FindByIdAsync(TopraktarID.ToString());
+
+                if (musteri == null || topraktar == null)
+                {
+                    TempData["ErrorMessage"] = "Geçersiz müşteri veya topraktar.";
+                    return RedirectToAction(nameof(AllRandevular));
+                }
+
+                var randevu = new Randevu
+                {
+                    MusteriId = MusteriId,
+                    TopraktarID = TopraktarID,
+                    RandevuZaman = RandevuZaman,
+                    Bolge = Bolge.Trim(),
+                    RandevuTipi = RandevuTipi.Trim(),
+                    RandevuDurum = RandevuDurum.pending
+                };
+
+                _context.Randevular.Add(randevu);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"✅ Yeni randevu oluşturuldu: #{randevu.RandevuID} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Randevu başarıyla eklendi.";
+                return RedirectToAction(nameof(AllRandevular));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Randevu oluşturma hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllRandevular));
+            }
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -415,10 +464,9 @@ namespace dortageDB.Controllers
             }
         }
 
-        // POST: Admin/EditRandevu
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditRandevu(int id, DateTime randevuZaman, string bolge, string randevuTipi)
+        public async Task<IActionResult> EditRandevu(int id, DateTime randevuZaman, string bolge, string randevuTipi, string randevuDurum)
         {
             try
             {
@@ -430,9 +478,16 @@ namespace dortageDB.Controllers
                 }
 
                 // Validate inputs
-                if (string.IsNullOrWhiteSpace(bolge) || string.IsNullOrWhiteSpace(randevuTipi))
+                if (string.IsNullOrWhiteSpace(bolge) || string.IsNullOrWhiteSpace(randevuTipi) || string.IsNullOrWhiteSpace(randevuDurum))
                 {
                     TempData["ErrorMessage"] = "Tüm alanlar doldurulmalıdır.";
+                    return RedirectToAction(nameof(AllRandevular));
+                }
+
+                // Parse and validate randevu durum
+                if (!Enum.TryParse<RandevuDurum>(randevuDurum, true, out var durum))
+                {
+                    TempData["ErrorMessage"] = "Geçersiz randevu durumu.";
                     return RedirectToAction(nameof(AllRandevular));
                 }
 
@@ -440,10 +495,11 @@ namespace dortageDB.Controllers
                 randevu.RandevuZaman = randevuZaman;
                 randevu.Bolge = bolge.Trim();
                 randevu.RandevuTipi = randevuTipi.Trim();
+                randevu.RandevuDurum = durum;
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Randevu #{id} düzenlendi (Admin: {User.Identity.Name})");
+                _logger.LogInformation($"✅ Randevu #{id} düzenlendi - Durum: {durum} (Admin: {User.Identity.Name})");
                 TempData["SuccessMessage"] = "Randevu başarıyla güncellendi.";
                 return RedirectToAction(nameof(AllRandevular));
             }

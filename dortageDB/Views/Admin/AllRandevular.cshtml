@@ -13,6 +13,8 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 32px;
+        flex-wrap: wrap;
+        gap: 16px;
     }
 
     .page-title {
@@ -33,6 +35,12 @@
         font-weight: 700;
     }
 
+    .header-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
     .btn-back {
         background: #f3f4f6;
         color: #374151;
@@ -44,10 +52,32 @@
         align-items: center;
         gap: 8px;
         transition: all 0.2s;
+        border: none;
+        cursor: pointer;
     }
 
         .btn-back:hover {
             background: #e5e7eb;
+        }
+
+    .btn-new-randevu {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-new-randevu:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
         }
 
     .filters-bar {
@@ -182,20 +212,11 @@
         }
 
     .btn-edit {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-        .btn-edit:hover {
-            background: #bfdbfe;
-        }
-
-    .btn-status {
         background: #fef3c7;
         color: #92400e;
     }
 
-        .btn-status:hover {
+        .btn-edit:hover {
             background: #fde68a;
         }
 
@@ -220,6 +241,7 @@
         z-index: 9999;
         align-items: center;
         justify-content: center;
+        overflow-y: auto;
     }
 
         .modal-overlay.active {
@@ -230,9 +252,12 @@
         background: white;
         border-radius: 16px;
         padding: 32px;
-        max-width: 500px;
+        max-width: 600px;
         width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
         box-shadow: 0 20px 25px rgba(0, 0, 0, 0.25);
+        margin: 20px;
     }
 
     .modal-header {
@@ -273,6 +298,12 @@
         margin-bottom: 24px;
     }
 
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
     .form-group {
         margin-bottom: 16px;
     }
@@ -286,20 +317,27 @@
         }
 
         .form-group select,
-        .form-group input {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 10px 14px;
             border: 2px solid #e5e7eb;
             border-radius: 8px;
             font-size: 14px;
+            font-family: inherit;
         }
 
             .form-group select:focus,
-            .form-group input:focus {
+            .form-group input:focus,
+            .form-group textarea:focus {
                 outline: none;
                 border-color: #000a68;
                 box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
             }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
 
     .modal-footer {
         display: flex;
@@ -344,6 +382,27 @@
             background: #b91c1c;
         }
 
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+    .detail-label {
+        font-weight: 600;
+        color: #6b7280;
+    }
+
+    .detail-value {
+        color: #1f2937;
+        font-weight: 500;
+    }
+
     .empty-state {
         text-align: center;
         padding: 80px 20px;
@@ -363,7 +422,11 @@
     }
 
     table {
-        min-width: 800px;
+        min-width: 900px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
     }
 
     }
@@ -371,6 +434,15 @@
 
 <div class="topraktar-main-panel">
     <div class="main-content">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-error">@TempData["ErrorMessage"]</div>
+        }
+
         <div class="page-header">
             <div>
                 <h1 class="page-title">
@@ -379,9 +451,14 @@
                 </h1>
                 <p style="color: #6b7280;">Sistemde toplam @Model.Count() randevu</p>
             </div>
-            <a asp-action="Index" class="btn-back">
-                ← Dashboard'a Dön
-            </a>
+            <div class="header-actions">
+                <button type="button" class="btn-new-randevu" onclick="openCreateModal()">
+                    ➕ Yeni Randevu
+                </button>
+                <a asp-action="Index" class="btn-back">
+                    ← Dashboard'a Dön
+                </a>
+            </div>
         </div>
 
         <div class="filters-bar">
@@ -415,21 +492,37 @@
                             <th>Bölge</th>
                             <th>Tip</th>
                             <th>Durum</th>
+                            <th style="text-align: center;">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var randevu in Model)
                         {
-                            <tr data-status="@randevu.RandevuDurum.ToString()"
-                                data-search="@randevu.Musteri.Ad @randevu.Musteri.Soyad @randevu.Topraktar.Ad @randevu.Topraktar.Soyad">
+                            var musteriAd = $"{randevu.Musteri.Ad} {randevu.Musteri.Soyad}";
+                            var topraktarAd = $"{randevu.Topraktar.Ad} {randevu.Topraktar.Soyad}";
+                            var tarih = randevu.RandevuZaman.ToString("dd MMM yyyy HH:mm");
+                            var durum = randevu.RandevuDurum.ToString();
+
+                            <tr data-status="@durum.ToLower()"
+                                data-search="@musteriAd @topraktarAd">
                                 <td><strong>#@randevu.RandevuID</strong></td>
-                                <td>@randevu.Musteri.Ad @randevu.Musteri.Soyad</td>
-                                <td>@randevu.Topraktar.Ad @randevu.Topraktar.Soyad</td>
-                                <td>@randevu.RandevuZaman.ToString("dd MMM yyyy HH:mm")</td>
+                                <td>
+                                    <div style="line-height: 1.4;">
+                                        <strong>@musteriAd</strong><br />
+                                        <span style="font-size: 12px; color: #6b7280;">(@randevu.Musteri.Telefon)</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="line-height: 1.4;">
+                                        <strong>@topraktarAd</strong><br />
+                                        <span style="font-size: 12px; color: #6b7280;">(@randevu.Topraktar.PhoneNumber)</span>
+                                    </div>
+                                </td>
+                                <td>@tarih</td>
                                 <td>@randevu.Bolge</td>
                                 <td>@randevu.RandevuTipi</td>
                                 <td>
-                                    <span class="status-badge status-@randevu.RandevuDurum.ToString().ToLower()">
+                                    <span class="status-badge status-@durum.ToLower()">
                                         @switch (randevu.RandevuDurum)
                                         {
                                             case RandevuDurum.pending:
@@ -450,6 +543,34 @@
                                         }
                                     </span>
                                 </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view"
+                                                data-musteri="@musteriAd"
+                                                data-topraktar="@topraktarAd"
+                                                data-tarih="@tarih"
+                                                data-bolge="@randevu.Bolge"
+                                                data-tip="@randevu.RandevuTipi"
+                                                data-durum="@durum"
+                                                onclick="openViewModalData(this)">
+                                            👁️ Görüntüle
+                                        </button>
+                                        <button class="btn-action btn-edit"
+                                                data-id="@randevu.RandevuID"
+                                                data-zaman="@randevu.RandevuZaman.ToString("yyyy-MM-ddTHH:mm")"
+                                                data-bolge="@randevu.Bolge"
+                                                data-tip="@randevu.RandevuTipi"
+                                                data-durum="@randevu.RandevuDurum.ToString()"
+                                                onclick="openEditModalData(this)">
+                                            ✏️ Düzenle
+                                        </button>
+                                        <button class="btn-action btn-delete"
+                                                data-id="@randevu.RandevuID"
+                                                onclick="openDeleteModalData(this)">
+                                            🗑️ Sil
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -467,7 +588,289 @@
     </div>
 </div>
 
+<!-- Create Randevu Modal -->
+<div class="modal-overlay" id="createModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>➕ Yeni Randevu Ekle</h3>
+            <button type="button" class="modal-close" onclick="closeCreateModal()">×</button>
+        </div>
+        <form asp-controller="Admin" asp-action="CreateRandevu" method="post">
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Müşteri *</label>
+                        <select name="MusteriId" required>
+                            <option value="">Müşteri Seçin</option>
+                            @{
+                                var musteriler = ViewContext.HttpContext.RequestServices
+                                .GetService(typeof(dortageDB.Data.AppDbContext)) as dortageDB.Data.AppDbContext;
+                                if (musteriler != null)
+                                {
+                                    foreach (var m in musteriler.Musteriler.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
+                                    {
+                                        <option value="@m.IdMusteri">@m.Ad @m.Soyad (@m.Telefon)</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Topraktar *</label>
+                        <select name="TopraktarID" required>
+                            <option value="">Topraktar Seçin</option>
+                            @{
+                                var userManager = ViewContext.HttpContext.RequestServices
+                                .GetService(typeof(Microsoft.AspNetCore.Identity.UserManager<dortageDB.Entities.AppUser>))
+                                as Microsoft.AspNetCore.Identity.UserManager<dortageDB.Entities.AppUser>;
+                                if (userManager != null)
+                                {
+                                    var topraktarlar = await userManager.GetUsersInRoleAsync("topraktar");
+                                    foreach (var t in topraktarlar.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
+                                    {
+                                        <option value="@t.Id">@t.Ad @t.Soyad (@t.PhoneNumber)</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Randevu Tarihi & Saati *</label>
+                        <input type="datetime-local" name="RandevuZaman" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Randevu Tipi *</label>
+                        <input type="text" name="RandevuTipi" placeholder="Örn: Arazi Gezisi" required maxlength="50">
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label>Bölge *</label>
+                    <textarea name="Bolge" rows="2" maxlength="500" placeholder="Randevu bölgesi" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-cancel" onclick="closeCreateModal()">İptal</button>
+                <button type="submit" class="btn-modal btn-save">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- View Randevu Modal -->
+<div class="modal-overlay" id="viewModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>👁️ Randevu Detayları</h3>
+            <button type="button" class="modal-close" onclick="closeViewModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="detail-row">
+                <span class="detail-label">Müşteri:</span>
+                <span class="detail-value" id="viewMusteri"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Topraktar:</span>
+                <span class="detail-value" id="viewTopraktar"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Randevu Tarihi:</span>
+                <span class="detail-value" id="viewTarih"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Bölge:</span>
+                <span class="detail-value" id="viewBolge"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Randevu Tipi:</span>
+                <span class="detail-value" id="viewTip"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Durum:</span>
+                <span class="detail-value" id="viewDurum"></span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-modal btn-cancel" onclick="closeViewModal()">Kapat</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Randevu Modal -->
+<!-- Edit Randevu Modal -->
+<div class="modal-overlay" id="editModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>✏️ Randevuyu Düzenle</h3>
+            <button type="button" class="modal-close" onclick="closeEditModal()">×</button>
+        </div>
+        <form asp-controller="Admin" asp-action="EditRandevu" method="post">
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <input type="hidden" name="id" id="editRandevuId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Randevu Tarihi & Saati *</label>
+                        <input type="datetime-local" name="randevuZaman" id="editZaman" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Randevu Tipi *</label>
+                        <input type="text" name="randevuTipi" id="editTip" placeholder="Örn: Arazi Gezisi" required maxlength="50">
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label>Bölge *</label>
+                    <textarea name="bolge" id="editBolge" rows="2" maxlength="500" required></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label>Randevu Durumu *</label>
+                    <select name="randevuDurum" id="editDurum" required>
+                        <option value="pending">⏳ Bekliyor</option>
+                        <option value="confirmed">✓ Onaylandı</option>
+                        <option value="completed">✓ Tamamlandı</option>
+                        <option value="cancelled">✗ İptal</option>
+                        <option value="no_show">⚠ Gelmedi</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-cancel" onclick="closeEditModal()">İptal</button>
+                <button type="submit" class="btn-modal btn-save">Güncelle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3>🗑️ Randevuyu Sil</h3>
+            <button type="button" class="modal-close" onclick="closeDeleteModal()">×</button>
+        </div>
+        <form asp-controller="Admin" asp-action="DeleteRandevu" method="post">
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <input type="hidden" name="id" id="deleteRandevuId">
+                <p style="color: #6b7280; line-height: 1.6;">
+                    Bu randevuyu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-cancel" onclick="closeDeleteModal()">İptal</button>
+                <button type="submit" class="btn-modal btn-confirm-delete">Evet, Sil</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+    console.log('✅ AllRandevular sayfası yüklendi');
+
+    // Create Modal
+    function openCreateModal() {
+        console.log('➕ Create modal açılıyor');
+        document.getElementById('createModal').classList.add('active');
+    }
+
+    function closeCreateModal() {
+        document.getElementById('createModal').classList.remove('active');
+    }
+
+    // View Modal - DATA ATTRIBUTE İLE
+    function openViewModalData(button) {
+        const musteri = button.getAttribute('data-musteri');
+        const topraktar = button.getAttribute('data-topraktar');
+        const tarih = button.getAttribute('data-tarih');
+        const bolge = button.getAttribute('data-bolge');
+        const tip = button.getAttribute('data-tip');
+        const durum = button.getAttribute('data-durum');
+
+        console.log('👁️ View modal açılıyor');
+
+        document.getElementById('viewMusteri').textContent = musteri;
+        document.getElementById('viewTopraktar').textContent = topraktar;
+        document.getElementById('viewTarih').textContent = tarih;
+        document.getElementById('viewBolge').textContent = bolge;
+        document.getElementById('viewTip').textContent = tip;
+        document.getElementById('viewDurum').textContent = getDurumText(durum);
+
+        document.getElementById('viewModal').classList.add('active');
+    }
+
+    function closeViewModal() {
+        document.getElementById('viewModal').classList.remove('active');
+    }
+
+    // Edit Modal - DATA ATTRIBUTE İLE
+        function openEditModalData(button) {
+        const id = button.getAttribute('data-id');
+        const zaman = button.getAttribute('data-zaman');
+        const bolge = button.getAttribute('data-bolge');
+        const tip = button.getAttribute('data-tip');
+        const durum = button.getAttribute('data-durum');
+
+        console.log('✏️ Edit modal açılıyor - ID:', id);
+
+        document.getElementById('editRandevuId').value = id;
+        document.getElementById('editZaman').value = zaman;
+        document.getElementById('editBolge').value = bolge;
+        document.getElementById('editTip').value = tip;
+        document.getElementById('editDurum').value = durum;
+
+        document.getElementById('editModal').classList.add('active');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.remove('active');
+    }
+
+    // Delete Modal - DATA ATTRIBUTE İLE
+    function openDeleteModalData(button) {
+        const id = button.getAttribute('data-id');
+        console.log('🗑️ Delete modal açılıyor - ID:', id);
+
+        document.getElementById('deleteRandevuId').value = id;
+        document.getElementById('deleteModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('active');
+    }
+
+    // Helper function for status text
+    function getDurumText(durum) {
+        switch(durum.toLowerCase()) {
+            case 'pending': return '⏳ Bekliyor';
+            case 'confirmed': return '✓ Onaylandı';
+            case 'completed': return '✓ Tamamlandı';
+            case 'cancelled': return '✗ İptal';
+            case 'no_show': return '⚠ Gelmedi';
+            default: return durum;
+        }
+    }
+
+    // Close modals on overlay click & ESC key
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+    });
+
     // Filter by status
     document.getElementById('statusFilter')?.addEventListener('change', function() {
         filterTable();

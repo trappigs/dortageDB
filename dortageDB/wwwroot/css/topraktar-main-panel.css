@@ -274,7 +274,7 @@
     padding: 20px;
     border: 1px solid #e5e7eb;
     transition: all 0.3s ease;
-    z-index: 999;
+    z-index: 998; /* 999'dan 998'e düþürdük */
 }
 
 .topraktar-main-panel .sidebar.collapsed .stats-card {
@@ -530,13 +530,11 @@
     }
 
     .topraktar-main-panel .stats-card {
-        left: 16px;
-        right: 16px;
+        position: relative;
+        bottom: auto;
+        left: auto;
         width: auto;
-    }
-
-    .topraktar-main-panel .nav-menu {
-        padding-bottom: 200px;
+        margin: 16px 16px 16px 16px;
     }
 
     /* Reset collapsed state for mobile */

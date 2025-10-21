@@ -51,15 +51,18 @@
         }
 
         @@keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
+            from
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         }
 
         /* Page Loading Overlay */
@@ -90,9 +93,12 @@
         }
 
         @@keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to
+
+        {
+            transform: rotate(360deg);
+        }
+
         }
 
         /* Custom Scrollbar */
@@ -122,6 +128,55 @@
             background: #f9fafb;
             overflow-x: hidden;
         }
+
+        /* Stats Card Mobile Fix */
+        @@media (max-width: 768px) {
+            .topraktar-main-panel .stats-card
+
+        {
+            position: static !important;
+            width: auto !important;
+            left: auto !important;
+            bottom: auto !important;
+            margin: 16px !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            transform: none !important;
+        }
+
+        .topraktar-main-panel .nav-menu {
+            padding-bottom: 20px !important;
+        }
+
+        .topraktar-main-panel .sidebar {
+            overflow-y: auto;
+        }
+
+        }
+
+        /* Stats Card Desktop */
+        @@media (min-width: 769px) {
+            .topraktar-main-panel .stats-card
+
+        {
+            position: fixed;
+            bottom: 24px;
+            left: 16px;
+            width: 248px;
+            z-index: 998;
+        }
+
+        .topraktar-main-panel .sidebar.collapsed .stats-card {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-20px);
+        }
+
+        .topraktar-main-panel .nav-menu {
+            padding-bottom: 200px;
+        }
+
+        }
     </style>
 </head>
 <body class="topraktar-main-panel">
@@ -140,7 +195,7 @@
     </button>
 
     <!-- Mobile Overlay -->
-    <div class="mobile-overlay" id="mobileOverlay"></div>
+    @* <div class="mobile-overlay" id="mobileOverlay"></div> *@
 
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar" role="navigation" aria-label="Ana navigasyon">
@@ -182,6 +237,41 @@
         </div>
 
         <!-- Navigation Menu -->
+        @{
+            var context = ViewContext.HttpContext.RequestServices.GetService(typeof(dortageDB.Data.AppDbContext)) as dortageDB.Data.AppDbContext;
+            var currentUserId = user?.Id ?? 0;
+
+            var totalSalesCount = 0;
+            var totalCommission = 0m;
+            var totalMusteriler = 0;
+            var pendingRandevular = 0;
+
+            if (context != null && currentUserId > 0)
+            {
+                // Sadece bu topraktara ait veriler
+                totalSalesCount = context.Satislar.Count(s => s.TopraktarID == currentUserId);
+                totalCommission = context.Satislar
+                .Where(s => s.TopraktarID == currentUserId)
+                .Sum(s => (decimal?)s.OdenecekKomisyon) ?? 0;
+
+                // Müşteri sayısını hesaplama - iki yöntem:
+                // 1. Tüm müşteriler: totalMusteriler = context.Musteriler.Count();
+                // 2. Bu topraktarın müşterileri (randevu veya satış yapmış):
+                var musteriIdsFromRandevu = context.Randevular
+                .Where(r => r.TopraktarID == currentUserId)
+                .Select(r => r.MusteriId)
+                .Distinct();
+                var musteriIdsFromSatis = context.Satislar
+                .Where(s => s.TopraktarID == currentUserId)
+                .Select(s => s.SatilanMusteriID)
+                .Distinct();
+                totalMusteriler = musteriIdsFromRandevu.Union(musteriIdsFromSatis).Count();
+
+                pendingRandevular = context.Randevular
+                .Count(r => r.TopraktarID == currentUserId && r.RandevuDurum == dortageDB.Entities.RandevuDurum.pending);
+            }
+        }
+
         <ul class="nav-menu">
             <li class="nav-item">
                 <a asp-controller="Dashboard" asp-action="Index"
@@ -207,7 +297,10 @@
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
                     <span class="nav-text">Müşterilerim</span>
-                    <span class="nav-badge badge-blue" id="musteriCount">0</span>
+                    @if (totalMusteriler > 0)
+                    {
+                        <span class="nav-badge badge-blue">@totalMusteriler</span>
+                    }
                     <span class="tooltip">Müşterilerim</span>
                 </a>
             </li>
@@ -222,7 +315,10 @@
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
                     <span class="nav-text">Randevularım</span>
-                    <span class="nav-badge badge-orange pulse" id="randevuCount">0</span>
+                    @if (pendingRandevular > 0)
+                    {
+                        <span class="nav-badge badge-orange pulse">@pendingRandevular</span>
+                    }
                     <span class="tooltip">Randevularım</span>
                 </a>
             </li>
@@ -315,7 +411,7 @@
                     <polyline points="16 7 22 7 22 13"></polyline>
                 </svg>
                 <span class="stat-label">Satış</span>
-                <span class="stat-value blue" id="totalSales">0</span>
+                <span class="stat-value blue">@totalSalesCount</span>
             </div>
             <div class="stat-item">
                 <svg class="stat-icon" viewBox="0 0 24 24">
@@ -323,7 +419,7 @@
                     <line x1="2" y1="10" x2="22" y2="10"></line>
                 </svg>
                 <span class="stat-label">Komisyon</span>
-                <span class="stat-value green" id="totalCommission">₺0</span>
+                <span class="stat-value green">₺@totalCommission.ToString("N0")</span>
             </div>
         </div>
     </nav>
@@ -455,20 +551,6 @@
         window.addEventListener('load', () => {
             pageLoading?.classList.remove('active');
         });
-
-        // ===================================
-        // Dynamic Badge Updates (Optional)
-        // ===================================
-        // You can fetch and update counts via AJAX if needed
-        // Example:
-        // fetch('/api/dashboard/counts')
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         document.getElementById('musteriCount').textContent = data.musteriCount;
-        //         document.getElementById('randevuCount').textContent = data.randevuCount;
-        //         document.getElementById('totalSales').textContent = data.totalSales;
-        //         document.getElementById('totalCommission').textContent = '₺' + data.totalCommission;
-        //     });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

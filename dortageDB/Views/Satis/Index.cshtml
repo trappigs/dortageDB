@@ -1,0 +1,496 @@
+﻿@model IEnumerable<Satis>
+
+@{
+    ViewData["Title"] = "Satışlarım";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #000a68;
+        margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+        color: #6b7280;
+        font-size: 16px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+    .stat-label {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+        .stat-value.blue {
+            color: #000a68;
+        }
+
+        .stat-value.green {
+            color: #10b981;
+        }
+
+        .stat-value.orange {
+            color: #f59e0b;
+        }
+
+    .stat-change {
+        font-size: 13px;
+        color: #10b981;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    /* Filters */
+    .filters-bar {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+        .filter-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+    /* Sales Table */
+    .sales-table {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead {
+        background: #f9fafb;
+    }
+
+    th {
+        padding: 16px;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
+        cursor: pointer;
+        user-select: none;
+    }
+
+        th:hover {
+            background: #f3f4f6;
+        }
+
+    td {
+        padding: 16px;
+        font-size: 14px;
+        color: #6b7280;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    tr:hover {
+        background: #f9fafb;
+    }
+
+    .customer-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .customer-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .customer-details {
+        flex: 1;
+    }
+
+    .customer-name {
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 2px;
+    }
+
+    .customer-phone {
+        font-size: 12px;
+        color: #9ca3af;
+    }
+
+    .amount {
+        font-weight: 700;
+        color: #000a68;
+        font-size: 15px;
+    }
+
+    .commission {
+        font-weight: 600;
+        color: #10b981;
+        font-size: 15px;
+    }
+
+    .payment-badge {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .payment-taksit {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .payment-pesin {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .btn-view {
+        padding: 8px 16px;
+        background: #dbeafe;
+        color: #1e40af;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+    }
+
+        .btn-view:hover {
+            background: #bfdbfe;
+            transform: translateY(-2px);
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 12px;
+    }
+
+    .empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    /* Info Banner */
+    .info-banner {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #1e40af;
+        font-size: 14px;
+    }
+
+        .info-banner svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+    @@media (max-width: 768px) {
+        .stats-grid
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .sales-table {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 800px;
+    }
+
+    .filter-group {
+        min-width: 100%;
+    }
+
+    }
+</style>
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">💰 Satışlarım</h1>
+            <p class="page-subtitle">Tüm satış kayıtlarınızı görüntüleyin</p>
+        </div>
+
+        <!-- Info Banner -->
+        <div class="info-banner">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>Satış kayıtları yalnızca yönetici tarafından eklenebilir. Satış yaptığınızda lütfen yöneticinize bilgi verin.</span>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Toplam Satış</div>
+                <div class="stat-value blue">@ViewBag.TotalSales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Toplam Ciro</div>
+                <div class="stat-value">₺@ViewBag.TotalRevenue.ToString("N0")</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Toplam Komisyon</div>
+                <div class="stat-value green">₺@ViewBag.TotalCommission.ToString("N0")</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Ortalama Satış</div>
+                <div class="stat-value">₺@ViewBag.AvgSaleValue.ToString("N0")</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Bu Ay Satış</div>
+                <div class="stat-value blue">@ViewBag.ThisMonthSales</div>
+                <div class="stat-change">
+                    ↑ ₺@ViewBag.ThisMonthRevenue.ToString("N0")
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Ödeme Tipi</div>
+                <div class="stat-value orange">@ViewBag.TaksitCount Taksit</div>
+                <div class="stat-change" style="color: #6b7280;">
+                    @ViewBag.PesinCount Peşin
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <div class="filter-group">
+                <label>Ara</label>
+                <input type="text" id="searchInput" placeholder="Müşteri ara...">
+            </div>
+            <div class="filter-group">
+                <label>Ödeme Tipi</label>
+                <select id="paymentFilter">
+                    <option value="">Tümü</option>
+                    <option value="pesin">Peşin</option>
+                    <option value="taksit">Taksitli</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Tarih Aralığı</label>
+                <select id="dateFilter">
+                    <option value="">Tümü</option>
+                    <option value="today">Bugün</option>
+                    <option value="week">Bu Hafta</option>
+                    <option value="month">Bu Ay</option>
+                    <option value="year">Bu Yıl</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Sales Table -->
+        @if (Model.Any())
+        {
+            <div class="sales-table">
+                <table id="salesTable">
+                    <thead>
+                        <tr>
+                            <th>Satış ID</th>
+                            <th>Müşteri</th>
+                            <th>Tarih</th>
+                            <th>Bölge</th>
+                            <th>Tutar</th>
+                            <th>Komisyon</th>
+                            <th>Ödeme</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var satis in Model)
+                        {
+                            var initials = $"{satis.Musteri.Ad.Substring(0, 1)}{satis.Musteri.Soyad.Substring(0, 1)}";
+                            var customerName = $"{satis.Musteri.Ad} {satis.Musteri.Soyad}";
+                            var saleDate = satis.SatilmaTarihi;
+                            var paymentType = satis.Taksit ? "taksit" : "pesin";
+
+                            <tr data-search="@customerName"
+                                data-payment="@paymentType"
+                                data-date="@saleDate.ToString("yyyy-MM-dd")">
+                                <td><strong>#@satis.SatisID</strong></td>
+                                <td>
+                                    <div class="customer-info">
+                                        <div class="customer-avatar">@initials</div>
+                                        <div class="customer-details">
+                                            <div class="customer-name">@customerName</div>
+                                            <div class="customer-phone">@satis.Musteri.Telefon</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@saleDate.ToString("dd MMM yyyy")</td>
+                                <td>@satis.Bolge</td>
+                                <td><span class="amount">₺@satis.ToplamSatisFiyati.ToString("N2")</span></td>
+                                <td><span class="commission">₺@satis.OdenecekKomisyon.ToString("N2")</span></td>
+                                <td>
+                                    <span class="payment-badge payment-@paymentType">
+                                        @(satis.Taksit ? "💳 Taksitli" : "💵 Peşin")
+                                    </span>
+                                </td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@satis.SatisID" class="btn-view">
+                                        👁️ Detay
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon">📊</div>
+                <h3 style="color: #1f2937; margin-bottom: 8px;">Henüz satış kaydınız yok</h3>
+                <p style="color: #6b7280;">Satış yaptığınızda kayıtlar burada görünecek</p>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Filter functionality
+    const searchInput = document.getElementById('searchInput');
+    const paymentFilter = document.getElementById('paymentFilter');
+    const dateFilter = document.getElementById('dateFilter');
+    const tableRows = document.querySelectorAll('#salesTable tbody tr');
+
+    function filterTable() {
+        const searchTerm = searchInput?.value.toLowerCase() || '';
+        const paymentType = paymentFilter?.value.toLowerCase() || '';
+        const dateRange = dateFilter?.value || '';
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        tableRows.forEach(row => {
+            const searchData = row.getAttribute('data-search').toLowerCase();
+            const payment = row.getAttribute('data-payment');
+            const dateStr = row.getAttribute('data-date');
+            const rowDate = new Date(dateStr);
+
+            // Search filter
+            const searchMatch = !searchTerm || searchData.includes(searchTerm);
+
+            // Payment filter
+            const paymentMatch = !paymentType || payment === paymentType;
+
+            // Date filter
+            let dateMatch = true;
+            if (dateRange === 'today') {
+                dateMatch = rowDate.toDateString() === today.toDateString();
+            } else if (dateRange === 'week') {
+                const weekAgo = new Date(today);
+                weekAgo.setDate(today.getDate() - 7);
+                dateMatch = rowDate >= weekAgo;
+            } else if (dateRange === 'month') {
+                dateMatch = rowDate.getMonth() === today.getMonth() &&
+                           rowDate.getFullYear() === today.getFullYear();
+            } else if (dateRange === 'year') {
+                dateMatch = rowDate.getFullYear() === today.getFullYear();
+            }
+
+            row.style.display = (searchMatch && paymentMatch && dateMatch) ? '' : 'none';
+        });
+    }
+
+    searchInput?.addEventListener('input', filterTable);
+    paymentFilter?.addEventListener('change', filterTable);
+    dateFilter?.addEventListener('change', filterTable);
+</script>
