@@ -51,18 +51,15 @@
         }
 
         @@keyframes slideIn {
-            from
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
 
-        {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Page Loading Overlay */
@@ -93,12 +90,9 @@
         }
 
         @@keyframes spin {
-            to
-
-        {
-            transform: rotate(360deg);
-        }
-
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Custom Scrollbar */
@@ -170,19 +164,21 @@
             var user = await UserManager.GetUserAsync(User);
             var initials = user != null ? $"{user.Ad?.Substring(0, 1)}{user.Soyad?.Substring(0, 1)}" : "??";
             var fullName = user != null ? $"{user.Ad} {user.Soyad}" : "Kullanıcı";
+            var isAdmin = User.IsInRole("admin");
+            var isTopraktar = User.IsInRole("topraktar");
         }
         <div class="user-profile">
             <div class="user-avatar">@initials</div>
             <div class="user-name">@fullName</div>
-            @if (User.IsInRole("topraktar"))
+            @if (isTopraktar)
             {
                 <span class="user-role">Topraktar</span>
             }
-            @if (User.IsInRole("admin"))
+            @if (isAdmin)
             {
                 <span class="user-role" style="background: rgba(239, 68, 68, 0.2); color: #dc2626;">Admin</span>
             }
-            <div class="user-code">REF: TRK2024@(user?.Id ?? 0)</div>
+            <div class="user-code">REF: TRK@(user?.Id ?? 0)</div>
         </div>
 
         <!-- Navigation Menu -->
@@ -232,7 +228,7 @@
             </li>
 
             <li class="nav-item">
-                <a @* asp-controller="Satis" asp-action="Index" *@
+                <a asp-controller="Satis" asp-action="Index"
                    class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Satis" ? "active" : "")">
                     <svg class="nav-icon" viewBox="0 0 24 24">
                         <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
@@ -254,6 +250,22 @@
                     <span class="tooltip">Topraktar Akademisi</span>
                 </a>
             </li>
+
+            @if (isAdmin)
+            {
+                <li class="nav-item" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+                    <a asp-controller="Admin" asp-action="Index"
+                       class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                        <span class="nav-text">Admin Panel</span>
+                        <span class="nav-badge badge-red">★</span>
+                        <span class="tooltip">Admin Panel</span>
+                    </a>
+                </li>
+            }
 
             <li class="nav-item">
                 <a asp-controller="Settings" asp-action="Profile"

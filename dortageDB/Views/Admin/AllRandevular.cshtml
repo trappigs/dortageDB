@@ -1,0 +1,500 @@
+﻿@model IEnumerable<Randevu>
+
+@{
+    ViewData["Title"] = "Tüm Randevular";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+    }
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #000a68;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .admin-badge {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .btn-back {
+        background: #f3f4f6;
+        color: #374151;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+
+        .btn-back:hover {
+            background: #e5e7eb;
+        }
+
+    .filters-bar {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+        .filter-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+    .randevular-table {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead {
+        background: #f9fafb;
+    }
+
+    th {
+        padding: 16px;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    td {
+        padding: 16px;
+        font-size: 14px;
+        color: #6b7280;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    tr:hover {
+        background: #f9fafb;
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-confirmed {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .status-completed {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .status-no_show {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .btn-action {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-view {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+        .btn-view:hover {
+            background: #bfdbfe;
+        }
+
+    .btn-edit {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+        .btn-edit:hover {
+            background: #bfdbfe;
+        }
+
+    .btn-status {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+        .btn-status:hover {
+            background: #fde68a;
+        }
+
+    .btn-delete {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+        .btn-delete:hover {
+            background: #fecaca;
+        }
+
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 20px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: background 0.2s;
+    }
+
+        .modal-close:hover {
+            background: #f3f4f6;
+        }
+
+    .modal-body {
+        margin-bottom: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+            .form-group select:focus,
+            .form-group input:focus {
+                outline: none;
+                border-color: #000a68;
+                box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
+            }
+
+    .modal-footer {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    .btn-modal {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-cancel {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+        .btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+    .btn-save {
+        background: linear-gradient(135deg, #000a68 0%, #001a88 100%);
+        color: white;
+    }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+        }
+
+    .btn-confirm-delete {
+        background: #dc2626;
+        color: white;
+    }
+
+        .btn-confirm-delete:hover {
+            background: #b91c1c;
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+    }
+
+    .empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    @@media (max-width: 768px) {
+        .randevular-table
+
+    {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 800px;
+    }
+
+    }
+</style>
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">
+                    Tüm Randevular
+                    <span class="admin-badge">ADMIN</span>
+                </h1>
+                <p style="color: #6b7280;">Sistemde toplam @Model.Count() randevu</p>
+            </div>
+            <a asp-action="Index" class="btn-back">
+                ← Dashboard'a Dön
+            </a>
+        </div>
+
+        <div class="filters-bar">
+            <div class="filter-group">
+                <label>Durum</label>
+                <select id="statusFilter">
+                    <option value="">Tümü</option>
+                    <option value="pending">Bekliyor</option>
+                    <option value="confirmed">Onaylandı</option>
+                    <option value="completed">Tamamlandı</option>
+                    <option value="cancelled">İptal</option>
+                    <option value="no_show">Gelmedi</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Ara</label>
+                <input type="text" id="searchInput" placeholder="Müşteri veya topraktar ara...">
+            </div>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="randevular-table">
+                <table id="randevularTable">
+                    <thead>
+                        <tr>
+                            <th>Randevu ID</th>
+                            <th>Müşteri</th>
+                            <th>Topraktar</th>
+                            <th>Tarih & Saat</th>
+                            <th>Bölge</th>
+                            <th>Tip</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var randevu in Model)
+                        {
+                            <tr data-status="@randevu.RandevuDurum.ToString()"
+                                data-search="@randevu.Musteri.Ad @randevu.Musteri.Soyad @randevu.Topraktar.Ad @randevu.Topraktar.Soyad">
+                                <td><strong>#@randevu.RandevuID</strong></td>
+                                <td>@randevu.Musteri.Ad @randevu.Musteri.Soyad</td>
+                                <td>@randevu.Topraktar.Ad @randevu.Topraktar.Soyad</td>
+                                <td>@randevu.RandevuZaman.ToString("dd MMM yyyy HH:mm")</td>
+                                <td>@randevu.Bolge</td>
+                                <td>@randevu.RandevuTipi</td>
+                                <td>
+                                    <span class="status-badge status-@randevu.RandevuDurum.ToString().ToLower()">
+                                        @switch (randevu.RandevuDurum)
+                                        {
+                                            case RandevuDurum.pending:
+                                                @:⏳ Bekliyor
+                                                break;
+                                            case RandevuDurum.confirmed:
+                                                @:✓ Onaylandı
+                                                break;
+                                            case RandevuDurum.completed:
+                                                @:✓ Tamamlandı
+                                                break;
+                                            case RandevuDurum.cancelled:
+                                                @:✗ İptal
+                                                break;
+                                            case RandevuDurum.no_show:
+                                                @:⚠ Gelmedi
+                                                break;
+                                        }
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon">📅</div>
+                <h3 style="color: #1f2937; margin-bottom: 8px;">Henüz randevu yok</h3>
+                <p style="color: #6b7280;">Sistemde kayıtlı randevu bulunmuyor</p>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Filter by status
+    document.getElementById('statusFilter')?.addEventListener('change', function() {
+        filterTable();
+    });
+
+    // Search functionality
+    document.getElementById('searchInput')?.addEventListener('input', function() {
+        filterTable();
+    });
+
+    function filterTable() {
+        const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('#randevularTable tbody tr');
+
+        rows.forEach(row => {
+            const status = row.getAttribute('data-status').toLowerCase();
+            const searchData = row.getAttribute('data-search').toLowerCase();
+
+            const statusMatch = !statusFilter || status === statusFilter;
+            const searchMatch = !searchTerm || searchData.includes(searchTerm);
+
+            if (statusMatch && searchMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+</script>

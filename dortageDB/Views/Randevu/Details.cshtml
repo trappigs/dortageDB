@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Randevu Detayları";
     Layout = "_LayoutTopraktar";
+    var isAdmin = User.IsInRole("admin");
 }
 
 <link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
@@ -198,21 +199,18 @@
     }
 
     @@media (max-width: 768px) {
-        .details-grid
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
 
-    {
-        grid-template-columns: 1fr;
-    }
+        .action-buttons {
+            flex-direction: column;
+        }
 
-    .action-buttons {
-        flex-direction: column;
-    }
-
-    .btn {
-        width: 100%;
-        justify-content: center;
-    }
-
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
 
@@ -262,7 +260,7 @@
                             <line x1="12" y1="8" x2="12" y2="12"></line>
                             <line x1="12" y1="16" x2="12.01" y2="16"></line>
                         </svg>
-                        Randevu durumu değişiklikleri sadece admin yetkisi ile yapılabilir.
+                        Randevu durumu değişiklikleri için lütfen Dortage Yönetim Ekibi ile iletişime geçin.
                     </div>
                 }
 
@@ -302,20 +300,23 @@
                         }
                     }
 
-                    <a asp-action="Edit" asp-route-id="@Model.RandevuID" class="btn btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                        Düzenle
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@Model.RandevuID" class="btn btn-danger">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                        Sil
-                    </a>
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.RandevuID" class="btn btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Düzenle
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.RandevuID" class="btn btn-danger">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            Sil
+                        </a>
+                    }
                 </div>
             </div>
 

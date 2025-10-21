@@ -191,7 +191,7 @@ namespace dortageDB.Controllers
             return View(randevular);
         }
 
-        // GET: Admin/AllSatislar
+        // GET: Admin/AllSatislar - GÜNCELLEME
         public async Task<IActionResult> AllSatislar()
         {
             var satislar = await _context.Satislar
@@ -200,8 +200,155 @@ namespace dortageDB.Controllers
                 .OrderByDescending(s => s.SatilmaTarihi)
                 .ToListAsync();
 
+            // Dropdown'lar için veri hazırla
+            ViewBag.Musteriler = await _context.Musteriler
+                .OrderBy(m => m.Ad)
+                .ThenBy(m => m.Soyad)
+                .ToListAsync();
+
+            ViewBag.Topraktarlar = await _userManager.GetUsersInRoleAsync("topraktar");
+
             return View(satislar);
         }
+        // POST: Admin/CreateSatis
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateSatis(int SatilanMusteriID, int TopraktarID,
+            DateTime SatilmaTarihi, decimal ToplamSatisFiyati, string Bolge, bool Taksit, decimal OdenecekKomisyon)
+        {
+            try
+            {
+                // Validate inputs
+                if (string.IsNullOrWhiteSpace(Bolge) || ToplamSatisFiyati <= 0 || OdenecekKomisyon < 0)
+                {
+                    TempData["ErrorMessage"] = "Geçersiz veri girişi.";
+                    return RedirectToAction(nameof(AllSatislar));
+                }
+
+                // Müşteri ve Topraktar kontrolü
+                var musteri = await _context.Musteriler.FindAsync(SatilanMusteriID);
+                var topraktar = await _userManager.FindByIdAsync(TopraktarID.ToString());
+
+                if (musteri == null || topraktar == null)
+                {
+                    TempData["ErrorMessage"] = "Geçersiz müşteri veya topraktar.";
+                    return RedirectToAction(nameof(AllSatislar));
+                }
+
+                var satis = new Satis
+                {
+                    SatilanMusteriID = SatilanMusteriID,
+                    TopraktarID = TopraktarID,
+                    SatilmaTarihi = SatilmaTarihi,
+                    ToplamSatisFiyati = ToplamSatisFiyati,
+                    Bolge = Bolge.Trim(),
+                    Taksit = Taksit,
+                    OdenecekKomisyon = OdenecekKomisyon
+                };
+
+                _context.Satislar.Add(satis);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"✅ Yeni satış oluşturuldu: #{satis.SatisID} - ₺{satis.ToplamSatisFiyati} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Satış başarıyla eklendi.";
+                return RedirectToAction(nameof(AllSatislar));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Satış oluşturma hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllSatislar));
+            }
+        }
+
+
+        // POST: Admin/EditSatis
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSatis(int SatisID, int SatilanMusteriID, int TopraktarID,
+            DateTime SatilmaTarihi, decimal ToplamSatisFiyati, string Bolge, bool Taksit, decimal OdenecekKomisyon)
+        {
+            try
+            {
+                var satis = await _context.Satislar.FindAsync(SatisID);
+                if (satis == null)
+                {
+                    TempData["ErrorMessage"] = "Satış bulunamadı.";
+                    return RedirectToAction(nameof(AllSatislar));
+                }
+
+                // Validate inputs
+                if (string.IsNullOrWhiteSpace(Bolge) || ToplamSatisFiyati <= 0 || OdenecekKomisyon < 0)
+                {
+                    TempData["ErrorMessage"] = "Geçersiz veri girişi.";
+                    return RedirectToAction(nameof(AllSatislar));
+                }
+
+                // Müşteri ve Topraktar kontrolü
+                var musteri = await _context.Musteriler.FindAsync(SatilanMusteriID);
+                var topraktar = await _userManager.FindByIdAsync(TopraktarID.ToString());
+
+                if (musteri == null || topraktar == null)
+                {
+                    TempData["ErrorMessage"] = "Geçersiz müşteri veya topraktar.";
+                    return RedirectToAction(nameof(AllSatislar));
+                }
+
+                // Update satis
+                satis.SatilanMusteriID = SatilanMusteriID;
+                satis.TopraktarID = TopraktarID;
+                satis.SatilmaTarihi = SatilmaTarihi;
+                satis.ToplamSatisFiyati = ToplamSatisFiyati;
+                satis.Bolge = Bolge.Trim();
+                satis.Taksit = Taksit;
+                satis.OdenecekKomisyon = OdenecekKomisyon;
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"✅ Satış #{SatisID} güncellendi - ₺{ToplamSatisFiyati} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Satış başarıyla güncellendi.";
+                return RedirectToAction(nameof(AllSatislar));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Satış güncelleme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllSatislar));
+            }
+        }
+
+        // POST: Admin/DeleteSatis
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteSatis(int id)
+        {
+            try
+            {
+                var satis = await _context.Satislar.FindAsync(id);
+                if (satis == null)
+                {
+                    TempData["ErrorMessage"] = "Satış bulunamadı.";
+                    return RedirectToAction(nameof(AllSatislar));
+                }
+
+                var satisInfo = $"#{satis.SatisID} - ₺{satis.ToplamSatisFiyati}";
+
+                _context.Satislar.Remove(satis);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"✅ Satış {satisInfo} silindi (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Satış başarıyla silindi.";
+                return RedirectToAction(nameof(AllSatislar));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Satış silme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllSatislar));
+            }
+        }
+
+
 
         // GET: Admin/AllTopraktars
         public async Task<IActionResult> AllTopraktars()
@@ -228,6 +375,114 @@ namespace dortageDB.Controllers
 
             ViewBag.TopraktarData = topraktarData;
             return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateRandevuStatus(int id, string status)
+        {
+            try
+            {
+                var randevu = await _context.Randevular.FindAsync(id);
+                if (randevu == null)
+                {
+                    TempData["ErrorMessage"] = "Randevu bulunamadı.";
+                    return RedirectToAction(nameof(AllRandevular));
+                }
+
+                // Parse status to enum
+                if (Enum.TryParse<RandevuDurum>(status, true, out var randevuDurum))
+                {
+                    randevu.RandevuDurum = randevuDurum;
+                    await _context.SaveChangesAsync();
+
+                    _logger.LogInformation($"✅ Randevu #{id} durumu güncellendi: {randevuDurum} (Admin: {User.Identity.Name})");
+                    TempData["SuccessMessage"] = "Randevu durumu başarıyla güncellendi.";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Geçersiz durum değeri.";
+                }
+
+                return RedirectToAction(nameof(AllRandevular));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Randevu durum güncelleme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllRandevular));
+            }
+        }
+
+        // POST: Admin/EditRandevu
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditRandevu(int id, DateTime randevuZaman, string bolge, string randevuTipi)
+        {
+            try
+            {
+                var randevu = await _context.Randevular.FindAsync(id);
+                if (randevu == null)
+                {
+                    TempData["ErrorMessage"] = "Randevu bulunamadı.";
+                    return RedirectToAction(nameof(AllRandevular));
+                }
+
+                // Validate inputs
+                if (string.IsNullOrWhiteSpace(bolge) || string.IsNullOrWhiteSpace(randevuTipi))
+                {
+                    TempData["ErrorMessage"] = "Tüm alanlar doldurulmalıdır.";
+                    return RedirectToAction(nameof(AllRandevular));
+                }
+
+                // Update randevu
+                randevu.RandevuZaman = randevuZaman;
+                randevu.Bolge = bolge.Trim();
+                randevu.RandevuTipi = randevuTipi.Trim();
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"✅ Randevu #{id} düzenlendi (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Randevu başarıyla güncellendi.";
+                return RedirectToAction(nameof(AllRandevular));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Randevu düzenleme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllRandevular));
+            }
+        }
+
+
+        // POST: Admin/DeleteRandevu
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteRandevu(int id)
+        {
+            try
+            {
+                var randevu = await _context.Randevular.FindAsync(id);
+                if (randevu == null)
+                {
+                    TempData["ErrorMessage"] = "Randevu bulunamadı.";
+                    return RedirectToAction(nameof(AllRandevular));
+                }
+
+                _context.Randevular.Remove(randevu);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"✅ Randevu #{id} silindi (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Randevu başarıyla silindi.";
+                return RedirectToAction(nameof(AllRandevular));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Randevu silme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllRandevular));
+            }
         }
     }
 }
