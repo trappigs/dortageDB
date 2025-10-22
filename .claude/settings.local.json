@@ -17,7 +17,13 @@
       "Bash(powershell -Command \"cd ''C:\\Users\\mami\\Desktop\\claude-code-project\\dortageDB''; dotnet ef database update\")",
       "Bash(powershell -Command \"cd ''C:\\Users\\mami\\Desktop\\claude-code-project\\dortageDB\\Views\\Home''; (Get-Content Index.cshtml) -replace '' data-aos=\"\"[^\"\"]*\"\"'', '''' -replace '' data-aos-delay=\"\"[^\"\"]*\"\"'', '''' | Set-Content Index.cshtml\")",
       "WebFetch(domain:web-project-71.preview.emergentagent.com)",
-      "Bash(powershell -Command \"cd ''C:\\Users\\mami\\Desktop\\claude-code-project\\dortageDB''; dotnet ef migrations add AddYatirimTuruToProje\")"
+      "Bash(powershell -Command \"cd ''C:\\Users\\mami\\Desktop\\claude-code-project\\dortageDB''; dotnet ef migrations add AddYatirimTuruToProje\")",
+      "Bash(powershell -Command \"Test-Path ''C:\\Users\\mami\\Desktop\\claude-code-project\\dortageDB\\Views\\Admin''\")",
+      "Bash(powershell -Command:*)",
+      "Read(//c/Users/mami/Desktop/btlast/Views/Partials/**)",
+      "Read(//c/Users/mami/Desktop/btlast/wwwroot/css/**)",
+      "Read(//c/Users/mami/Desktop/btlast/wwwroot/scripts/**)",
+      "Read(//c/Users/mami/Desktop/btlast/Views/**)"
     ],
     "deny": [],
     "ask": []

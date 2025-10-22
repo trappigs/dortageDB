@@ -1,6 +1,6 @@
 /* ===================================
    DORTAGE PROJELER SAYFASI CSS
-   Bereketli Topraklar'dan İlham
+   Bereketli Topraklar Tasarımından İlham
    =================================== */
 
 :root {
@@ -11,7 +11,7 @@
     --danger-color: #ef4444;
     --text-dark: #1f2937;
     --text-light: #6b7280;
-    --bg-light: #f9fafb;
+    --bg-light: #E9E8E6;
     --white: #ffffff;
     --border-color: #e5e7eb;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -23,432 +23,336 @@
     --radius-lg: 16px;
 }
 
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/latoregular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* ===================================
    PAGE TITLE
    =================================== */
 
 .page-title-section {
     padding: 120px 0 40px;
-    background: var(--white);
+    background: var(--primary-color);
     text-align: center;
 }
 
 .page-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--primary-color);
-    letter-spacing: 0.05em;
+    font-size: 2.8rem;
+    font-weight: 400;
+    color: var(--white);
+    letter-spacing: 1.5px;
     margin: 0;
+    display: inline-block;
 }
 
 /* ===================================
-   FİLTRE SECTİON
+   FİLTRE SECTİON - Gizli (isteğe bağlı)
    =================================== */
 
 .filtre-section {
-    padding: 40px 0;
-    background: var(--bg-light);
-}
-
-.filtre-card {
-    background: var(--white);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    box-shadow: var(--shadow-md);
-}
-
-.filtre-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 8px;
-}
-
-.filtre-icon {
-    width: 16px;
-    height: 16px;
-    stroke: var(--primary-color);
-}
-
-.filtre-select,
-.filtre-input {
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-}
-
-.filtre-select:focus,
-.filtre-input:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
-    outline: none;
-}
-
-.filtre-check {
-    padding: 12px 16px;
-    background: var(--bg-light);
-    border-radius: var(--radius-sm);
-    margin-bottom: 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.filtre-check .form-check-input {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border-color);
-    cursor: pointer;
-    margin: 0;
-    flex-shrink: 0;
-}
-
-.filtre-check .form-check-input:checked {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.filtre-check .form-check-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    margin: 0;
-    padding: 0;
-}
-
-.check-icon {
-    width: 16px;
-    height: 16px;
-    stroke: var(--text-light);
-    flex-shrink: 0;
-}
-
-.btn-filtre {
-    width: 100%;
-    height: 100%;
-    min-height: 46px;
-    background: var(--primary-color);
-    border: none;
-    border-radius: var(--radius-sm);
-    color: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-filtre:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-}
-
-.btn-filtre svg {
-    width: 20px;
-    height: 20px;
-}
-
-.active-filters {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border-color);
-}
-
-.filter-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-dark);
-}
-
-.btn-clear-filters {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: transparent;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    color: var(--text-light);
-    font-size: 0.875rem;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.btn-clear-filters:hover {
-    background: var(--bg-light);
-    color: var(--text-dark);
-}
-
-.btn-clear-filters svg {
-    width: 14px;
-    height: 14px;
+    display: none; /* Bereketli Topraklar tasarımında filtre yok */
 }
 
 /* ===================================
-   PROJELER GRID
+   PROJELER GRID - YENİ TASARIM
    =================================== */
 
 .projeler-grid-section {
-    padding: 0px 0 100px;
-}
-
-.proje-card {
-    background: var(--white);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    transition: all 0.3s ease;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--border-color);
-}
-
-.proje-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-xl);
-}
-
-.proje-image {
-    position: relative;
-    width: 100%;
-    height: 240px;
-    background-size: cover;
-    background-position: center;
+    padding: 80px 0;
     background-color: var(--bg-light);
 }
 
-.proje-placeholder {
-    display: flex;
-    align-items: center;
+.projeler-grid-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.projeler-grid-section .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 30px;
     justify-content: center;
-    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
 }
 
-.proje-placeholder svg {
-    width: 64px;
-    height: 64px;
-    stroke: var(--text-light);
-}
-
-.proje-placeholder p {
+/* YENİ Badge - Kağıt köşesi */
+.paper-corner-badge {
     position: absolute;
-    bottom: 20px;
-    color: var(--text-light);
-    font-size: 0.875rem;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 55px 55px 0 0;
+    border-color: #045129 transparent transparent transparent;
+    z-index: 15;
+    transition: transform 0.3s ease;
 }
 
-.proje-badge {
+.paper-corner-badge::before {
+    content: "YENİ";
     position: absolute;
-    top: 16px;
-    right: 16px;
-    padding: 6px 12px;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
+    top: -42px;
+    left: 4px;
+    color: white;
+    font-size: 0.60rem;
+    font-weight: 700;
     letter-spacing: 0.5px;
+    transform: rotate(-45deg);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
-.badge-hot {
-    background: var(--danger-color);
-    color: var(--white);
+.paper-corner-badge::after {
+    content: "";
+    position: absolute;
+    top: -55px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 4px 4px 0 0;
+    border-color: rgba(0,0,0,0.15) transparent transparent transparent;
+    transform: translate(-4px, 55px);
 }
 
-.badge-new {
-    background: var(--success-color);
-    color: var(--white);
-}
+/* ===================================
+   PROJE KARTLARI
+   =================================== */
 
-.proje-content {
-    padding: 24px;
-    flex-grow: 1;
+.project-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    position: relative;
+    height: 400px;
     display: flex;
     flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.proje-header {
-    margin-bottom: 16px;
+.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
 }
 
-.proje-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-dark);
-    margin-bottom: 8px;
+.project-card:hover .paper-corner-badge {
+    transform: scale(1.05);
 }
 
-.proje-location {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.9rem;
-    color: var(--text-light);
+/* Üst Başlık Alanı */
+.project-card .card-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    text-align: center;
+    background: linear-gradient(rgba(255,255,255,0.35), rgba(255,255,255,0.35));
+    z-index: 10;
 }
 
-.proje-location svg {
-    width: 16px;
-    height: 16px;
-    stroke: var(--primary-color);
-}
-
-.proje-description {
-    font-size: 0.95rem;
-    color: var(--text-light);
-    line-height: 1.6;
-    margin-bottom: 16px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.proje-features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
-}
-
-.feature-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    background: rgba(0, 10, 104, 0.05);
-    border-radius: 50px;
-    font-size: 0.75rem;
+.project-card .card-title {
+    font-family: 'Lato', sans-serif;
+    font-size: 1.5rem !important;
     font-weight: 600;
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
+    margin: 0;
+    letter-spacing: 1.2px;
+    text-shadow: 0 2px 4px rgba(255,255,255,0.8);
+    position: relative;
+    z-index: 11;
 }
 
-.feature-badge svg {
-    width: 12px;
-    height: 12px;
-    stroke: var(--success-color);
+.project-card:hover .card-title {
+    color: white !important;
 }
 
-.proje-progress {
-    margin-bottom: 20px;
-    padding: 16px;
-    background: var(--bg-light);
-    border-radius: var(--radius-sm);
-}
-
-.progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.progress-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-dark);
-}
-
-.progress-percent {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--primary-color);
-}
-
-.progress {
-    height: 8px;
-    background: var(--white);
-    border-radius: 50px;
-    overflow: hidden;
-    margin-bottom: 8px;
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--success-color) 0%, var(--primary-color) 100%);
-    transition: width 0.6s ease;
-}
-
-.progress-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: var(--text-light);
-}
-
-.progress-info .kalan {
-    font-weight: 600;
-    color: var(--success-color);
-}
-
-.proje-footer {
-    margin-top: auto;
-    padding-top: 20px;
-    border-top: 1px solid var(--border-color);
-}
-
-.proje-price {
-    margin-bottom: 16px;
-}
-
-.price {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--primary-color);
-}
-
-.price-range {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.price-from,
-.price-to {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: var(--primary-color);
-}
-
-.price-separator {
-    color: var(--text-light);
-}
-
-.btn-proje-detail {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 12px 24px;
+/* Yatırım Türü Badge (ARSA/KONUT) */
+.yatirim-badge {
+    position: absolute;
+    top: 19px;
+    right: 10px;
     background: var(--primary-color);
-    color: var(--white);
-    border: none;
-    border-radius: var(--radius-sm);
+    color: white;
+    padding: 0.8em 1.2em;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.60rem;
     font-weight: 600;
-    text-decoration: none;
+    letter-spacing: 0.5px;
+    z-index: 12;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
 }
 
-.btn-proje-detail:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    color: var(--white);
+.yatirim-badge.arsa-beyaz {
+    background: #ffffff !important;
+    color: var(--primary-color);
 }
 
-.btn-proje-detail svg {
-    width: 18px;
-    height: 18px;
+.yatirim-badge i {
+    color: #FFD700;
+    font-size: 0.9rem;
+}
+
+.yatirim-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Görsel Alanı */
+.card-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.card-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.project-card:hover .card-image-container img {
+    transform: scale(1.05);
+    filter: brightness(0.7);
+}
+
+/* Açıklama Overlay'i */
+.card-description-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.8;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 2;
+}
+
+.project-card:hover .card-description-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+.card-description-overlay p {
+    margin: 0;
+    font-weight: 300;
+}
+
+/* Alt Footer Alanı */
+.card-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+/* Konum Badge */
+.location-info {
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    z-index: 12;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+
+.location-info i {
+    color: white;
+    font-size: 0.8rem;
+}
+
+.location-info:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Buton Alanı */
+.card-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+    flex-wrap: nowrap;
+}
+
+.btn {
+    padding: 0.8em 1.8em;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: 1.5px solid;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    z-index: 11;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: white;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-secondary {
+    background-color: white;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: white;
 }
 
 /* ===================================
@@ -478,6 +382,129 @@
     font-size: 1rem;
     color: var(--text-light);
     margin-bottom: 24px;
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .page-title-section {
+        padding: 100px 0 30px;
+    }
+
+    .projeler-grid-section {
+        padding: 40px 0 60px;
+    }
+
+    .projeler-grid-section .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .project-card {
+        height: 350px;
+    }
+
+    .project-card .card-title {
+        font-size: 1.3rem !important;
+    }
+
+    .card-description-overlay {
+        padding: 20px;
+        padding-top: 70px;
+        padding-bottom: 80px;
+        font-size: 0.9rem;
+    }
+
+    .card-footer {
+        padding: 12px;
+        gap: 6px;
+    }
+
+    .location-info {
+        font-size: 0.7rem;
+        padding: 5px 10px;
+    }
+
+    .btn {
+        font-size: 0.7rem;
+        padding: 0.7em 1.4em;
+    }
+
+    .card-actions {
+        gap: 6px;
+    }
+
+    .paper-corner-badge {
+        border-width: 45px 45px 0 0;
+    }
+
+    .paper-corner-badge::before {
+        top: -35px;
+        left: 3px;
+        font-size: 0.55rem;
+    }
+
+    .paper-corner-badge::after {
+        top: -45px;
+        border-width: 3px 3px 0 0;
+        transform: translate(-3px, 45px);
+    }
+}
+
+@media (max-width: 576px) {
+    .page-title {
+        font-size: 1.75rem;
+        letter-spacing: 1px;
+    }
+
+    .page-title-section {
+        padding: 90px 0 25px;
+    }
+}
+
+@media (max-width: 425px) {
+    .btn {
+        padding: 0.6em 1.2em;
+        font-size: 0.65rem;
+    }
+
+    .card-footer {
+        padding: 10px;
+    }
+
+    .location-info {
+        font-size: 0.65rem;
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 375px) {
+    .btn {
+        padding: 0.5em 1em;
+        font-size: 0.6rem;
+    }
+
+    .card-actions {
+        gap: 4px;
+    }
+}
+
+@media (max-width: 320px) {
+    .btn {
+        padding: 0.4em 0.8em;
+        font-size: 0.55rem;
+    }
+}
+
+@media (min-width: 769px) {
+    .location-info {
+        left: 28px;
+    }
 }
 
 /* ===================================
@@ -535,6 +562,16 @@
     letter-spacing: 0.5px;
 }
 
+.badge-hot {
+    background: var(--danger-color);
+    color: var(--white);
+}
+
+.badge-new {
+    background: var(--success-color);
+    color: var(--white);
+}
+
 .detail-title {
     font-size: 2.5rem;
     font-weight: 800;
@@ -565,6 +602,8 @@
     border-radius: var(--radius-lg);
     padding: 32px;
     border: 2px solid var(--border-color);
+    position: sticky;
+    top: 20px;
 }
 
 .price-box {
@@ -590,6 +629,7 @@
     display: flex;
     align-items: baseline;
     gap: 12px;
+    justify-content: center;
 }
 
 .price-sep {
@@ -615,6 +655,20 @@
 .stock-percent {
     font-weight: 700;
     color: var(--primary-color);
+}
+
+.progress {
+    height: 8px;
+    background: var(--border-color);
+    border-radius: 50px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--success-color) 0%, var(--primary-color) 100%);
+    transition: width 0.6s ease;
 }
 
 .stock-remaining {
@@ -792,19 +846,6 @@
     height: 20px;
 }
 
-.btn-primary {
-    background: var(--primary-color);
-    color: var(--white);
-    border: 2px solid var(--primary-color);
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark);
-    border-color: var(--primary-dark);
-    color: var(--white);
-    transform: translateY(-2px);
-}
-
 .btn-outline {
     background: transparent;
     color: var(--primary-color);
@@ -838,67 +879,31 @@
 }
 
 /* ===================================
-   RESPONSIVE DESIGN
+   DETAY RESPONSIVE
    =================================== */
 
 @media (max-width: 992px) {
-    .page-title {
-        font-size: 2rem;
-    }
-
-    .page-title-section {
-        padding: 100px 0 30px;
-    }
-
     .detail-title {
         font-size: 2rem;
-    }
-
-    .filtre-card {
-        padding: 24px;
     }
 
     .detail-sidebar {
         position: static;
         margin-top: 40px;
     }
+
+    .detail-quick-info {
+        position: static;
+    }
 }
 
 @media (max-width: 768px) {
-    .page-title {
-        font-size: 1.75rem;
-    }
-
-    .page-title-section {
-        padding: 90px 0 25px;
-    }
-
     .detail-title {
         font-size: 1.75rem;
     }
 
-    .filtre-section {
-        padding: 30px 0;
-    }
-
-    .projeler-grid-section {
-        padding: 40px 0 60px;
-    }
-
     .proje-detail-content {
         padding: 40px 0 60px;
-    }
-
-    .filtre-card {
-        padding: 20px;
-    }
-
-    .filtre-check {
-        margin-bottom: 12px;
-    }
-
-    .btn-filtre {
-        margin-top: 12px;
     }
 
     .price-value {
@@ -911,29 +916,8 @@
 }
 
 @media (max-width: 576px) {
-    .page-title {
-        font-size: 1.5rem;
-        letter-spacing: 0.03em;
-    }
-
-    .page-title-section {
-        padding: 80px 0 20px;
-    }
-
     .detail-title {
         font-size: 1.5rem;
-    }
-
-    .proje-card {
-        margin-bottom: 20px;
-    }
-
-    .proje-image {
-        height: 200px;
-    }
-
-    .proje-content {
-        padding: 20px;
     }
 
     .contact-card,

@@ -174,6 +174,7 @@ namespace dortageDB.Controllers
             var musteriler = await _context.Musteriler
                 .Include(m => m.Randevular)
                 .Include(m => m.Satislar)
+                .Include(m => m.Topraktar)
                 .OrderByDescending(m => m.IdMusteri)
                 .ToListAsync();
 
@@ -540,6 +541,208 @@ namespace dortageDB.Controllers
                 TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
                 return RedirectToAction(nameof(AllRandevular));
             }
+        }
+
+        // ====================================
+        // PROJE YÖNETİMİ
+        // ====================================
+
+        // GET: Admin/Projeler
+        public async Task<IActionResult> Projeler()
+        {
+            var projeler = await _context.Projeler
+                .OrderByDescending(p => p.Oncelik)
+                .ThenByDescending(p => p.KayitTarihi)
+                .ToListAsync();
+
+            return View(projeler);
+        }
+
+        // GET: Admin/CreateProje
+        public IActionResult CreateProje()
+        {
+            return View();
+        }
+
+        // POST: Admin/CreateProje
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateProje(Proje proje)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(proje.ProjeAdi) || string.IsNullOrWhiteSpace(proje.Konum))
+                {
+                    TempData["ErrorMessage"] = "Proje adı ve konum zorunludur.";
+                    return View(proje);
+                }
+
+                proje.KayitTarihi = DateTime.Now;
+                proje.AktifMi = true;
+
+                _context.Projeler.Add(proje);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"✅ Yeni proje oluşturuldu: {proje.ProjeAdi} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Proje başarıyla oluşturuldu.";
+                return RedirectToAction(nameof(Projeler));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Proje oluşturma hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return View(proje);
+            }
+        }
+
+        // GET: Admin/EditProje/5
+        public async Task<IActionResult> EditProje(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var proje = await _context.Projeler.FindAsync(id);
+            if (proje == null)
+            {
+                return NotFound();
+            }
+
+            return View(proje);
+        }
+
+        // POST: Admin/EditProje/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProje(int id, Proje proje)
+        {
+            if (id != proje.ProjeID)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(proje.ProjeAdi) || string.IsNullOrWhiteSpace(proje.Konum))
+                {
+                    TempData["ErrorMessage"] = "Proje adı ve konum zorunludur.";
+                    return View(proje);
+                }
+
+                var existingProje = await _context.Projeler.FindAsync(id);
+                if (existingProje == null)
+                {
+                    return NotFound();
+                }
+
+                // Update properties
+                existingProje.ProjeAdi = proje.ProjeAdi;
+                existingProje.Aciklama = proje.Aciklama;
+                existingProje.Konum = proje.Konum;
+                existingProje.Sehir = proje.Sehir;
+                existingProje.Ilce = proje.Ilce;
+                existingProje.YatirimTuru = proje.YatirimTuru;
+                existingProje.MinFiyat = proje.MinFiyat;
+                existingProje.MaxFiyat = proje.MaxFiyat;
+                existingProje.ToplamParsel = proje.ToplamParsel;
+                existingProje.SatilanParsel = proje.SatilanParsel;
+                existingProje.KapakGorseli = proje.KapakGorseli;
+                existingProje.GaleriGorselleri = proje.GaleriGorselleri;
+                existingProje.Imarlimi = proje.Imarlimi;
+                existingProje.MustakilTapu = proje.MustakilTapu;
+                existingProje.TaksitImkani = proje.TaksitImkani;
+                existingProje.TakasImkani = proje.TakasImkani;
+                existingProje.Altyapi = proje.Altyapi;
+                existingProje.MetreKare = proje.MetreKare;
+                existingProje.KrediyeUygunluk = proje.KrediyeUygunluk;
+                existingProje.OzelliklerJson = proje.OzelliklerJson;
+                existingProje.AktifMi = proje.AktifMi;
+                existingProje.Oncelik = proje.Oncelik;
+                existingProje.GuncellemeTarihi = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"✅ Proje #{id} güncellendi: {proje.ProjeAdi} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Proje başarıyla güncellendi.";
+                return RedirectToAction(nameof(Projeler));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Proje güncelleme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return View(proje);
+            }
+        }
+
+        // GET: Admin/DeleteProje/5
+        public async Task<IActionResult> DeleteProje(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var proje = await _context.Projeler
+                .FirstOrDefaultAsync(m => m.ProjeID == id);
+
+            if (proje == null)
+            {
+                return NotFound();
+            }
+
+            return View(proje);
+        }
+
+        // POST: Admin/DeleteProje/5
+        [HttpPost, ActionName("DeleteProje")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProjeConfirmed(int id)
+        {
+            try
+            {
+                var proje = await _context.Projeler.FindAsync(id);
+                if (proje == null)
+                {
+                    TempData["ErrorMessage"] = "Proje bulunamadı.";
+                    return RedirectToAction(nameof(Projeler));
+                }
+
+                var projeAdi = proje.ProjeAdi;
+                _context.Projeler.Remove(proje);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"✅ Proje silindi: {projeAdi} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Proje başarıyla silindi.";
+                return RedirectToAction(nameof(Projeler));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Proje silme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(Projeler));
+            }
+        }
+
+        // GET: Admin/DetailsProje/5
+        public async Task<IActionResult> DetailsProje(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var proje = await _context.Projeler
+                .Include(p => p.Satislar)
+                .Include(p => p.Randevular)
+                .FirstOrDefaultAsync(m => m.ProjeID == id);
+
+            if (proje == null)
+            {
+                return NotFound();
+            }
+
+            return View(proje);
         }
     }
 }

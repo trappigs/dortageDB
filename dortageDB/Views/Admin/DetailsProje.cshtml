@@ -1,0 +1,209 @@
+@model dortageDB.Entities.Proje
+@{
+    ViewData["Title"] = "Proje Detayları";
+    Layout = "_LayoutTopraktar";
+    var satisYuzdesi = Model.ToplamParsel > 0 ? (double)Model.SatilanParsel / Model.ToplamParsel * 100 : 0;
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mt-4">Proje Detayları</h1>
+        <div>
+            <a asp-action="EditProje" asp-route-id="@Model.ProjeID" class="btn btn-warning">
+                <i class="fas fa-edit me-2"></i>Düzenle
+            </a>
+            <a asp-action="Projeler" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Geri
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-info-circle me-2"></i>Genel Bilgiler
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Proje ID:</dt>
+                        <dd class="col-sm-9">#@Model.ProjeID</dd>
+
+                        <dt class="col-sm-3">Proje Adı:</dt>
+                        <dd class="col-sm-9"><strong>@Model.ProjeAdi</strong></dd>
+
+                        <dt class="col-sm-3">Yatırım Türü:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-@(Model.YatirimTuru == "Arsa" ? "success" : "info") fs-6">
+                                @Model.YatirimTuru
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3">Açıklama:</dt>
+                        <dd class="col-sm-9">@Model.Aciklama</dd>
+
+                        <dt class="col-sm-3">Konum:</dt>
+                        <dd class="col-sm-9">
+                            <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                            @Model.Sehir, @Model.Ilce<br />
+                            <small class="text-muted">@Model.Konum</small>
+                        </dd>
+
+                        <dt class="col-sm-3">Fiyat Aralığı:</dt>
+                        <dd class="col-sm-9">
+                            @if (Model.MinFiyat == Model.MaxFiyat)
+                            {
+                                <strong>@Model.MinFiyat.ToString("N0") ₺</strong>
+                            }
+                            else
+                            {
+                                <strong>@Model.MinFiyat.ToString("N0") ₺ - @Model.MaxFiyat.ToString("N0") ₺</strong>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-3">Metrekare:</dt>
+                        <dd class="col-sm-9">@(Model.MetreKare?.ToString("N0") ?? "-") m²</dd>
+
+                        <dt class="col-sm-3">Durum:</dt>
+                        <dd class="col-sm-9">
+                            @if (Model.AktifMi)
+                            {
+                                <span class="badge bg-success">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Pasif</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-3">Öncelik:</dt>
+                        <dd class="col-sm-9"><span class="badge bg-primary">@Model.Oncelik</span></dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-check-circle me-2"></i>Özellikler
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked="@Model.Imarlimi" disabled>
+                                <label class="form-check-label">İmarlı</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked="@Model.MustakilTapu" disabled>
+                                <label class="form-check-label">Müstakil Tapu</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked="@Model.TaksitImkani" disabled>
+                                <label class="form-check-label">Taksit İmkanı</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked="@Model.TakasImkani" disabled>
+                                <label class="form-check-label">Takas İmkanı</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Altyapi))
+                    {
+                        <div class="mt-3">
+                            <strong>Altyapı:</strong> @Model.Altyapi
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.KrediyeUygunluk))
+                    {
+                        <div class="mt-2">
+                            <strong>Krediye Uygunluk:</strong> @Model.KrediyeUygunluk
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie me-2"></i>Satış Durumu
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <h2 class="display-4 text-@(satisYuzdesi >= 75 ? "danger" : satisYuzdesi >= 50 ? "warning" : "success")">
+                            %@Math.Round(satisYuzdesi, 1)
+                        </h2>
+                        <p class="text-muted">Satış Oranı</p>
+                    </div>
+
+                    <div class="progress mb-3" style="height: 30px;">
+                        <div class="progress-bar bg-@(satisYuzdesi >= 75 ? "danger" : satisYuzdesi >= 50 ? "warning" : "success")"
+                             role="progressbar"
+                             style="width: @satisYuzdesi%">
+                            @Math.Round(satisYuzdesi, 0)%
+                        </div>
+                    </div>
+
+                    <dl class="row mb-0">
+                        <dt class="col-6">Toplam Parsel:</dt>
+                        <dd class="col-6 text-end">@Model.ToplamParsel</dd>
+
+                        <dt class="col-6">Satılan:</dt>
+                        <dd class="col-6 text-end text-danger">@Model.SatilanParsel</dd>
+
+                        <dt class="col-6">Kalan:</dt>
+                        <dd class="col-6 text-end text-success">@(Model.ToplamParsel - Model.SatilanParsel)</dd>
+                    </dl>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.KapakGorseli))
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-image me-2"></i>Kapak Görseli
+                    </div>
+                    <div class="card-body p-0">
+                        <img src="@Model.KapakGorseli" alt="@Model.ProjeAdi" class="img-fluid w-100" />
+                    </div>
+                </div>
+            }
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-calendar me-2"></i>Tarihler
+                    </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-6">Kayıt:</dt>
+                        <dd class="col-6 text-end">@Model.KayitTarihi.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                        @if (Model.GuncellemeTarihi.HasValue)
+                        {
+                            <dt class="col-6">Güncelleme:</dt>
+                            <dd class="col-6 text-end">@Model.GuncellemeTarihi.Value.ToString("dd.MM.yyyy HH:mm")</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+}

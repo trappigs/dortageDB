@@ -1,0 +1,67 @@
+@model dortageDB.Entities.Proje
+@{
+    ViewData["Title"] = "Proje Sil";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+<div class="container-fluid px-4">
+    <h1 class="mt-4 mb-4 text-danger">Proje Sil</h1>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Uyarı: Bu işlem geri alınamaz!
+                </div>
+                <div class="card-body">
+                    <h5>Bu projeyi silmek istediğinizden emin misiniz?</h5>
+
+                    <dl class="row mt-4">
+                        <dt class="col-sm-3">Proje Adı:</dt>
+                        <dd class="col-sm-9">@Model.ProjeAdi</dd>
+
+                        <dt class="col-sm-3">Yatırım Türü:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-@(Model.YatirimTuru == "Arsa" ? "success" : "info")">
+                                @Model.YatirimTuru
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3">Konum:</dt>
+                        <dd class="col-sm-9">@Model.Sehir, @Model.Ilce - @Model.Konum</dd>
+
+                        <dt class="col-sm-3">Fiyat Aralığı:</dt>
+                        <dd class="col-sm-9">@Model.MinFiyat.ToString("N0") ₺ - @Model.MaxFiyat.ToString("N0") ₺</dd>
+
+                        <dt class="col-sm-3">Parsel Durumu:</dt>
+                        <dd class="col-sm-9">@Model.SatilanParsel / @Model.ToplamParsel Satıldı</dd>
+
+                        <dt class="col-sm-3">Kayıt Tarihi:</dt>
+                        <dd class="col-sm-9">@Model.KayitTarihi.ToString("dd.MM.yyyy HH:mm")</dd>
+                    </dl>
+
+                    <form asp-action="DeleteProje" method="post" class="mt-4">
+                        <input type="hidden" asp-for="ProjeID" />
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-2"></i>Evet, Sil
+                            </button>
+                            <a asp-action="Projeler" class="btn btn-secondary">İptal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+}

@@ -1,0 +1,165 @@
+@model dortageDB.Entities.Proje
+@{
+    ViewData["Title"] = "Proje Düzenle";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<style>
+    .form-check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .form-check-input {
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    .form-check-label {
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+    }
+</style>
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+<div class="container-fluid px-4">
+    <h1 class="mt-4 mb-4">Proje Düzenle - @Model.ProjeAdi</h1>
+
+    <div class="row">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header">Proje Bilgileri</div>
+                <div class="card-body">
+                    <form asp-action="EditProje" asp-route-id="@Model.ProjeID" method="post">
+                        <input type="hidden" asp-for="ProjeID" />
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="ProjeAdi" class="form-label">Proje Adı *</label>
+                                <input asp-for="ProjeAdi" class="form-control" required />
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="YatirimTuru" class="form-label">Yatırım Türü *</label>
+                                <select asp-for="YatirimTuru" class="form-select" required>
+                                    <option value="Arsa">Arsa</option>
+                                    <option value="Konut">Konut</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Oncelik" class="form-label">Öncelik</label>
+                                <input asp-for="Oncelik" type="number" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Aciklama" class="form-label">Açıklama *</label>
+                            <textarea asp-for="Aciklama" class="form-control" rows="3" required></textarea>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label asp-for="Sehir" class="form-label">Şehir</label>
+                                <input asp-for="Sehir" class="form-control" />
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Ilce" class="form-label">İlçe</label>
+                                <input asp-for="Ilce" class="form-control" />
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Konum" class="form-label">Konum *</label>
+                                <input asp-for="Konum" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label asp-for="MinFiyat" class="form-label">Min Fiyat (₺)</label>
+                                <input asp-for="MinFiyat" type="number" step="0.01" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="MaxFiyat" class="form-label">Max Fiyat (₺)</label>
+                                <input asp-for="MaxFiyat" type="number" step="0.01" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="ToplamParsel" class="form-label">Toplam Parsel</label>
+                                <input asp-for="ToplamParsel" type="number" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="SatilanParsel" class="form-label">Satılan Parsel</label>
+                                <input asp-for="SatilanParsel" type="number" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="KapakGorseli" class="form-label">Kapak Görseli URL</label>
+                                <input asp-for="KapakGorseli" class="form-control" placeholder="https://..." />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="MetreKare" class="form-label">Metrekare</label>
+                                <input asp-for="MetreKare" type="number" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input asp-for="Imarlimi" class="form-check-input" type="checkbox" checked />
+                                    <label asp-for="Imarlimi" class="form-check-label">İmarlı</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input asp-for="MustakilTapu" class="form-check-input" type="checkbox" checked />
+                                    <label asp-for="MustakilTapu" class="form-check-label">Müstakil Tapu</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input asp-for="TaksitImkani" class="form-check-input" type="checkbox" checked />
+                                    <label asp-for="TaksitImkani" class="form-check-label">Taksit İmkanı</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input asp-for="TakasImkani" class="form-check-input" type="checkbox" />
+                                    <label asp-for="TakasImkani" class="form-check-label">Takas İmkanı</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Altyapi" class="form-label">Altyapı</label>
+                            <input asp-for="Altyapi" class="form-control" placeholder="Elektrik, Su, Kanalizasyon" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="KrediyeUygunluk" class="form-label">Krediye Uygunluk</label>
+                            <input asp-for="KrediyeUygunluk" class="form-control" />
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="form-check">
+                                    <input asp-for="AktifMi" class="form-check-input" type="checkbox" />
+                                    <label asp-for="AktifMi" class="form-check-label">Proje Aktif</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-warning">Proje Güncelle</button>
+                            <a asp-action="Projeler" class="btn btn-secondary">İptal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>

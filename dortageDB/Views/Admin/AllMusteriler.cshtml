@@ -297,6 +297,20 @@
                                 </svg>
                                 @musteri.Sehir
                             </div>
+                            @if (musteri.Topraktar != null)
+                            {
+                                <div class="info-row">
+                                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                    <span style="color: #059669; font-weight: 600;">
+                                        @musteri.Topraktar.Ad @musteri.Topraktar.Soyad (@musteri.Topraktar.PhoneNumber)
+                                    </span>
+                                </div>
+                            }
                         </div>
 
                         <div class="stats-row">
@@ -317,9 +331,9 @@
                             <a asp-controller="Musteri" asp-action="Edit" asp-route-id="@musteri.IdMusteri" class="btn-action btn-edit">
                                 Düzenle
                             </a>
-                            <a asp-controller="Musteri" asp-action="Delete" asp-route-id="@musteri.IdMusteri" class="btn-action btn-delete">
+                            @* <a asp-controller="Musteri" asp-action="Delete" asp-route-id="@musteri.IdMusteri" class="btn-action btn-delete">
                                 Sil
-                            </a>
+                            </a> *@
                         </div>
                     </div>
                 }

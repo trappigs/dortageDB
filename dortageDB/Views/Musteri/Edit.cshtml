@@ -4,6 +4,7 @@
     ViewData["Title"] = "Müşteri Düzenle";
     Layout = "_LayoutTopraktar";
     var musteriId = ViewData["MusteriId"];
+    var isAdmin = User.IsInRole("admin");
 }
 
 <link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
@@ -304,7 +305,15 @@
                 </div>
 
                 <div class="form-actions">
-                    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+                    @if (!isAdmin)
+                    {
+                        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+                    }
+                    else
+                    {
+                        <a asp-action="AllMusteriler" asp-controller="Admin" class="btn btn-secondary">İptal</a>   
+                    }
+                    
                     <button type="submit" class="btn btn-primary">
                         Güncelle
                     </button>
