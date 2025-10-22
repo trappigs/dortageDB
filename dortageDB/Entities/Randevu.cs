@@ -18,6 +18,10 @@ namespace dortageDB.Entities
         public int TopraktarID { get; set; }
         public AppUser Topraktar { get; set; } = null!;
 
+        // Proje İlişkisi (Opsiyonel)
+        public int? ProjeID { get; set; }
+        public Proje? Proje { get; set; }
+
         // Randevu Bilgileri
         [Required, StringLength(100)]
         public string Bolge { get; set; } = null!; // Şehir/İl bilgisi

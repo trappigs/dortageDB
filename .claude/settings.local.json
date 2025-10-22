@@ -9,7 +9,15 @@
       "Bash(dotnet ef database:*)",
       "Bash(Select-String -Pattern \"error|Build succeeded|Build FAILED\")",
       "Bash(taskkill:*)",
-      "Bash(powershell -Command \"Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -Force\")"
+      "Bash(powershell -Command \"Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -Force\")",
+      "Read(//c/Users/mami/Documents/Sözleşmeler/**)",
+      "Bash(powershell -Command \"cd ''C:\\Users\\mami\\Desktop\\claude-code-project\\dortageDB''; dotnet build\")",
+      "WebFetch(domain:www.bereketlitopraklar.com.tr)",
+      "Bash(powershell -Command \"cd ''C:\\Users\\mami\\Desktop\\claude-code-project\\dortageDB''; dotnet ef migrations add AddProjeEntity\")",
+      "Bash(powershell -Command \"cd ''C:\\Users\\mami\\Desktop\\claude-code-project\\dortageDB''; dotnet ef database update\")",
+      "Bash(powershell -Command \"cd ''C:\\Users\\mami\\Desktop\\claude-code-project\\dortageDB\\Views\\Home''; (Get-Content Index.cshtml) -replace '' data-aos=\"\"[^\"\"]*\"\"'', '''' -replace '' data-aos-delay=\"\"[^\"\"]*\"\"'', '''' | Set-Content Index.cshtml\")",
+      "WebFetch(domain:web-project-71.preview.emergentagent.com)",
+      "Bash(powershell -Command \"cd ''C:\\Users\\mami\\Desktop\\claude-code-project\\dortageDB''; dotnet ef migrations add AddYatirimTuruToProje\")"
     ],
     "deny": [],
     "ask": []

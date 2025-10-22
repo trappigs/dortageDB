@@ -6,8 +6,8 @@
 
 .login-form .login-container {
     display: flex;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    padding-top: 104px;
 }
 
 /* Left Section */
@@ -21,6 +21,7 @@
     padding: 60px;
     position: relative;
     overflow: hidden;
+    min-height: calc(100vh - 104px);
 }
 
 .login-form .login-left-section::after {

@@ -15,6 +15,10 @@ namespace dortageDB.Entities
         public int TopraktarID { get; set; }
         public AppUser Topraktar { get; set; } = null!;
 
+        // Proje İlişkisi (Opsiyonel)
+        public int? ProjeID { get; set; }
+        public Proje? Proje { get; set; }
+
         // Satış Bilgileri
         [Required]
         public DateTime SatilmaTarihi { get; set; }

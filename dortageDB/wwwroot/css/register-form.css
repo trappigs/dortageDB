@@ -7,6 +7,7 @@
 .register-form .container {
     display: flex;
     min-height: 100vh;
+    padding-top: 104px;
 }
 
 /* Left Section */

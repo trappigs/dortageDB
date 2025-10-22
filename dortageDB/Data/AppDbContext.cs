@@ -13,6 +13,7 @@ namespace dortageDB.Data
         public DbSet<Randevu> Randevular => Set<Randevu>();
         public DbSet<Satis> Satislar => Set<Satis>();
         public DbSet<Referral> Referrals => Set<Referral>();
+        public DbSet<Proje> Projeler => Set<Proje>();
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
@@ -89,6 +90,12 @@ namespace dortageDB.Data
                     .HasForeignKey(r => r.TopraktarID)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                // Proje İlişkisi
+                entity.HasOne(r => r.Proje)
+                    .WithMany(p => p.Randevular)
+                    .HasForeignKey(r => r.ProjeID)
+                    .OnDelete(DeleteBehavior.SetNull);
+
                 // Enum -> String dönüşümü
                 entity.Property(r => r.RandevuDurum).HasConversion<string>();
 
@@ -124,6 +131,12 @@ namespace dortageDB.Data
                     .HasForeignKey(s => s.TopraktarID)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                // Proje İlişkisi
+                entity.HasOne(s => s.Proje)
+                    .WithMany(p => p.Satislar)
+                    .HasForeignKey(s => s.ProjeID)
+                    .OnDelete(DeleteBehavior.SetNull);
+
                 // İndeksler
                 entity.HasIndex(s => new { s.TopraktarID, s.SatilmaTarihi });
                 entity.HasIndex(s => s.SatilanMusteriID);
@@ -149,6 +162,23 @@ namespace dortageDB.Data
                 entity.HasIndex(r => r.IsActive);
 
                 entity.Property(r => r.CreatedAtUtc).HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            // ============================================
+            // PROJE
+            // ============================================
+            b.Entity<Proje>(entity =>
+            {
+                entity.HasKey(p => p.ProjeID);
+
+                entity.Property(p => p.MinFiyat).HasPrecision(18, 2);
+                entity.Property(p => p.MaxFiyat).HasPrecision(18, 2);
+
+                entity.HasIndex(p => p.Sehir);
+                entity.HasIndex(p => p.AktifMi);
+                entity.HasIndex(p => new { p.AktifMi, p.Oncelik });
+
+                entity.Property(p => p.KayitTarihi).HasDefaultValueSql("GETDATE()");
             });
         }
     }

@@ -1,30 +1,23 @@
 ﻿<div class="nav-menus">
     <!-- Main Navigation -->
     <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
-        <a asp-controller="" asp-action="" class="logo" style="text-decoration: none;">DORTAGE</a>
+        <a asp-controller="" asp-action="" class="logo" style="text-decoration: none;">
+            <img src="~/images/logo.png" alt="Dortage Logo" class="logo-image" />
+        </a>
 
         <!-- Desktop Menu -->
         <ul class="nav-menu">
             <li class="nav-item">
-                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" && ViewContext.RouteData.Values["controller"]?.ToString() == "" ? "active" : "")">Ana Sayfa</a>
+                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" && ViewContext.RouteData.Values["controller"]?.ToString() == "" ? "active" : "")">Anasayfa</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "" ? "active" : "")">
-                    Projeler
-                    <span class="dropdown-arrow">▼</span>
-                </a>
-                <div class="dropdown">
-                    <a asp-controller="" asp-action="" class="dropdown-item">Tüm Projeler</a>
-                    <a asp-controller="" asp-action="" asp-route-city="Istanbul" class="dropdown-item">İstanbul Projeleri</a>
-                    <a asp-controller="" asp-action="" asp-route-city="Ankara" class="dropdown-item">Ankara Projeleri</a>
-                    <a asp-controller="" asp-action="" asp-route-city="Izmir" class="dropdown-item">İzmir Projeleri</a>
-                </div>
+                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Topraktar Nedir?</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Topraktar Ol</a>
+                <a asp-controller="Proje" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Proje" ? "active" : "")">Projeler</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Academy" ? "active" : "")">Topraktar Akademisi</a>
+                <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Academy" ? "active" : "")">Topraktar Akademi</a>
             </li>
             <li class="nav-item">
                 <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Hakkımızda</a>
@@ -62,28 +55,24 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu">
         <div class="mobile-menu-header">
-            <a asp-controller="" asp-action="" class="logo" style="text-decoration: none;">DORTAGE</a>
+            <a asp-controller="" asp-action="" class="logo" style="text-decoration: none;">
+                <img src="~/images/logo.png" alt="Dortage Logo" class="logo-image" />
+            </a>
             <button class="close-menu" aria-label="Menüyü kapat">×</button>
         </div>
 
         <ul class="mobile-nav-menu">
             <li class="mobile-nav-item">
-                <a asp-controller="" asp-action="" class="mobile-nav-link">Ana Sayfa</a>
+                <a asp-controller="" asp-action="" class="mobile-nav-link">Anasayfa</a>
             </li>
             <li class="mobile-nav-item">
-                <a href="#" class="mobile-nav-link" data-dropdown="projects">Projeler ▼</a>
-                <div class="mobile-dropdown-items" id="projects">
-                    <a asp-controller="" asp-action="" class="mobile-dropdown-item">Tüm Projeler</a>
-                    <a asp-controller="" asp-action="" asp-route-city="Istanbul" class="mobile-dropdown-item">İstanbul Projeleri</a>
-                    <a asp-controller="" asp-action="" asp-route-city="Ankara" class="mobile-dropdown-item">Ankara Projeleri</a>
-                    <a asp-controller="" asp-action="" asp-route-city="Izmir" class="mobile-dropdown-item">İzmir Projeleri</a>
-                </div>
+                <a asp-controller="" asp-action="" class="mobile-nav-link">Topraktar Nedir?</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="" asp-action="" class="mobile-nav-link">Topraktar Ol</a>
+                <a asp-controller="Proje" asp-action="Index" class="mobile-nav-link">Projeler</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="" asp-action="" class="mobile-nav-link">Topraktar Akademisi</a>
+                <a asp-controller="" asp-action="" class="mobile-nav-link">Topraktar Akademi</a>
             </li>
             <li class="mobile-nav-item">
                 <a asp-controller="" asp-action="" class="mobile-nav-link">Hakkımızda</a>
