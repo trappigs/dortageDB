@@ -14,6 +14,7 @@ namespace dortageDB.Entities
         public bool Pazarlama { get; set; }
 
         public TopraktarProfile? TopraktarProfile { get; set; }
+        public ICollection<Musteri> Musteriler { get; set; } = new List<Musteri>(); // topraktar olarak eklediği müşteriler
         public ICollection<Randevu> Randevular { get; set; } = new List<Randevu>(); // topraktar olarak
         public ICollection<Satis> Satislar { get; set; } = new List<Satis>();       // topraktar olarak
     }

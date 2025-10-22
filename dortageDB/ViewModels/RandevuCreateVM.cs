@@ -5,10 +5,24 @@ namespace dortageDB.ViewModels
 {
     public class RandevuCreateVM
     {
-        [Required] public int MusteriId { get; set; }
-        [Required, StringLength(500)] public string Bolge { get; set; } = null!;
+        // Mevcut müşteri seçimi
+        public int? MusteriId { get; set; }
+
+        // YENİ MÜŞTERİ BİLGİLERİ (opsiyonel)
+        public bool YeniMusteri { get; set; } // Checkbox için
+        [StringLength(100)] public string? YeniMusteriAd { get; set; }
+        [StringLength(100)] public string? YeniMusteriSoyad { get; set; }
+        [StringLength(15)] public string? YeniMusteriTelefon { get; set; }
+        [StringLength(200), EmailAddress] public string? YeniMusteriEposta { get; set; }
+        [StringLength(100)] public string? YeniMusteriSehir { get; set; }
+        public bool? YeniMusteriCinsiyet { get; set; }
+        [StringLength(11)] public string? YeniMusteriTcNo { get; set; }
+
+        // Randevu bilgileri
+        [Required, StringLength(100)] public string Bolge { get; set; } = null!;
+        [StringLength(500)] public string? Aciklama { get; set; }
         [Required] public DateTime RandevuZaman { get; set; }
         [Required, StringLength(50)] public string RandevuTipi { get; set; } = null!;
-        [Required] public int TopraktarID { get; set; }
+        public int? TopraktarID { get; set; }
     }
 }

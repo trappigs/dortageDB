@@ -21,67 +21,134 @@ namespace dortageDB.Data
         {
             base.OnModelCreating(b);
 
-            // AppUser
-            b.Entity<AppUser>().HasIndex(x => x.TcNo).IsUnique();
-            b.Entity<AppUser>().HasIndex(x => x.PhoneNumber).IsUnique();
-            b.Entity<AppUser>().HasIndex(x => x.Email).IsUnique();
-
-            // Musteri
-            b.Entity<Musteri>().HasKey(x => x.IdMusteri);
-            b.Entity<Musteri>().HasIndex(x => x.Telefon).IsUnique();
-            b.Entity<Musteri>().HasIndex(x => x.TcNo).IsUnique();
-            b.Entity<Musteri>().HasIndex(x => x.Eposta).IsUnique(false);
-
-            // Profile
-            b.Entity<TopraktarProfile>()
-                .HasOne(tp => tp.User).WithOne(u => u.TopraktarProfile)
-                .HasForeignKey<TopraktarProfile>(tp => tp.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Randevu
-            b.Entity<Randevu>()
-                .HasOne(r => r.Musteri).WithMany(m => m.Randevular)
-                .HasForeignKey(r => r.MusteriId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            b.Entity<Randevu>()
-                .HasOne(r => r.Topraktar).WithMany(u => u.Randevular)
-                .HasForeignKey(r => r.TopraktarID);
-
-            b.Entity<Randevu>().Property(r => r.RandevuDurum).HasConversion<string>();
-            b.Entity<Randevu>().HasIndex(r => new { r.RandevuDurum, r.RandevuZaman });
-
-            // Satis
-            b.Entity<Satis>()
-                .Property(s => s.ToplamSatisFiyati).HasPrecision(14, 2);
-            b.Entity<Satis>()
-                .Property(s => s.OdenecekKomisyon).HasPrecision(14, 2);
-
-            b.Entity<Satis>()
-                .HasOne(s => s.Musteri).WithMany(m => m.Satislar)
-                .HasForeignKey(s => s.SatilanMusteriID);
-
-            b.Entity<Satis>()
-                .HasOne(s => s.Topraktar).WithMany(u => u.Satislar)
-                .HasForeignKey(s => s.TopraktarID);
-
-            b.Entity<Satis>().HasIndex(s => new { s.TopraktarID, s.SatilmaTarihi });
-
-            b.Entity<Referral>(e =>
+            // ============================================
+            // IDENTITY TABLES (AppUser, AppRole)
+            // ============================================
+            b.Entity<AppUser>(entity =>
             {
-                // Code alanı zorunlu ve en fazla 32 karakter
-                e.Property(x => x.Code)
+                entity.HasIndex(x => x.TcNo).IsUnique();
+                entity.HasIndex(x => x.PhoneNumber).IsUnique();
+                entity.HasIndex(x => x.Email).IsUnique();
+                entity.HasIndex(x => x.UserName).IsUnique();
+            });
+
+            // ============================================
+            // TOPRAKTAR PROFILE
+            // ============================================
+            b.Entity<TopraktarProfile>(entity =>
+            {
+                entity.HasKey(tp => tp.UserId);
+
+                entity.HasOne(tp => tp.User)
+                    .WithOne(u => u.TopraktarProfile)
+                    .HasForeignKey<TopraktarProfile>(tp => tp.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(tp => tp.TotalCommission).HasPrecision(18, 2);
+                entity.HasIndex(tp => tp.ReferralCode).IsUnique();
+            });
+
+            // ============================================
+            // MUSTERI
+            // ============================================
+            b.Entity<Musteri>(entity =>
+            {
+                entity.HasKey(m => m.IdMusteri);
+
+                // Topraktar İlişkisi
+                entity.HasOne(m => m.Topraktar)
+                    .WithMany(u => u.Musteriler)
+                    .HasForeignKey(m => m.TopraktarID)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(m => m.Telefon).IsUnique();
+                entity.HasIndex(m => m.TcNo).IsUnique();
+                entity.HasIndex(m => m.Eposta).IsUnique(false);
+                entity.HasIndex(m => m.EklenmeTarihi);
+                entity.HasIndex(m => m.TopraktarID);
+
+                entity.Property(m => m.EklenmeTarihi).HasDefaultValueSql("GETDATE()");
+            });
+
+            // ============================================
+            // RANDEVU
+            // ============================================
+            b.Entity<Randevu>(entity =>
+            {
+                entity.HasKey(r => r.RandevuID);
+
+                // Müşteri İlişkisi
+                entity.HasOne(r => r.Musteri)
+                    .WithMany(m => m.Randevular)
+                    .HasForeignKey(r => r.MusteriId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Topraktar İlişkisi
+                entity.HasOne(r => r.Topraktar)
+                    .WithMany(u => u.Randevular)
+                    .HasForeignKey(r => r.TopraktarID)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Enum -> String dönüşümü
+                entity.Property(r => r.RandevuDurum).HasConversion<string>();
+
+                // İndeksler
+                entity.HasIndex(r => new { r.TopraktarID, r.RandevuZaman });
+                entity.HasIndex(r => new { r.RandevuDurum, r.RandevuZaman });
+                entity.HasIndex(r => r.MusteriId);
+
+                // Varsayılan değerler
+                entity.Property(r => r.OlusturulmaTarihi).HasDefaultValueSql("GETDATE()");
+            });
+
+            // ============================================
+            // SATIS
+            // ============================================
+            b.Entity<Satis>(entity =>
+            {
+                entity.HasKey(s => s.SatisID);
+
+                // Decimal Precision
+                entity.Property(s => s.ToplamSatisFiyati).HasPrecision(14, 2);
+                entity.Property(s => s.OdenecekKomisyon).HasPrecision(14, 2);
+
+                // Müşteri İlişkisi
+                entity.HasOne(s => s.Musteri)
+                    .WithMany(m => m.Satislar)
+                    .HasForeignKey(s => s.SatilanMusteriID)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Topraktar İlişkisi
+                entity.HasOne(s => s.Topraktar)
+                    .WithMany(u => u.Satislar)
+                    .HasForeignKey(s => s.TopraktarID)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // İndeksler
+                entity.HasIndex(s => new { s.TopraktarID, s.SatilmaTarihi });
+                entity.HasIndex(s => s.SatilanMusteriID);
+                entity.HasIndex(s => s.SatilmaTarihi);
+
+                // Varsayılan değerler
+                entity.Property(s => s.OlusturulmaTarihi).HasDefaultValueSql("GETDATE()");
+            });
+
+            // ============================================
+            // REFERRAL
+            // ============================================
+            b.Entity<Referral>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+
+                entity.Property(r => r.Code)
                     .HasMaxLength(32)
                     .IsRequired();
 
-                // Code üzerinde benzersiz indeks: aynı koddan yalnızca bir tane olabilir
-                e.HasIndex(x => x.Code)
-                    .IsUnique();
+                entity.HasIndex(r => r.Code).IsUnique();
+                entity.HasIndex(r => r.CreatedByUserId);
+                entity.HasIndex(r => r.IsActive);
 
-                // (İsteğe bağlı) CreatedAtUtc için varsayılan değer atanabilir.
-                // Eğer DB tarafında default istersen:
-                // e.Property(x => x.CreatedAtUtc)
-                //  .HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(r => r.CreatedAtUtc).HasDefaultValueSql("GETUTCDATE()");
             });
         }
     }

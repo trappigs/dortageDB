@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/mami/Desktop/web-deneme/**)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet ef migrations:*)",
+      "Bash(dotnet run)",
+      "Bash(timeout:*)",
+      "Bash(dotnet ef database:*)",
+      "Bash(Select-String -Pattern \"error|Build succeeded|Build FAILED\")",
+      "Bash(taskkill:*)",
+      "Bash(powershell -Command \"Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -Force\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

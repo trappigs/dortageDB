@@ -8,14 +8,24 @@ static async Task CreateAdminUser(IServiceProvider serviceProvider)
 {
     var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
     var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
-    
-    // Admin rol� yoksa olu�tur
+
+    Console.WriteLine("🔧 Admin kullanıcısı kontrol ediliyor...");
+
+    // Admin rolü yoksa oluştur
     if (!await roleManager.RoleExistsAsync("admin"))
     {
         await roleManager.CreateAsync(new AppRole { Name = "admin" });
+        Console.WriteLine("✅ Admin rolü oluşturuldu");
     }
-    
-    // Admin kullan�c�s� yoksa olu�tur
+
+    // Topraktar rolü yoksa oluştur
+    if (!await roleManager.RoleExistsAsync("topraktar"))
+    {
+        await roleManager.CreateAsync(new AppRole { Name = "topraktar" });
+        Console.WriteLine("✅ Topraktar rolü oluşturuldu");
+    }
+
+    // Admin kullanıcısı yoksa oluştur
     var adminUser = await userManager.FindByEmailAsync("admin@dortage.com");
     if (adminUser == null)
     {
@@ -24,21 +34,42 @@ static async Task CreateAdminUser(IServiceProvider serviceProvider)
             UserName = "admin@dortage.com",
             Email = "admin@dortage.com",
             EmailConfirmed = true,
+            PhoneNumber = "05001234567",
             Ad = "Admin",
-            Soyad = "User",
-            Sehir = "�stanbul",
+            Soyad = "DORTAGE",
+            Sehir = "İstanbul",
+            TcNo = "12345678901",
             Cinsiyet = true,
             Kvkk = true,
             Pazarlama = false
         };
-        
-        await userManager.CreateAsync(adminUser, "Admin123!");
-        await userManager.AddToRoleAsync(adminUser, "Admin");
+
+        var result = await userManager.CreateAsync(adminUser, "Admin123!");
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, "admin");
+            Console.WriteLine("✅ Admin kullanıcısı oluşturuldu:");
+            Console.WriteLine($"   Email: admin@dortage.com");
+            Console.WriteLine($"   Şifre: Admin123!");
+        }
+        else
+        {
+            Console.WriteLine("❌ Admin kullanıcısı oluşturulamadı:");
+            foreach (var error in result.Errors)
+            {
+                Console.WriteLine($"   - {error.Description}");
+            }
+        }
+    }
+    else
+    {
+        Console.WriteLine("ℹ️  Admin kullanıcısı zaten mevcut");
     }
 }
+
 var builder = WebApplication.CreateBuilder(args);
 
-Console.WriteLine("=== UYGULAMA BA�LATILIYOR ===");
+Console.WriteLine("=== UYGULAMA BAŞLATILIYOR ===");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -50,29 +81,29 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Identity
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
 {
-    // �ifre gereksinimleri
+    // Şifre gereksinimleri
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
 
-    // Kullan�c� ayarlar�
+    // Kullanıcı ayarları
     options.User.RequireUniqueEmail = true;
 
-    // Lockout ayarlar�
+    // Lockout ayarları
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
 
-    // SignIn ayarlar�
+    // SignIn ayarları
     options.SignIn.RequireConfirmedEmail = false;
     options.SignIn.RequireConfirmedPhoneNumber = false;
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
-// Cookie ayarlar�
+// Cookie ayarları
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
@@ -88,9 +119,24 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 
+// Veritabanı migration'larını uygula ve admin kullanıcısı oluştur
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+
+    try
+    {
+        // Migration'ları uygula
+        var context = services.GetRequiredService<AppDbContext>();
+        await context.Database.MigrateAsync();
+        Console.WriteLine("✅ Migration'lar uygulandı");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Migration hatası: {ex.Message}");
+    }
+
+    // Admin kullanıcısı oluştur
     await CreateAdminUser(services);
 }
 
@@ -112,5 +158,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+Console.WriteLine("✅ Uygulama başlatıldı!");
 
 app.Run();

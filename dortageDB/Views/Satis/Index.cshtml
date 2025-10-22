@@ -113,47 +113,46 @@
             font-size: 14px;
         }
 
-    /* Sales Table */
-    .sales-table {
+    /* Sales Cards Grid */
+    .sales-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+
+    .sale-card {
         background: white;
         border-radius: 12px;
-        overflow: hidden;
+        padding: 20px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid #000a68;
+        transition: all 0.2s;
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    thead {
-        background: #f9fafb;
-    }
-
-    th {
-        padding: 16px;
-        text-align: left;
-        font-size: 14px;
-        font-weight: 600;
-        color: #374151;
-        border-bottom: 1px solid #e5e7eb;
-        cursor: pointer;
-        user-select: none;
-    }
-
-        th:hover {
-            background: #f3f4f6;
+        .sale-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
-    td {
-        padding: 16px;
-        font-size: 14px;
-        color: #6b7280;
-        border-bottom: 1px solid #f3f4f6;
+    .sale-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
     }
 
-    tr:hover {
-        background: #f9fafb;
+    .sale-id {
+        font-size: 14px;
+        font-weight: 700;
+        color: #000a68;
+        background: #f0f4ff;
+        padding: 6px 12px;
+        border-radius: 6px;
+    }
+
+    .sale-date {
+        font-size: 13px;
+        color: #6b7280;
     }
 
     .customer-info {
@@ -191,16 +190,65 @@
         color: #9ca3af;
     }
 
+    .sale-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin: 16px 0;
+        padding: 16px;
+        background: #f9fafb;
+        border-radius: 8px;
+    }
+
+    .sale-info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .sale-info-label {
+        font-size: 12px;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .sale-info-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
     .amount {
         font-weight: 700;
         color: #000a68;
-        font-size: 15px;
+        font-size: 16px;
     }
 
     .commission {
-        font-weight: 600;
+        font-weight: 700;
         color: #10b981;
-        font-size: 15px;
+        font-size: 16px;
+    }
+
+    .region-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        background: #f3f4f6;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .sale-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #f3f4f6;
     }
 
     .payment-badge {
@@ -277,24 +325,22 @@
         }
 
     @@media (max-width: 768px) {
-        .stats-grid
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
 
-    {
-        grid-template-columns: 1fr;
-    }
+        .sales-grid {
+            grid-template-columns: 1fr;
+        }
 
-    .sales-table {
-        overflow-x: auto;
-    }
+        .filter-group {
+            min-width: 100%;
+        }
 
-    table {
-        min-width: 800px;
-    }
-
-    .filter-group {
-        min-width: 100%;
-    }
-
+        .sale-info-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
     }
 </style>
 
@@ -375,62 +421,67 @@
             </div>
         </div>
 
-        <!-- Sales Table -->
+        <!-- Sales Cards Grid -->
         @if (Model.Any())
         {
-            <div class="sales-table">
-                <table id="salesTable">
-                    <thead>
-                        <tr>
-                            <th>Satış ID</th>
-                            <th>Müşteri</th>
-                            <th>Tarih</th>
-                            <th>Bölge</th>
-                            <th>Tutar</th>
-                            <th>Komisyon</th>
-                            <th>Ödeme</th>
-                            <th>İşlem</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var satis in Model)
-                        {
-                            var initials = $"{satis.Musteri.Ad.Substring(0, 1)}{satis.Musteri.Soyad.Substring(0, 1)}";
-                            var customerName = $"{satis.Musteri.Ad} {satis.Musteri.Soyad}";
-                            var saleDate = satis.SatilmaTarihi;
-                            var paymentType = satis.Taksit ? "taksit" : "pesin";
+            <div class="sales-grid">
+                @foreach (var satis in Model)
+                {
+                    var initials = $"{satis.Musteri.Ad.Substring(0, 1)}{satis.Musteri.Soyad.Substring(0, 1)}";
+                    var customerName = $"{satis.Musteri.Ad} {satis.Musteri.Soyad}";
+                    var saleDate = satis.SatilmaTarihi;
+                    var paymentType = satis.Taksit ? "taksit" : "pesin";
 
-                            <tr data-search="@customerName"
-                                data-payment="@paymentType"
-                                data-date="@saleDate.ToString("yyyy-MM-dd")">
-                                <td><strong>#@satis.SatisID</strong></td>
-                                <td>
-                                    <div class="customer-info">
-                                        <div class="customer-avatar">@initials</div>
-                                        <div class="customer-details">
-                                            <div class="customer-name">@customerName</div>
-                                            <div class="customer-phone">@satis.Musteri.Telefon</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>@saleDate.ToString("dd MMM yyyy")</td>
-                                <td>@satis.Bolge</td>
-                                <td><span class="amount">₺@satis.ToplamSatisFiyati.ToString("N2")</span></td>
-                                <td><span class="commission">₺@satis.OdenecekKomisyon.ToString("N2")</span></td>
-                                <td>
-                                    <span class="payment-badge payment-@paymentType">
-                                        @(satis.Taksit ? "💳 Taksitli" : "💵 Peşin")
-                                    </span>
-                                </td>
-                                <td>
-                                    <a asp-action="Details" asp-route-id="@satis.SatisID" class="btn-view">
-                                        👁️ Detay
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                    <div class="sale-card"
+                         data-search="@customerName"
+                         data-payment="@paymentType"
+                         data-date="@saleDate.ToString("yyyy-MM-dd")">
+
+                        <!-- Card Header -->
+                        <div class="sale-card-header">
+                            <span class="sale-id">#@satis.SatisID</span>
+                            <span class="sale-date">@saleDate.ToString("dd MMM yyyy")</span>
+                        </div>
+
+                        <!-- Customer Info -->
+                        <div class="customer-info">
+                            <div class="customer-avatar">@initials</div>
+                            <div class="customer-details">
+                                <div class="customer-name">@customerName</div>
+                                <div class="customer-phone">@satis.Musteri.Telefon</div>
+                            </div>
+                        </div>
+
+                        <!-- Sale Info Grid -->
+                        <div class="sale-info-grid">
+                            <div class="sale-info-item">
+                                <span class="sale-info-label">Tutar</span>
+                                <span class="amount">₺@satis.ToplamSatisFiyati.ToString("N2")</span>
+                            </div>
+                            <div class="sale-info-item">
+                                <span class="sale-info-label">Komisyon</span>
+                                <span class="commission">₺@satis.OdenecekKomisyon.ToString("N2")</span>
+                            </div>
+                            <div class="sale-info-item">
+                                <span class="sale-info-label">Bölge</span>
+                                <span class="region-badge">📍 @satis.Bolge</span>
+                            </div>
+                            <div class="sale-info-item">
+                                <span class="sale-info-label">Ödeme</span>
+                                <span class="payment-badge payment-@paymentType">
+                                    @(satis.Taksit ? "💳 Taksitli" : "💵 Peşin")
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="sale-card-footer">
+                            <a asp-action="Details" asp-route-id="@satis.SatisID" class="btn-view">
+                                👁️ Detay Görüntüle
+                            </a>
+                        </div>
+                    </div>
+                }
             </div>
         }
         else
@@ -449,9 +500,9 @@
     const searchInput = document.getElementById('searchInput');
     const paymentFilter = document.getElementById('paymentFilter');
     const dateFilter = document.getElementById('dateFilter');
-    const tableRows = document.querySelectorAll('#salesTable tbody tr');
+    const saleCards = document.querySelectorAll('.sale-card');
 
-    function filterTable() {
+    function filterCards() {
         const searchTerm = searchInput?.value.toLowerCase() || '';
         const paymentType = paymentFilter?.value.toLowerCase() || '';
         const dateRange = dateFilter?.value || '';
@@ -459,11 +510,11 @@
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        tableRows.forEach(row => {
-            const searchData = row.getAttribute('data-search').toLowerCase();
-            const payment = row.getAttribute('data-payment');
-            const dateStr = row.getAttribute('data-date');
-            const rowDate = new Date(dateStr);
+        saleCards.forEach(card => {
+            const searchData = card.getAttribute('data-search').toLowerCase();
+            const payment = card.getAttribute('data-payment');
+            const dateStr = card.getAttribute('data-date');
+            const cardDate = new Date(dateStr);
 
             // Search filter
             const searchMatch = !searchTerm || searchData.includes(searchTerm);
@@ -474,23 +525,23 @@
             // Date filter
             let dateMatch = true;
             if (dateRange === 'today') {
-                dateMatch = rowDate.toDateString() === today.toDateString();
+                dateMatch = cardDate.toDateString() === today.toDateString();
             } else if (dateRange === 'week') {
                 const weekAgo = new Date(today);
                 weekAgo.setDate(today.getDate() - 7);
-                dateMatch = rowDate >= weekAgo;
+                dateMatch = cardDate >= weekAgo;
             } else if (dateRange === 'month') {
-                dateMatch = rowDate.getMonth() === today.getMonth() &&
-                           rowDate.getFullYear() === today.getFullYear();
+                dateMatch = cardDate.getMonth() === today.getMonth() &&
+                           cardDate.getFullYear() === today.getFullYear();
             } else if (dateRange === 'year') {
-                dateMatch = rowDate.getFullYear() === today.getFullYear();
+                dateMatch = cardDate.getFullYear() === today.getFullYear();
             }
 
-            row.style.display = (searchMatch && paymentMatch && dateMatch) ? '' : 'none';
+            card.style.display = (searchMatch && paymentMatch && dateMatch) ? '' : 'none';
         });
     }
 
-    searchInput?.addEventListener('input', filterTable);
-    paymentFilter?.addEventListener('change', filterTable);
-    dateFilter?.addEventListener('change', filterTable);
+    searchInput?.addEventListener('input', filterCards);
+    paymentFilter?.addEventListener('change', filterCards);
+    dateFilter?.addEventListener('change', filterCards);
 </script>

@@ -79,6 +79,7 @@ namespace dortageDB.Controllers
                     return RedirectToAction(nameof(Referrals));
                 }
 
+                var userIdString = _userManager.GetUserId(User);
                 var referral = new Referral
                 {
                     Code = code,
@@ -86,7 +87,7 @@ namespace dortageDB.Controllers
                     MaxUses = maxUses,
                     UsedCount = 0,
                     ExpiresAt = expiresAt,
-                    CreatedByUserId = _userManager.GetUserId(User),
+                    CreatedByUserId = userIdString != null ? int.Parse(userIdString) : null,
                     CreatedAtUtc = DateTime.UtcNow
                 };
 

@@ -1,0 +1,635 @@
+﻿@model Satis
+
+@{
+    ViewData["Title"] = $"Satış Detayı #{Model.SatisID}";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<style>
+    .page-header {
+        margin-bottom: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .header-left {
+        flex: 1;
+    }
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #000a68;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .sale-id-badge {
+        background: linear-gradient(135deg, #000a68 0%, #001a88 100%);
+        color: white;
+        padding: 6px 16px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .page-subtitle {
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-back {
+        padding: 10px 20px;
+        background: white;
+        color: #374151;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+
+        .btn-back:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+    .btn-print {
+        padding: 10px 20px;
+        background: #dbeafe;
+        color: #1e40af;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+
+        .btn-print:hover {
+            background: #bfdbfe;
+            transform: translateY(-2px);
+        }
+
+    /* Status Banner */
+    .status-banner {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 20px 24px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .status-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .status-content {
+        flex: 1;
+    }
+
+    .status-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .status-description {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    /* Details Grid */
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .detail-card {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .detail-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #1e40af;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .detail-label {
+        font-size: 14px;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .detail-value {
+        font-size: 15px;
+        color: #1f2937;
+        font-weight: 600;
+        text-align: right;
+    }
+
+        .detail-value.highlight {
+            color: #000a68;
+            font-size: 18px;
+        }
+
+        .detail-value.success {
+            color: #10b981;
+            font-size: 18px;
+        }
+
+    /* Customer Card */
+    .customer-profile {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px;
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+
+    .customer-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 24px;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .customer-info h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 4px;
+    }
+
+    .customer-contact {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Payment Badge */
+    .payment-badge {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .payment-taksit {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .payment-pesin {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    /* Timeline Card */
+    .timeline-card {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .timeline-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .timeline-icon {
+        width: 40px;
+        height: 40px;
+        background: #10b981;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .timeline-content {
+        flex: 1;
+    }
+
+    .timeline-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 4px;
+    }
+
+    .timeline-description {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 4px;
+    }
+
+    .timeline-date {
+        font-size: 13px;
+        color: #9ca3af;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 12px;
+        border: 2px dashed #e5e7eb;
+    }
+
+    .empty-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .page-header
+
+    {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .btn-back,
+    .btn-print {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-title {
+        font-size: 24px;
+    }
+
+    .sale-id-badge {
+        font-size: 14px;
+        padding: 4px 12px;
+    }
+
+    .customer-profile {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .customer-contact {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .detail-value {
+        text-align: left;
+    }
+
+    }
+
+    /* Print Styles */
+    @@media print {
+        body
+
+    {
+        padding-top: 0;
+    }
+
+    .page-header,
+    .header-actions,
+    .btn-back,
+    .btn-print,
+    .sidebar,
+    .mobile-menu-btn {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 20px !important;
+    }
+
+    .detail-card,
+    .timeline-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #e5e7eb;
+    }
+
+    }
+</style>
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-left">
+                <h1 class="page-title">
+                    <span class="sale-id-badge">#@Model.SatisID</span>
+                    Satış Detayı
+                </h1>
+                <p class="page-subtitle">Satış bilgilerini görüntüleyin</p>
+            </div>
+            <div class="header-actions">
+                <a asp-action="Index" class="btn-back">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Geri Dön
+                </a>
+                <button onclick="window.print()" class="btn-print">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    Yazdır
+                </button>
+            </div>
+        </div>
+
+        <!-- Status Banner -->
+        <div class="status-banner">
+            <div class="status-icon">✓</div>
+            <div class="status-content">
+                <div class="status-title">Satış Tamamlandı</div>
+                <div class="status-description">Bu satış başarıyla kaydedildi ve sisteme işlendi</div>
+            </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="details-grid">
+            <!-- Müşteri Bilgileri -->
+            <div class="detail-card">
+                <div class="card-header">
+                    <div class="card-icon">👤</div>
+                    <h3 class="card-title">Müşteri Bilgileri</h3>
+                </div>
+
+                @{
+                    var initials = $"{Model.Musteri.Ad.Substring(0, 1)}{Model.Musteri.Soyad.Substring(0, 1)}";
+                    var fullName = $"{Model.Musteri.Ad} {Model.Musteri.Soyad}";
+                }
+
+                <div class="customer-profile">
+                    <div class="customer-avatar">@initials</div>
+                    <div class="customer-info">
+                        <h3>@fullName</h3>
+                        <div class="customer-contact">
+                            <span class="contact-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                                @Model.Musteri.Telefon
+                            </span>
+                            @if (!string.IsNullOrEmpty(Model.Musteri.Eposta))
+                            {
+                                <span class="contact-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                    @Model.Musteri.Eposta
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Şehir</span>
+                    <span class="detail-value">@Model.Musteri.Sehir</span>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.Musteri.TcNo))
+                {
+                    <div class="detail-row">
+                        <span class="detail-label">TC No</span>
+                        <span class="detail-value">@Model.Musteri.TcNo</span>
+                    </div>
+                }
+            </div>
+
+            <!-- Satış Bilgileri -->
+            <div class="detail-card">
+                <div class="card-header">
+                    <div class="card-icon">💰</div>
+                    <h3 class="card-title">Satış Bilgileri</h3>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Satış Tarihi</span>
+                    <span class="detail-value">@Model.SatilmaTarihi.ToString("dd MMMM yyyy")</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Bölge</span>
+                    <span class="detail-value">@Model.Bolge</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Satış Tutarı</span>
+                    <span class="detail-value highlight">₺@Model.ToplamSatisFiyati.ToString("N2")</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Ödeme Tipi</span>
+                    <span class="detail-value">
+                        <span class="payment-badge payment-@(Model.Taksit ? "taksit" : "pesin")">
+                            @(Model.Taksit ? "💳 Taksitli" : "💵 Peşin")
+                        </span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Komisyon Bilgileri -->
+            <div class="detail-card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <h3 class="card-title">Komisyon Bilgileri</h3>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Topraktar</span>
+                    <span class="detail-value">@Model.Topraktar.Ad @Model.Topraktar.Soyad</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Kazanılan Komisyon</span>
+                    <span class="detail-value success">₺@Model.OdenecekKomisyon.ToString("N2")</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Komisyon Oranı</span>
+                    <span class="detail-value">
+                        @{
+                            var commissionRate = Model.ToplamSatisFiyati > 0
+                            ? (Model.OdenecekKomisyon / Model.ToplamSatisFiyati * 100).ToString("F1")
+                            : "0.0";
+                        }
+                        %@commissionRate
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- İşlem Geçmişi -->
+        <div class="timeline-card">
+            <div class="card-header" style="border: none; padding-bottom: 16px;">
+                <div class="card-icon">📋</div>
+                <h3 class="card-title">İşlem Geçmişi</h3>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">✓</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Satış Tamamlandı</div>
+                    <div class="timeline-description">
+                        @Model.Topraktar.Ad @Model.Topraktar.Soyad tarafından satış gerçekleştirildi
+                    </div>
+                    <div class="timeline-date">@Model.SatilmaTarihi.ToString("dd MMMM yyyy, HH:mm")</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon" style="background: #3b82f6;">📝</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Kayıt Oluşturuldu</div>
+                    <div class="timeline-description">
+                        Satış sisteme kaydedildi ve komisyon hesaplandı
+                    </div>
+                    <div class="timeline-date">@Model.SatilmaTarihi.ToString("dd MMMM yyyy, HH:mm")</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon" style="background: #f59e0b;">💰</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Ödeme Bilgisi</div>
+                    <div class="timeline-description">
+                        @(Model.Taksit ? "Taksitli ödeme seçeneği ile" : "Peşin ödeme ile") satış gerçekleşti
+                    </div>
+                    <div class="timeline-date">@Model.SatilmaTarihi.ToString("dd MMMM yyyy")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -260,6 +260,10 @@ namespace dortageDB.Migrations
                         .IsUnique()
                         .HasFilter("[TcNo] IS NOT NULL");
 
+                    b.HasIndex("UserName")
+                        .IsUnique()
+                        .HasFilter("[UserName] IS NOT NULL");
+
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -278,6 +282,11 @@ namespace dortageDB.Migrations
 
                     b.Property<bool>("Cinsiyet")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("EklenmeTarihi")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Eposta")
                         .HasMaxLength(200)
@@ -302,7 +311,12 @@ namespace dortageDB.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
+                    b.Property<int>("TopraktarID")
+                        .HasColumnType("int");
+
                     b.HasKey("IdMusteri");
+
+                    b.HasIndex("EklenmeTarihi");
 
                     b.HasIndex("Eposta");
 
@@ -312,6 +326,8 @@ namespace dortageDB.Migrations
 
                     b.HasIndex("Telefon")
                         .IsUnique();
+
+                    b.HasIndex("TopraktarID");
 
                     b.ToTable("Musteriler");
                 });
@@ -324,13 +340,22 @@ namespace dortageDB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RandevuID"));
 
-                    b.Property<string>("Bolge")
-                        .IsRequired()
+                    b.Property<string>("Aciklama")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("Bolge")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<int>("MusteriId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("OlusturulmaTarihi")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("RandevuDurum")
                         .IsRequired()
@@ -351,9 +376,9 @@ namespace dortageDB.Migrations
 
                     b.HasIndex("MusteriId");
 
-                    b.HasIndex("TopraktarID");
-
                     b.HasIndex("RandevuDurum", "RandevuZaman");
+
+                    b.HasIndex("TopraktarID", "RandevuZaman");
 
                     b.ToTable("Randevular");
                 });
@@ -372,16 +397,21 @@ namespace dortageDB.Migrations
                         .HasColumnType("nvarchar(32)");
 
                     b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<string>("CreatedByUserId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUsedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("MaxUses")
                         .HasColumnType("int");
@@ -393,6 +423,10 @@ namespace dortageDB.Migrations
 
                     b.HasIndex("Code")
                         .IsUnique();
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("IsActive");
 
                     b.ToTable("Referrals");
                 });
@@ -414,6 +448,11 @@ namespace dortageDB.Migrations
                         .HasPrecision(14, 2)
                         .HasColumnType("decimal(14,2)");
 
+                    b.Property<DateTime>("OlusturulmaTarihi")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
                     b.Property<int>("SatilanMusteriID")
                         .HasColumnType("int");
 
@@ -434,6 +473,8 @@ namespace dortageDB.Migrations
 
                     b.HasIndex("SatilanMusteriID");
 
+                    b.HasIndex("SatilmaTarihi");
+
                     b.HasIndex("TopraktarID", "SatilmaTarihi");
 
                     b.ToTable("Satislar");
@@ -444,7 +485,26 @@ namespace dortageDB.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<string>("IBAN")
+                        .HasMaxLength(34)
+                        .HasColumnType("nvarchar(34)");
+
+                    b.Property<string>("ReferralCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("TotalCommission")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TotalSales")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
+
+                    b.HasIndex("ReferralCode")
+                        .IsUnique()
+                        .HasFilter("[ReferralCode] IS NOT NULL");
 
                     b.ToTable("TopraktarProfiles");
                 });
@@ -500,6 +560,17 @@ namespace dortageDB.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("dortageDB.Entities.Musteri", b =>
+                {
+                    b.HasOne("dortageDB.Entities.AppUser", "Topraktar")
+                        .WithMany("Musteriler")
+                        .HasForeignKey("TopraktarID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Topraktar");
+                });
+
             modelBuilder.Entity("dortageDB.Entities.Randevu", b =>
                 {
                     b.HasOne("dortageDB.Entities.Musteri", "Musteri")
@@ -511,7 +582,7 @@ namespace dortageDB.Migrations
                     b.HasOne("dortageDB.Entities.AppUser", "Topraktar")
                         .WithMany("Randevular")
                         .HasForeignKey("TopraktarID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Musteri");
@@ -524,13 +595,13 @@ namespace dortageDB.Migrations
                     b.HasOne("dortageDB.Entities.Musteri", "Musteri")
                         .WithMany("Satislar")
                         .HasForeignKey("SatilanMusteriID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("dortageDB.Entities.AppUser", "Topraktar")
                         .WithMany("Satislar")
                         .HasForeignKey("TopraktarID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Musteri");
@@ -551,6 +622,8 @@ namespace dortageDB.Migrations
 
             modelBuilder.Entity("dortageDB.Entities.AppUser", b =>
                 {
+                    b.Navigation("Musteriler");
+
                     b.Navigation("Randevular");
 
                     b.Navigation("Satislar");

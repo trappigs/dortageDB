@@ -262,74 +262,6 @@
     animation: pulse 2s infinite;
 }
 
-/* Statistics Card */
-
-.topraktar-main-panel .stats-card {
-    position: fixed;
-    bottom: 24px;
-    left: 16px;
-    width: 248px;
-    background: #f9fafb;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #e5e7eb;
-    transition: all 0.3s ease;
-    z-index: 998; /* 999'dan 998'e düþürdük */
-}
-
-.topraktar-main-panel .sidebar.collapsed .stats-card {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(-20px);
-}
-
-.topraktar-main-panel .stats-title {
-    font-size: 12px;
-    color: #6b7280;
-    margin-bottom: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.topraktar-main-panel .stat-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.topraktar-main-panel .stat-item:last-child {
-        margin-bottom: 0;
-    }
-
-.topraktar-main-panel .stat-icon {
-    width: 18px;
-    height: 18px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-    flex-shrink: 0;
-}
-
-.topraktar-main-panel .stat-label {
-    font-size: 13px;
-    color: #6b7280;
-    flex: 1;
-}
-
-.topraktar-main-panel .stat-value {
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.topraktar-main-panel .stat-value.blue {
-        color: #000a68;
-    }
-
-.topraktar-main-panel .stat-value.green {
-        color: #10b981;
-    }
 
 /* Collapse Button - Desktop */
 
@@ -529,14 +461,6 @@
         display: none;
     }
 
-    .topraktar-main-panel .stats-card {
-        position: relative;
-        bottom: auto;
-        left: auto;
-        width: auto;
-        margin: 16px 16px 16px 16px;
-    }
-
     /* Reset collapsed state for mobile */
     .topraktar-main-panel .sidebar.mobile-open .nav-text {
         opacity: 1;
@@ -577,12 +501,6 @@
         padding: 2px 8px;
         font-size: 11px;
     }
-
-    .topraktar-main-panel .sidebar.mobile-open .stats-card {
-        opacity: 1;
-        pointer-events: auto;
-        transform: none;
-    }
 }
 
 /* Tablet Responsive */
@@ -603,10 +521,6 @@
     .topraktar-main-panel .sidebar.collapsed .collapse-btn {
         left: 56px;
     }
-
-    .topraktar-main-panel .stats-card {
-        width: 208px;
-    }
 }
 
 /* Main Content Demo */
@@ -625,7 +539,7 @@
 @media (max-width: 768px) {
     .topraktar-main-panel .main-content {
         margin-left: 0;
-        padding: 80px 20px 40px;
+        padding: 40px 10px 20px;
     }
 }
 

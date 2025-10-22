@@ -49,7 +49,18 @@ namespace dortageDB.Controllers
         // GET: Randevu/Create
         public async Task<IActionResult> Create()
         {
-            var musteriler = await _context.Musteriler
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Sadece kendi müşterilerini göster (admin hariç)
+            var musteriQuery = User.IsInRole("admin")
+                ? _context.Musteriler
+                : _context.Musteriler.Where(m => m.TopraktarID == user.Id);
+
+            var musteriler = await musteriQuery
                 .OrderBy(m => m.Ad)
                 .Select(m => new
                 {
@@ -59,6 +70,22 @@ namespace dortageDB.Controllers
                 .ToListAsync();
 
             ViewBag.Musteriler = new SelectList(musteriler, "IdMusteri", "AdSoyad");
+
+            // Bölge listesi
+            ViewBag.Bolgeler = new SelectList(new[]
+            {
+                "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Ankara", "Antalya",
+                "Ardahan", "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik",
+                "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum",
+                "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir",
+                "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "İstanbul",
+                "İzmir", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kilis",
+                "Kırıkkale", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa",
+                "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye",
+                "Rize", "Sakarya", "Samsun", "Şanlıurfa", "Siirt", "Sinop", "Şırnak", "Sivas",
+                "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak"
+            });
+
             return View();
         }
 
@@ -69,13 +96,66 @@ namespace dortageDB.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    await LoadMusterilerSelectList();
-                    return View(model);
-                }
-
                 var user = await _userManager.GetUserAsync(User);
+
+                // Yeni müşteri mi, mevcut müşteri mi?
+                int musteriId;
+
+                if (model.YeniMusteri)
+                {
+                    // Yeni müşteri oluştur
+                    if (string.IsNullOrWhiteSpace(model.YeniMusteriAd) ||
+                        string.IsNullOrWhiteSpace(model.YeniMusteriSoyad) ||
+                        string.IsNullOrWhiteSpace(model.YeniMusteriTelefon) ||
+                        string.IsNullOrWhiteSpace(model.YeniMusteriSehir))
+                    {
+                        ModelState.AddModelError("", "Yeni müşteri için Ad, Soyad, Telefon ve Şehir zorunludur.");
+                        await LoadMusterilerSelectList();
+                        return View(model);
+                    }
+
+                    // Telefon numarasını temizle
+                    var cleanPhone = model.YeniMusteriTelefon.Replace("(", "").Replace(")", "").Replace(" ", "").Trim();
+
+                    // Telefon kontrolü
+                    var existingPhone = await _context.Musteriler.AnyAsync(m => m.Telefon == cleanPhone);
+                    if (existingPhone)
+                    {
+                        ModelState.AddModelError("YeniMusteriTelefon", "Bu telefon numarası zaten kayıtlı.");
+                        await LoadMusterilerSelectList();
+                        return View(model);
+                    }
+
+                    var yeniMusteri = new Musteri
+                    {
+                        Ad = model.YeniMusteriAd.Trim(),
+                        Soyad = model.YeniMusteriSoyad.Trim(),
+                        Telefon = cleanPhone,
+                        Eposta = model.YeniMusteriEposta?.Trim(),
+                        Sehir = model.YeniMusteriSehir.Trim(),
+                        Cinsiyet = model.YeniMusteriCinsiyet ?? false,
+                        TcNo = model.YeniMusteriTcNo?.Trim(),
+                        TopraktarID = user!.Id
+                    };
+
+                    _context.Musteriler.Add(yeniMusteri);
+                    await _context.SaveChangesAsync();
+
+                    musteriId = yeniMusteri.IdMusteri;
+                    _logger.LogInformation($"✅ Yeni müşteri oluşturuldu: {musteriId} - {yeniMusteri.Ad} {yeniMusteri.Soyad}");
+                }
+                else
+                {
+                    // Mevcut müşteri seçilmeli
+                    if (!model.MusteriId.HasValue || model.MusteriId.Value == 0)
+                    {
+                        ModelState.AddModelError("MusteriId", "Lütfen bir müşteri seçin veya yeni müşteri ekleyin.");
+                        await LoadMusterilerSelectList();
+                        return View(model);
+                    }
+
+                    musteriId = model.MusteriId.Value;
+                }
 
                 // Randevu tarihini kontrol et
                 if (model.RandevuZaman < DateTime.Now)
@@ -85,13 +165,15 @@ namespace dortageDB.Controllers
                     return View(model);
                 }
 
+                // Randevu oluştur
                 var randevu = new Randevu
                 {
-                    MusteriId = model.MusteriId,
+                    MusteriId = musteriId,
                     Bolge = model.Bolge,
+                    Aciklama = model.Aciklama,
                     RandevuZaman = model.RandevuZaman,
                     RandevuTipi = model.RandevuTipi,
-                    TopraktarID = user.Id,
+                    TopraktarID = user!.Id,
                     RandevuDurum = RandevuDurum.pending
                 };
 
@@ -99,7 +181,9 @@ namespace dortageDB.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation($"✅ Randevu oluşturuldu: {randevu.RandevuID}");
-                TempData["SuccessMessage"] = "Randevu başarıyla oluşturuldu.";
+                TempData["SuccessMessage"] = model.YeniMusteri
+                    ? "Yeni müşteri ve randevu başarıyla oluşturuldu."
+                    : "Randevu başarıyla oluşturuldu.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -137,6 +221,7 @@ namespace dortageDB.Controllers
             {
                 MusteriId = randevu.MusteriId,
                 Bolge = randevu.Bolge,
+                Aciklama = randevu.Aciklama,
                 RandevuZaman = randevu.RandevuZaman,
                 RandevuTipi = randevu.RandevuTipi,
                 TopraktarID = randevu.TopraktarID
@@ -176,8 +261,17 @@ namespace dortageDB.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                randevu.MusteriId = model.MusteriId;
+                // MusteriId validation (Edit doesn't support creating new customers)
+                if (!model.MusteriId.HasValue || model.MusteriId.Value == 0)
+                {
+                    ModelState.AddModelError("MusteriId", "Lütfen bir müşteri seçin.");
+                    await LoadMusterilerSelectList();
+                    return View(model);
+                }
+
+                randevu.MusteriId = model.MusteriId.Value;
                 randevu.Bolge = model.Bolge;
+                randevu.Aciklama = model.Aciklama;
                 randevu.RandevuZaman = model.RandevuZaman;
                 randevu.RandevuTipi = model.RandevuTipi;
 
@@ -323,7 +417,14 @@ namespace dortageDB.Controllers
 
         private async Task LoadMusterilerSelectList()
         {
-            var musteriler = await _context.Musteriler
+            var user = await _userManager.GetUserAsync(User);
+
+            // Sadece kendi müşterilerini göster (admin hariç)
+            var musteriQuery = User.IsInRole("admin")
+                ? _context.Musteriler
+                : _context.Musteriler.Where(m => m.TopraktarID == user!.Id);
+
+            var musteriler = await musteriQuery
                 .OrderBy(m => m.Ad)
                 .Select(m => new
                 {
@@ -333,6 +434,21 @@ namespace dortageDB.Controllers
                 .ToListAsync();
 
             ViewBag.Musteriler = new SelectList(musteriler, "IdMusteri", "AdSoyad");
+
+            // Bölge listesi
+            ViewBag.Bolgeler = new SelectList(new[]
+            {
+                "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Ankara", "Antalya",
+                "Ardahan", "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik",
+                "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum",
+                "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir",
+                "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "İstanbul",
+                "İzmir", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kilis",
+                "Kırıkkale", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa",
+                "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye",
+                "Rize", "Sakarya", "Samsun", "Şanlıurfa", "Siirt", "Sinop", "Şırnak", "Sivas",
+                "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak"
+            });
         }
     }
 }

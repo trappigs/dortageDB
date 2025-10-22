@@ -6,16 +6,32 @@ namespace dortageDB.Entities
     {
         public int SatisID { get; set; }
 
+        // Müşteri İlişkisi
         public int SatilanMusteriID { get; set; }
         public Musteri Musteri { get; set; } = null!;
 
-        [Required] public DateTime SatilmaTarihi { get; set; }
-        [Required] public decimal ToplamSatisFiyati { get; set; }   // DECIMAL(14,2)
-        [Required, StringLength(500)] public string Bolge { get; set; } = null!;
-        public bool Taksit { get; set; }
-        [Required] public decimal OdenecekKomisyon { get; set; }
-
+        // Topraktar İlişkisi
+        [Required]
         public int TopraktarID { get; set; }
         public AppUser Topraktar { get; set; } = null!;
+
+        // Satış Bilgileri
+        [Required]
+        public DateTime SatilmaTarihi { get; set; }
+
+        [Required]
+        [Range(0.01, 9999999999.99)]
+        public decimal ToplamSatisFiyati { get; set; } // DECIMAL(14,2)
+
+        [Required, StringLength(500)]
+        public string Bolge { get; set; } = null!;
+
+        public bool Taksit { get; set; } // false=Peşin, true=Taksitli
+
+        [Required]
+        [Range(0, 9999999999.99)]
+        public decimal OdenecekKomisyon { get; set; } // DECIMAL(14,2)
+
+        public DateTime OlusturulmaTarihi { get; set; } = DateTime.Now;
     }
 }

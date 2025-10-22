@@ -29,9 +29,22 @@ namespace dortageDB.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-            var musteriler = await _context.Musteriler
-                .OrderByDescending(m => m.IdMusteri)
-                .ToListAsync();
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Admin tüm müşterileri görebilir, diğerleri sadece kendi müşterilerini
+            var musteriler = User.IsInRole("admin")
+                ? await _context.Musteriler
+                    .Include(m => m.Topraktar)
+                    .OrderByDescending(m => m.IdMusteri)
+                    .ToListAsync()
+                : await _context.Musteriler
+                    .Include(m => m.Topraktar)
+                    .Where(m => m.TopraktarID == user.Id)
+                    .OrderByDescending(m => m.IdMusteri)
+                    .ToListAsync();
 
             return View(musteriler);
         }
@@ -83,6 +96,8 @@ namespace dortageDB.Controllers
                     }
                 }
 
+                var currentUser = await _userManager.GetUserAsync(User);
+
                 var musteri = new Musteri
                 {
                     Ad = model.Ad,
@@ -91,7 +106,8 @@ namespace dortageDB.Controllers
                     Eposta = model.Eposta,
                     Sehir = model.Sehir,
                     Cinsiyet = model.Cinsiyet,
-                    TcNo = model.TcNo
+                    TcNo = model.TcNo,
+                    TopraktarID = currentUser!.Id
                 };
 
                 _context.Musteriler.Add(musteri);
@@ -117,10 +133,23 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var musteri = await _context.Musteriler.FindAsync(id);
             if (musteri == null)
             {
                 return NotFound();
+            }
+
+            // Topraktar sadece kendi müşterisini düzenleyebilir (admin hariç)
+            if (!User.IsInRole("admin") && musteri.TopraktarID != user.Id)
+            {
+                _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {user.Id} tried to edit customer {id}");
+                return Forbid();
             }
 
             var model = new MusteriCreateVM
@@ -151,10 +180,23 @@ namespace dortageDB.Controllers
                     return View(model);
                 }
 
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
                 var musteri = await _context.Musteriler.FindAsync(id);
                 if (musteri == null)
                 {
                     return NotFound();
+                }
+
+                // Topraktar sadece kendi müşterisini düzenleyebilir (admin hariç)
+                if (!User.IsInRole("admin") && musteri.TopraktarID != user.Id)
+                {
+                    _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {user.Id} tried to edit customer {id}");
+                    return Forbid();
                 }
 
                 // Telefon numarasını temizle
@@ -216,6 +258,12 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var musteri = await _context.Musteriler
                 .Include(m => m.Randevular)
                 .Include(m => m.Satislar)
@@ -224,6 +272,13 @@ namespace dortageDB.Controllers
             if (musteri == null)
             {
                 return NotFound();
+            }
+
+            // Topraktar sadece kendi müşterisini silebilir (admin hariç)
+            if (!User.IsInRole("admin") && musteri.TopraktarID != user.Id)
+            {
+                _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {user.Id} tried to delete customer {id}");
+                return Forbid();
             }
 
             return View(musteri);
@@ -236,6 +291,12 @@ namespace dortageDB.Controllers
         {
             try
             {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
                 var musteri = await _context.Musteriler
                     .Include(m => m.Randevular)
                     .Include(m => m.Satislar)
@@ -244,6 +305,13 @@ namespace dortageDB.Controllers
                 if (musteri == null)
                 {
                     return NotFound();
+                }
+
+                // Topraktar sadece kendi müşterisini silebilir (admin hariç)
+                if (!User.IsInRole("admin") && musteri.TopraktarID != user.Id)
+                {
+                    _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {user.Id} tried to delete customer {id}");
+                    return Forbid();
                 }
 
                 // İlişkili kayıtları kontrol et
@@ -276,6 +344,12 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var musteri = await _context.Musteriler
                 .Include(m => m.Randevular)
                     .ThenInclude(r => r.Topraktar)
@@ -286,6 +360,13 @@ namespace dortageDB.Controllers
             if (musteri == null)
             {
                 return NotFound();
+            }
+
+            // Topraktar sadece kendi müşterisinin detayını görebilir (admin hariç)
+            if (!User.IsInRole("admin") && musteri.TopraktarID != user.Id)
+            {
+                _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {user.Id} tried to view customer {id}");
+                return Forbid();
             }
 
             return View(musteri);
