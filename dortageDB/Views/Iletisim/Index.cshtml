@@ -1,0 +1,185 @@
+@model IletisimVM
+@{
+    ViewData["Title"] = "İletişim";
+    Layout = "_LayoutFullWidth";
+}
+
+<!-- Font Awesome için CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Page Title -->
+<div class="iletisim-page-title">
+    <div class="container">
+        <h1 class="page-title">İLETİŞİM</h1>
+        <p class="page-subtitle">Size yardımcı olmaktan mutluluk duyarız</p>
+    </div>
+</div>
+
+<!-- İletişim İçerik -->
+<section class="iletisim-section">
+    <div class="container">
+        <div class="row">
+            <!-- Sol Taraf - İletişim Bilgileri -->
+            <div class="col-lg-5 mb-4">
+                <div class="iletisim-info-card">
+                    <h2 class="info-title">İletişim Bilgileri</h2>
+                    <p class="info-description">
+                        Sorularınız, önerileriniz veya projelerimiz hakkında detaylı bilgi almak için bizimle iletişime geçebilirsiniz.
+                    </p>
+
+                    <div class="info-items">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Adres</h3>
+                                <p>Merkez Mahallesi, Topraktar Sokak No:1<br>İstanbul, Türkiye</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Telefon</h3>
+                                <p>+90 (212) 555 00 00</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>E-posta</h3>
+                                <p>info@topraktar.com</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Çalışma Saatleri</h3>
+                                <p>Pazartesi - Cuma: 09:00 - 18:00<br>Cumartesi: 10:00 - 16:00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="social-links">
+                        <h3>Sosyal Medya</h3>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-icon" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="social-icon" aria-label="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-icon" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sağ Taraf - İletişim Formu -->
+            <div class="col-lg-7">
+                <div class="iletisim-form-card">
+                    <h2 class="form-title">Bize Ulaşın</h2>
+                    <p class="form-description">
+                        Formu doldurarak bize mesaj gönderebilirsiniz. En kısa sürede size dönüş yapacağız.
+                    </p>
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <form asp-action="Index" method="post" class="iletisim-form">
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label asp-for="AdSoyad">
+                                    <i class="fas fa-user"></i> Ad Soyad
+                                </label>
+                                <input asp-for="AdSoyad" class="form-control" placeholder="Adınız ve Soyadınız" />
+                                <span asp-validation-for="AdSoyad" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label asp-for="Email">
+                                    <i class="fas fa-envelope"></i> E-posta
+                                </label>
+                                <input asp-for="Email" class="form-control" placeholder="ornek@email.com" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label asp-for="Telefon">
+                                    <i class="fas fa-phone"></i> Telefon
+                                </label>
+                                <input asp-for="Telefon" class="form-control" placeholder="(5XX) XXX XX XX" />
+                                <span asp-validation-for="Telefon" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label asp-for="Konu">
+                                    <i class="fas fa-tag"></i> Konu
+                                </label>
+                                <input asp-for="Konu" class="form-control" placeholder="Mesajınızın konusu" />
+                                <span asp-validation-for="Konu" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label asp-for="Mesaj">
+                                    <i class="fas fa-comment"></i> Mesajınız
+                                </label>
+                                <textarea asp-for="Mesaj" class="form-control" rows="6" placeholder="Mesajınızı buraya yazın..."></textarea>
+                                <span asp-validation-for="Mesaj" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Mesaj Gönder
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <link rel="stylesheet" href="~/css/iletisim.css" asp-append-version="true" />
+    <partial name="_ValidationScriptsPartial" />
+}

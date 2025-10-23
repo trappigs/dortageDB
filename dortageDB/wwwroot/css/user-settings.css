@@ -1,4 +1,10 @@
-﻿
+
+.settings-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 20px 20px;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -415,6 +421,10 @@ input, select, textarea {
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+    .settings-container {
+        padding: 140px 12px 12px;
+    }
+
     .container {
         padding: 12px;
     }
@@ -424,8 +434,8 @@ input, select, textarea {
     }
 
     .breadcrumb {
-        font-size: 13px;
-        margin-bottom: 12px;
+        font-size: 17px;
+        margin-bottom: 20px;
     }
 
     .layout {

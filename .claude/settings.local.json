@@ -23,7 +23,9 @@
       "Read(//c/Users/mami/Desktop/btlast/Views/Partials/**)",
       "Read(//c/Users/mami/Desktop/btlast/wwwroot/css/**)",
       "Read(//c/Users/mami/Desktop/btlast/wwwroot/scripts/**)",
-      "Read(//c/Users/mami/Desktop/btlast/Views/**)"
+      "Read(//c/Users/mami/Desktop/btlast/Views/**)",
+      "WebFetch(domain:bereketlitopraklar.com.tr)",
+      "Bash(Select-String -Pattern \"error|warning\" -Context 2)"
     ],
     "deny": [],
     "ask": []

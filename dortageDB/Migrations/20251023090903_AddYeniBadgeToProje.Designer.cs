@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dortageDB.Data;
 
@@ -11,9 +12,11 @@ using dortageDB.Data;
 namespace dortageDB.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251023090903_AddYeniBadgeToProje")]
+    partial class AddYeniBadgeToProje
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -381,18 +384,12 @@ namespace dortageDB.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("MaxMetreKare")
-                        .HasColumnType("int");
-
                     b.Property<int?>("MetreKare")
                         .HasColumnType("int");
 
                     b.Property<decimal>("MinFiyat")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("MinMetreKare")
-                        .HasColumnType("int");
 
                     b.Property<bool>("MustakilTapu")
                         .HasColumnType("bit");
@@ -413,9 +410,6 @@ namespace dortageDB.Migrations
                     b.Property<string>("Sehir")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("SosyalTesisler")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("TakasImkani")
                         .HasColumnType("bit");
 
@@ -424,15 +418,6 @@ namespace dortageDB.Migrations
 
                     b.Property<int>("ToplamParsel")
                         .HasColumnType("int");
-
-                    b.Property<string>("UlasimBilgileri")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("YakinBolgeler")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("YakinProjeler")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("YatirimTuru")
                         .IsRequired()

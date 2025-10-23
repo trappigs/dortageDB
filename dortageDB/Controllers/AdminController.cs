@@ -13,15 +13,18 @@ namespace dortageDB.Controllers
         private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<AdminController> _logger;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AdminController(
             AppDbContext context,
             UserManager<AppUser> userManager,
-            ILogger<AdminController> logger)
+            ILogger<AdminController> logger,
+            IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _logger = logger;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // Admin Dashboard
@@ -655,10 +658,17 @@ namespace dortageDB.Controllers
                 existingProje.TakasImkani = proje.TakasImkani;
                 existingProje.Altyapi = proje.Altyapi;
                 existingProje.MetreKare = proje.MetreKare;
+                existingProje.MinMetreKare = proje.MinMetreKare;
+                existingProje.MaxMetreKare = proje.MaxMetreKare;
                 existingProje.KrediyeUygunluk = proje.KrediyeUygunluk;
                 existingProje.OzelliklerJson = proje.OzelliklerJson;
                 existingProje.AktifMi = proje.AktifMi;
                 existingProje.Oncelik = proje.Oncelik;
+                existingProje.YeniBadge = proje.YeniBadge;
+                existingProje.YakinProjeler = proje.YakinProjeler;
+                existingProje.YakinBolgeler = proje.YakinBolgeler;
+                existingProje.UlasimBilgileri = proje.UlasimBilgileri;
+                existingProje.SosyalTesisler = proje.SosyalTesisler;
                 existingProje.GuncellemeTarihi = DateTime.Now;
 
                 await _context.SaveChangesAsync();
@@ -743,6 +753,101 @@ namespace dortageDB.Controllers
             }
 
             return View(proje);
+        }
+
+        // ====================================
+        // DOSYA YÜKLEME
+        // ====================================
+
+        // POST: Admin/UploadGalleryImage
+        [HttpPost]
+        public async Task<IActionResult> UploadGalleryImage(IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    return Json(new { success = false, message = "Dosya seçilmedi." });
+                }
+
+                // Dosya boyutu kontrolü (5MB)
+                if (file.Length > 5 * 1024 * 1024)
+                {
+                    return Json(new { success = false, message = "Dosya boyutu 5MB'dan küçük olmalıdır." });
+                }
+
+                // Dosya türü kontrolü
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+                var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(extension))
+                {
+                    return Json(new { success = false, message = "Sadece resim dosyaları yüklenebilir (.jpg, .jpeg, .png, .webp, .gif)" });
+                }
+
+                // Uploads klasörünü oluştur
+                var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "projeler");
+                if (!Directory.Exists(uploadsPath))
+                {
+                    Directory.CreateDirectory(uploadsPath);
+                }
+
+                // Benzersiz dosya adı oluştur
+                var fileName = $"{Guid.NewGuid()}{extension}";
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                // Dosyayı kaydet
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                // URL'i döndür
+                var fileUrl = $"/uploads/projeler/{fileName}";
+
+                _logger.LogInformation($"✅ Görsel yüklendi: {fileName} (Admin: {User.Identity.Name})");
+
+                return Json(new { success = true, url = fileUrl });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Görsel yükleme hatası: {ex.Message}");
+                return Json(new { success = false, message = "Dosya yüklenirken bir hata oluştu." });
+            }
+        }
+
+        // POST: Admin/DeleteGalleryImage
+        [HttpPost]
+        public IActionResult DeleteGalleryImage(string imageUrl)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(imageUrl))
+                {
+                    return Json(new { success = false, message = "Görsel URL'si gerekli." });
+                }
+
+                // URL'den dosya yolunu çıkar
+                if (imageUrl.StartsWith("/uploads/projeler/"))
+                {
+                    var fileName = Path.GetFileName(imageUrl);
+                    var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "projeler", fileName);
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                        _logger.LogInformation($"✅ Görsel silindi: {fileName} (Admin: {User.Identity.Name})");
+                        return Json(new { success = true });
+                    }
+                }
+
+                return Json(new { success = true }); // Dosya yoksa da success döndür
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Görsel silme hatası: {ex.Message}");
+                return Json(new { success = false, message = "Dosya silinirken bir hata oluştu." });
+            }
         }
     }
 }

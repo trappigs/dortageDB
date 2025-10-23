@@ -38,7 +38,9 @@ public class Proje
 
     public string? Altyapi { get; set; } // Elektrik, Su, Kanalizasyon vb.
 
-    public int? MetreKare { get; set; }
+    public int? MetreKare { get; set; } // Eski alan - geriye dönük uyumluluk için
+    public int? MinMetreKare { get; set; } // Minimum metrekare
+    public int? MaxMetreKare { get; set; } // Maximum metrekare
 
     public string? KrediyeUygunluk { get; set; }
 
@@ -51,6 +53,14 @@ public class Proje
     public bool AktifMi { get; set; } = true;
 
     public int Oncelik { get; set; } = 0; // Sıralama için
+
+    public bool YeniBadge { get; set; } = false; // YENİ badge gösterimi için
+
+    // Yakınlık Bilgileri
+    public string? YakinProjeler { get; set; } // Yakında gerçekleşecek projeler
+    public string? YakinBolgeler { get; set; } // Yakınındaki önemli bölgeler (siteler, OSB, otoyol vs.)
+    public string? UlasimBilgileri { get; set; } // Ulaşım bilgileri
+    public string? SosyalTesisler { get; set; } // Yakınındaki sosyal tesisler (hastane, okul, AVM vs.)
 
     // Navigation Properties
     public ICollection<Satis>? Satislar { get; set; }

@@ -1,0 +1,640 @@
+/* Topraktar Akademisi Sayfası Stilleri */
+
+:root {
+    --primary-color: #000a68;
+    --secondary-color: #4CAF50;
+    --accent-color: #FFC107;
+    --text-dark: #2C3E50;
+    --text-light: #7F8C8D;
+    --bg-light: #F8F9FA;
+    --white: #FFFFFF;
+    --success: #27AE60;
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+/* Genel overflow düzeltmesi */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* Hero Section */
+.akademi-hero {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #001a8a 100%);
+    padding: 120px 0 80px;
+    color: var(--white);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.akademi-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+    opacity: 0.5;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 12px 24px;
+    border-radius: 50px;
+    margin-bottom: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.hero-badge i {
+    font-size: 1.5rem;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--white);
+}
+
+.hero-subtitle {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--white);
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    line-height: 1.8;
+    color: var(--white);
+}
+
+/* Stats Section */
+.akademi-stats-section {
+    padding: 0;
+    margin-top: -50px;
+    position: relative;
+    z-index: 2;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.stat-card {
+    background: var(--white);
+    padding: 40px 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+/* Eğitim Kategorileri Section */
+.egitim-kategoriler-section {
+    padding: 100px 0;
+    background: var(--bg-light);
+}
+
+.section-header {
+    margin-bottom: 60px;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-light);
+}
+
+.kategori-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.kategori-card {
+    background: var(--white);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+    position: relative;
+    border: 2px solid transparent;
+}
+
+.kategori-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 10, 104, 0.15);
+}
+
+.kategori-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--primary-color), #001a8a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.kategori-icon i {
+    font-size: 2rem;
+    color: var(--white);
+}
+
+.kategori-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.kategori-description {
+    font-size: 1rem;
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.kategori-topics {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+.kategori-topics li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.kategori-topics i {
+    color: var(--success);
+    font-size: 1rem;
+}
+
+.kategori-badge {
+    display: inline-block;
+    background: var(--accent-color);
+    color: var(--primary-color);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Popüler Eğitimler Section */
+.populer-egitimler-section {
+    padding: 100px 0;
+    background: var(--white);
+}
+
+.egitim-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.egitim-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+}
+
+.egitim-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.egitim-thumbnail {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.egitim-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.egitim-card:hover .egitim-thumbnail img {
+    transform: scale(1.05);
+}
+
+.egitim-duration {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--white);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.egitim-badge-popular,
+.egitim-badge-new {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.egitim-badge-popular {
+    background: var(--accent-color);
+    color: var(--primary-color);
+}
+
+.egitim-badge-new {
+    background: var(--success);
+    color: var(--white);
+}
+
+.egitim-content {
+    padding: 25px;
+}
+
+.egitim-category {
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.egitim-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+}
+
+.egitim-description {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.egitim-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.egitim-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Neden Akademi Section */
+.neden-akademi-section {
+    padding: 100px 0;
+    background: var(--bg-light);
+}
+
+.neden-content {
+    padding-right: 40px;
+}
+
+.neden-description {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    line-height: 1.8;
+    margin-bottom: 40px;
+}
+
+.neden-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.neden-item {
+    display: flex;
+    gap: 20px;
+    align-items: start;
+}
+
+.neden-icon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.neden-icon i {
+    font-size: 1.5rem;
+    color: var(--white);
+}
+
+.neden-text h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.neden-text p {
+    font-size: 1rem;
+    color: var(--text-dark);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.neden-image {
+    position: relative;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.neden-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.image-badge {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: var(--accent-color);
+    padding: 20px 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.badge-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.badge-content i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+.badge-content span {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* CTA Section */
+.akademi-cta-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #001a8a 100%);
+}
+
+.akademi-cta-section .cta-box {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 60px 40px;
+    border-radius: var(--border-radius);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.cta-icon {
+    font-size: 4rem;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+}
+
+.cta-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 20px;
+}
+
+.cta-description {
+    font-size: 1.3rem;
+    color: var(--white);
+    margin-bottom: 40px;
+    opacity: 0.95;
+}
+
+.btn-cta-large {
+    background: var(--accent-color);
+    color: var(--primary-color);
+    padding: 20px 60px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-radius: 50px;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    transition: var(--transition);
+    box-shadow: 0 15px 40px rgba(255, 193, 7, 0.3);
+}
+
+.btn-cta-large:hover {
+    background: #FFD54F;
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(255, 193, 7, 0.4);
+    color: var(--primary-color);
+}
+
+.cta-note {
+    margin-top: 25px;
+    font-size: 1rem;
+    color: var(--white);
+    opacity: 0.9;
+}
+
+/* Responsive Tasarım */
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.4rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .kategori-grid,
+    .egitim-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .neden-content {
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .akademi-hero {
+        padding: 80px 0 60px;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .stat-card {
+        padding: 30px 20px;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .egitim-kategoriler-section,
+    .populer-egitimler-section,
+    .neden-akademi-section {
+        padding: 60px 0;
+    }
+
+    .akademi-cta-section {
+        padding: 60px 0;
+    }
+
+    .akademi-cta-section .cta-box {
+        padding: 40px 20px;
+    }
+
+    .cta-title {
+        font-size: 1.8rem;
+    }
+
+    .cta-description {
+        font-size: 1.1rem;
+    }
+
+    .btn-cta-large {
+        padding: 15px 40px;
+        font-size: 1.2rem;
+    }
+
+    .kategori-card,
+    .egitim-card {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-badge {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+    }
+
+    .kategori-card {
+        padding: 30px 20px;
+    }
+
+    .kategori-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .kategori-icon i {
+        font-size: 1.75rem;
+    }
+}

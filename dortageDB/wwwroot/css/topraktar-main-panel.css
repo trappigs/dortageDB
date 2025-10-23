@@ -364,21 +364,22 @@
 
 .topraktar-main-panel .mobile-menu-btn {
     display: none;
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    width: 48px;
-    height: 48px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    z-index: 998;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    padding: 0;
+    margin-right: 8px;
 }
+
+.topraktar-main-panel .mobile-menu-btn:hover {
+        background: #f3f4f6;
+    }
 
 .topraktar-main-panel .mobile-menu-btn:active {
         transform: scale(0.95);
@@ -527,7 +528,7 @@
 
 .topraktar-main-panel .main-content {
     margin-left: 125px;
-    padding: 40px;
+    padding: 10px 50px;
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: 100vh;
 }

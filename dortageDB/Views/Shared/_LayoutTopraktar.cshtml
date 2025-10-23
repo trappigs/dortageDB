@@ -130,6 +130,137 @@
             overflow-x: hidden;
         }
 
+        /* Top Navbar */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            right: 0;
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 100;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.collapsed ~ .top-navbar {
+            left: 80px;
+        }
+
+        .top-navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .top-navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #000a68;
+            font-weight: 700;
+            font-size: 18px;
+            transition: opacity 0.2s;
+        }
+
+        .top-navbar-logo:hover {
+            opacity: 0.8;
+        }
+
+        .top-navbar-logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .top-navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .navbar-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .navbar-link:hover {
+            background: #f3f4f6;
+            color: #000a68;
+        }
+
+        .navbar-link svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Adjust main content for navbar */
+        .main-content {
+            margin-top: 45px;
+        }
+
+        /* Mobile navbar */
+        @@media (max-width: 768px) {
+            .top-navbar {
+                left: 0;
+                padding: 0 12px;
+                height: 60px;
+            }
+
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+
+            .top-navbar-logo {
+                font-size: 14px;
+            }
+
+            .top-navbar-logo img {
+                height: 28px;
+            }
+
+            .top-navbar-logo span {
+                display: none;
+            }
+
+            .navbar-link {
+                padding: 6px 8px;
+                font-size: 12px;
+                gap: 4px;
+            }
+
+            .navbar-link span {
+                display: none;
+            }
+
+            .navbar-link svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .top-navbar-right {
+                gap: 4px;
+            }
+
+            .main-content {
+                margin-top: 5px;
+            }
+        }
     </style>
 </head>
 <body class="topraktar-main-panel">
@@ -138,14 +269,41 @@
         <div class="loading-spinner"></div>
     </div>
 
-    <!-- Mobile Menu Button -->
-    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menüyü aç">
-        <svg viewBox="0 0 24 24">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-    </button>
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+        <div class="top-navbar-left">
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menüyü aç">
+                <svg viewBox="0 0 24 24">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <a asp-controller="Home" asp-action="Index" class="top-navbar-logo">
+                <img src="~/images/logo.png" alt="Dortage Logo" />
+                <span>TOPRAKTAR</span>
+            </a>
+        </div>
+        <div class="top-navbar-right">
+            <a asp-controller="Home" asp-action="Index" class="navbar-link">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Anasayfa</span>
+            </a>
+            <a asp-controller="Proje" asp-action="Index" class="navbar-link">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                <span>Projeler</span>
+            </a>
+        </div>
+    </nav>
 
     <!-- Mobile Overlay -->
     @* <div class="mobile-overlay" id="mobileOverlay"></div> *@

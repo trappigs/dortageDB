@@ -362,7 +362,7 @@ body {
 }
 
 .steps-container {
-    margin-top: 60px;
+    margin-top: 15px;
 }
 
 .step-card {
@@ -674,6 +674,9 @@ body {
 }
 
 @media (max-width: 768px) {
+    .section-header {
+        margin-bottom: 5px;
+    }
     .hero-section {
         padding: 60px 0 40px;
     }

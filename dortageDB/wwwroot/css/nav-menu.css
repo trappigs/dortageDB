@@ -197,6 +197,8 @@
     padding: 24px;
     transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 .nav-menus .mobile-menu.active {
         right: 0;
@@ -206,7 +208,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
 }
 .nav-menus .mobile-menu-header .logo {
         font-size: 24px;
@@ -227,13 +230,25 @@
     list-style: none;
     display: flex;
     flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 0;
+    padding-bottom: 20px;
 }
 .nav-menus .mobile-nav-item {
     border-bottom: 1px solid var(--border-light);
 }
+.nav-menus .mobile-nav-logout {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+}
 .nav-menus .mobile-nav-link {
     display: block;
-    padding: 20px 0;
+    padding: 14px 0;
     color: var(--text-primary);
     text-decoration: none;
     font-size: 18px;
@@ -254,20 +269,7 @@
     display: block;
     font-size: 16px;
 }
-/* Mobile Buttons */
-.nav-menus .mobile-buttons {
-    position: absolute;
-    bottom: 24px;
-    left: 24px;
-    right: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-.nav-menus .mobile-buttons .btn {
-        width: 100%;
-        justify-content: center;
-    }
+/* Mobile Buttons - Artık mobile-nav-buttons olarak kullanılıyor */
 @media (max-width: 1300px) {
     .nav-menus .nav-menu {
         gap: 25px;
