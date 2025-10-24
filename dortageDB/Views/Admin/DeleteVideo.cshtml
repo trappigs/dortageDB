@@ -1,0 +1,240 @@
+@model dortageDB.Entities.EgitimVideo
+
+@{
+    ViewData["Title"] = "Video Sil";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/admin-panel.css" asp-append-version="true" />
+
+<style>
+    .delete-warning {
+        background: #fee2e2;
+        border: 2px solid #ef4444;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        display: flex;
+        gap: 16px;
+        align-items: start;
+    }
+
+    .warning-icon {
+        width: 48px;
+        height: 48px;
+        background: #ef4444;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .video-preview {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .video-preview iframe {
+        width: 100%;
+        max-width: 560px;
+        height: 315px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .video-details {
+        display: grid;
+        gap: 16px;
+    }
+
+    .detail-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 16px;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 8px;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #6b7280;
+    }
+
+    .detail-value {
+        color: #1f2937;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-right: 8px;
+    }
+
+    .badge-active {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .badge-featured {
+        background: #FFC107;
+        color: #000a68;
+    }
+
+    .badge-new {
+        background: #10b981;
+        color: white;
+    }
+
+    .badge-popular {
+        background: #3b82f6;
+        color: white;
+    }
+</style>
+
+<div class="admin-panel">
+    <div class="panel-header">
+        <div>
+            <h1 class="panel-title">🗑️ Video Sil</h1>
+            <p class="panel-subtitle">Bu işlem geri alınamaz!</p>
+        </div>
+        <a asp-action="EgitimVideolar" class="btn btn-secondary">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Geri Dön
+        </a>
+    </div>
+
+    <div class="panel-content">
+        <div class="delete-warning">
+            <div class="warning-icon">⚠️</div>
+            <div>
+                <h3 style="color: #991b1b; font-size: 18px; font-weight: 700; margin-bottom: 8px;">
+                    Bu videoyu silmek istediğinizden emin misiniz?
+                </h3>
+                <p style="color: #991b1b; margin: 0;">
+                    Bu işlem geri alınamaz. Video kalıcı olarak silinecek ve Topraktar Akademi'den kaldırılacaktır.
+                </p>
+            </div>
+        </div>
+
+        <div class="video-preview">
+            <iframe
+                src="https://www.youtube.com/embed/@Model.YoutubeVideoID"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+
+            <div class="video-details">
+                <div class="detail-row">
+                    <div class="detail-label">Video ID:</div>
+                    <div class="detail-value">@Model.VideoID</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Başlık:</div>
+                    <div class="detail-value"><strong>@Model.Baslik</strong></div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Açıklama:</div>
+                    <div class="detail-value">@Model.Aciklama</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Kategori:</div>
+                    <div class="detail-value">
+                        @{
+                            var kategoriAdi = dortageDB.Entities.EgitimKategorileri.GetAll()
+                                .FirstOrDefault(k => k.Key == Model.Kategori).Value ?? Model.Kategori;
+                        }
+                        @kategoriAdi
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">YouTube Video ID:</div>
+                    <div class="detail-value">
+                        <code style="background: #f3f4f6; padding: 4px 8px; border-radius: 4px;">@Model.YoutubeVideoID</code>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Süre:</div>
+                    <div class="detail-value">@Model.Sure</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">İstatistikler:</div>
+                    <div class="detail-value">
+                        <strong>@Model.IzlenmeSayisi</strong> izlenme ·
+                        <strong>@Model.BegeniSayisi</strong> beğeni
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Etiketler:</div>
+                    <div class="detail-value">
+                        <span class="badge @(Model.Aktif ? "badge-active" : "badge-inactive")">
+                            @(Model.Aktif ? "Aktif" : "Pasif")
+                        </span>
+                        @if (Model.OneEikan)
+                        {
+                            <span class="badge badge-featured">⭐ Öne Çıkan</span>
+                        }
+                        @if (Model.Yeni)
+                        {
+                            <span class="badge badge-new">Yeni</span>
+                        }
+                        @if (Model.Populer)
+                        {
+                            <span class="badge badge-popular">Popüler</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Sıra:</div>
+                    <div class="detail-value">@Model.Sira</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Eklenme Tarihi:</div>
+                    <div class="detail-value">@Model.EklenmeTarihi.ToString("dd MMMM yyyy HH:mm")</div>
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="DeleteVideo" method="post" style="margin-top: 24px;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="VideoID" />
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Evet, Videoyu Sil
+                </button>
+                <a asp-action="EgitimVideolar" class="btn btn-secondary">İptal Et</a>
+            </div>
+        </form>
+    </div>
+</div>

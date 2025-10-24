@@ -37,8 +37,11 @@ namespace dortageDB.Controllers
                 TotalRandevular = await _context.Randevular.CountAsync(),
                 PendingRandevular = await _context.Randevular.CountAsync(r => r.RandevuDurum == RandevuDurum.pending),
                 TotalSatislar = await _context.Satislar.CountAsync(),
+                TotalSatisMiktari = await _context.Satislar.SumAsync(s => (decimal?)s.ToplamSatisFiyati) ?? 0,
                 TotalKomisyon = await _context.Satislar.SumAsync(s => (decimal?)s.OdenecekKomisyon) ?? 0,
-                ActiveReferrals = await _context.Referrals.CountAsync(r => r.IsActive)
+                ActiveReferrals = await _context.Referrals.CountAsync(r => r.IsActive),
+                TotalVideos = await _context.EgitimVideolar.CountAsync(),
+                ActiveVideos = await _context.EgitimVideolar.CountAsync(v => v.Aktif)
             };
 
             ViewBag.Stats = stats;
@@ -848,6 +851,197 @@ namespace dortageDB.Controllers
                 _logger.LogError($"❌ Görsel silme hatası: {ex.Message}");
                 return Json(new { success = false, message = "Dosya silinirken bir hata oluştu." });
             }
+        }
+
+        // ====================================
+        // EĞİTİM VİDEO YÖNETİMİ
+        // ====================================
+
+        // GET: Admin/EgitimVideolar
+        public async Task<IActionResult> EgitimVideolar()
+        {
+            var videolar = await _context.EgitimVideolar
+                .OrderByDescending(v => v.Sira)
+                .ThenByDescending(v => v.EklenmeTarihi)
+                .ToListAsync();
+
+            return View(videolar);
+        }
+
+        // GET: Admin/VideoDetails/5
+        public async Task<IActionResult> VideoDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var video = await _context.EgitimVideolar
+                .FirstOrDefaultAsync(m => m.VideoID == id);
+
+            if (video == null)
+            {
+                return NotFound();
+            }
+
+            return View(video);
+        }
+
+        // GET: Admin/CreateVideo
+        public IActionResult CreateVideo()
+        {
+            ViewBag.Kategoriler = EgitimKategorileri.GetAll();
+            return View();
+        }
+
+        // POST: Admin/CreateVideo
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateVideo([Bind("Baslik,Aciklama,YoutubeVideoID,Kategori,Sure,OneEikan,Yeni,Populer,Sira,Aktif")] EgitimVideo video)
+        {
+            if (ModelState.IsValid)
+            {
+                video.EklenmeTarihi = DateTime.Now;
+                video.IzlenmeSayisi = 0;
+                video.BegeniSayisi = 0;
+
+                _context.Add(video);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"✅ Eğitim videosu eklendi: {video.Baslik} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Video başarıyla eklendi!";
+                return RedirectToAction(nameof(EgitimVideolar));
+            }
+
+            ViewBag.Kategoriler = EgitimKategorileri.GetAll();
+            return View(video);
+        }
+
+        // GET: Admin/EditVideo/5
+        public async Task<IActionResult> EditVideo(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var video = await _context.EgitimVideolar.FindAsync(id);
+            if (video == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Kategoriler = EgitimKategorileri.GetAll();
+            return View(video);
+        }
+
+        // POST: Admin/EditVideo/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditVideo(int id, [Bind("VideoID,Baslik,Aciklama,YoutubeVideoID,Kategori,Sure,IzlenmeSayisi,BegeniSayisi,OneEikan,Yeni,Populer,Sira,Aktif,EklenmeTarihi")] EgitimVideo video)
+        {
+            if (id != video.VideoID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(video);
+                    await _context.SaveChangesAsync();
+
+                    _logger.LogInformation($"✅ Eğitim videosu güncellendi: {video.Baslik} (Admin: {User.Identity.Name})");
+                    TempData["SuccessMessage"] = "Video başarıyla güncellendi!";
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!VideoExists(video.VideoID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(EgitimVideolar));
+            }
+
+            ViewBag.Kategoriler = EgitimKategorileri.GetAll();
+            return View(video);
+        }
+
+        // GET: Admin/DeleteVideo/5
+        public async Task<IActionResult> DeleteVideo(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var video = await _context.EgitimVideolar
+                .FirstOrDefaultAsync(m => m.VideoID == id);
+
+            if (video == null)
+            {
+                return NotFound();
+            }
+
+            return View(video);
+        }
+
+        // POST: Admin/DeleteVideo/5
+        [HttpPost, ActionName("DeleteVideo")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteVideoConfirmed(int id)
+        {
+            try
+            {
+                var video = await _context.EgitimVideolar.FindAsync(id);
+                if (video != null)
+                {
+                    var videoBaslik = video.Baslik;
+                    _context.EgitimVideolar.Remove(video);
+                    await _context.SaveChangesAsync();
+
+                    _logger.LogInformation($"✅ Eğitim videosu silindi: {videoBaslik} (Admin: {User.Identity.Name})");
+                    TempData["SuccessMessage"] = "Video başarıyla silindi!";
+                }
+
+                return RedirectToAction(nameof(EgitimVideolar));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Video silme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(EgitimVideolar));
+            }
+        }
+
+        // POST: Admin/ToggleVideoAktif/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleVideoAktif(int id)
+        {
+            var video = await _context.EgitimVideolar.FindAsync(id);
+            if (video == null)
+            {
+                return NotFound();
+            }
+
+            video.Aktif = !video.Aktif;
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"✅ Video durumu değiştirildi: {video.Baslik} -> {(video.Aktif ? "Aktif" : "Pasif")} (Admin: {User.Identity.Name})");
+            TempData["SuccessMessage"] = $"Video {(video.Aktif ? "aktif" : "pasif")} hale getirildi!";
+            return RedirectToAction(nameof(EgitimVideolar));
+        }
+
+        private bool VideoExists(int id)
+        {
+            return _context.EgitimVideolar.Any(e => e.VideoID == id);
         }
     }
 }

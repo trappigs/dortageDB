@@ -43,9 +43,9 @@
         margin-bottom: 20px;
     }
 
-    .form-group {
+    /* .form-group {
         margin-bottom: 20px;
-    }
+    } */
 
         .form-group label {
             display: block;
@@ -219,7 +219,7 @@
                     <h4 style="color: #000a68; margin-bottom: 16px;">📋 Yeni Müşteri Bilgileri</h4>
 
                     <div class="form-row">
-                        <div class="form-group">
+                        <div style="margin-bottom: 0px;" class="form-group">
                             <label asp-for="YeniMusteriAd">Ad <span class="required">*</span></label>
                             <input asp-for="YeniMusteriAd" class="form-control" placeholder="Müşteri adı" />
                             <span asp-validation-for="YeniMusteriAd" class="text-danger"></span>

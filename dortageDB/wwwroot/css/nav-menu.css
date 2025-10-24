@@ -17,8 +17,8 @@
     z-index: var(--z-fixed);
     transition: all 0.3s ease;
 }
-/* Logo */
-.nav-menus .navbar .logo {
+    /* Logo */
+    .nav-menus .navbar .logo {
         font-size: 24px;
         font-weight: 700;
         color: var(--primary);
@@ -30,13 +30,16 @@
         align-items: center;
         height: 100%;
     }
-.nav-menus .navbar .logo:hover {
+
+        .nav-menus .navbar .logo:hover {
             transform: scale(1.05);
         }
-.nav-menus .navbar .logo-image {
+
+    .nav-menus .navbar .logo-image {
         height: 40px;
         width: auto;
         object-fit: contain;
+        margin-top: 8px;
     }
 /* Desktop Navigation Menu */
 .nav-menus .nav-menu {
@@ -48,12 +51,14 @@
     margin: 0;
     padding: 0;
 }
+
 .nav-menus .nav-item {
     position: relative;
     display: flex;
     align-items: center;
     height: 100%;
 }
+
 .nav-menus .nav-link {
     font-size: 14px;
     font-weight: 500;
@@ -67,14 +72,17 @@
     height: 100%;
     white-space: nowrap;
 }
-.nav-menus .nav-link:hover {
+
+    .nav-menus .nav-link:hover {
         color: var(--primary);
     }
-.nav-menus .nav-link.active {
+
+    .nav-menus .nav-link.active {
         color: var(--primary);
         position: relative;
     }
-.nav-menus .nav-link.active::after {
+
+        .nav-menus .nav-link.active::after {
             content: '';
             position: absolute;
             bottom: -4px;
@@ -89,6 +97,7 @@
     font-size: 12px;
     transition: transform 0.3s ease;
 }
+
 .nav-menus .nav-item:hover .dropdown-arrow {
     transform: rotate(180deg);
 }
@@ -108,11 +117,13 @@
     transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
     transform: translateX(-50%) translateY(-8px);
 }
+
 .nav-menus .nav-item:hover .dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
 }
+
 .nav-menus .dropdown-item {
     padding: 12px 24px;
     color: var(--text-primary);
@@ -122,7 +133,8 @@
     font-weight: 500;
     transition: background 0.3s ease;
 }
-.nav-menus .dropdown-item:hover {
+
+    .nav-menus .dropdown-item:hover {
         background: var(--bg-hover);
     }
 /* Navigation Buttons */
@@ -132,6 +144,7 @@
     align-items: center;
     height: 100%;
 }
+
 .nav-menus .navbar .btn-outlined {
     border: 2px solid var(--primary);
     color: var(--primary);
@@ -146,10 +159,12 @@
     align-items: center;
     white-space: nowrap;
 }
-.nav-menus .navbar .btn-outlined:hover {
+
+    .nav-menus .navbar .btn-outlined:hover {
         background: var(--primary);
         color: var(--white);
     }
+
 .nav-menus .navbar .btn-filled {
     background: var(--primary);
     color: var(--white);
@@ -164,7 +179,8 @@
     border: none;
     white-space: nowrap;
 }
-.nav-menus .navbar .btn-filled:hover {
+
+    .nav-menus .navbar .btn-filled:hover {
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(0, 10, 104, 0.3);
     }
@@ -178,7 +194,8 @@
     background: none;
     border: none;
 }
-.nav-menus .mobile-menu-toggle span {
+
+    .nav-menus .mobile-menu-toggle span {
         width: 24px;
         height: 2px;
         background: var(--primary);
@@ -200,7 +217,8 @@
     display: flex;
     flex-direction: column;
 }
-.nav-menus .mobile-menu.active {
+
+    .nav-menus .mobile-menu.active {
         right: 0;
     }
 /* Mobile Menu Header */
@@ -211,12 +229,14 @@
     margin-bottom: 20px;
     padding-bottom: 10px;
 }
-.nav-menus .mobile-menu-header .logo {
+
+    .nav-menus .mobile-menu-header .logo {
         font-size: 24px;
         font-weight: 700;
         color: var(--primary);
         text-decoration: none;
     }
+
 .nav-menus .close-menu {
     font-size: 32px;
     cursor: pointer;
@@ -235,9 +255,11 @@
     margin-bottom: 0;
     padding-bottom: 20px;
 }
+
 .nav-menus .mobile-nav-item {
     border-bottom: 1px solid var(--border-light);
 }
+
 .nav-menus .mobile-nav-logout {
     width: 100%;
     background: none;
@@ -246,6 +268,7 @@
     text-align: left;
     font-family: inherit;
 }
+
 .nav-menus .mobile-nav-link {
     display: block;
     padding: 14px 0;
@@ -259,9 +282,11 @@
     padding-left: 20px;
     display: none;
 }
-.nav-menus .mobile-dropdown-items.active {
+
+    .nav-menus .mobile-dropdown-items.active {
         display: block;
     }
+
 .nav-menus .mobile-dropdown-item {
     padding: 12px 0;
     color: var(--text-primary);

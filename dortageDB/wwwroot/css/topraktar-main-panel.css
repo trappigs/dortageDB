@@ -527,14 +527,14 @@
 /* Main Content Demo */
 
 .topraktar-main-panel .main-content {
-    margin-left: 125px;
+    margin-left: 120px;
     padding: 10px 50px;
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: 100vh;
 }
 
 .topraktar-main-panel .sidebar.collapsed ~ .main-content {
-    margin-left: 80px;
+    margin-left: 250px;
 }
 
 @media (max-width: 768px) {

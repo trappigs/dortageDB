@@ -230,9 +230,19 @@
                 <div class="stat-header">
                     <div>
                         <div class="stat-value">@stats.TotalSatislar</div>
-                        <div class="stat-label">Toplam Satış</div>
+                        <div class="stat-label">Toplam Satış Adedi</div>
                     </div>
                     <div class="stat-icon green">💰</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value">₺@stats.TotalSatisMiktari.ToString("N0")</div>
+                        <div class="stat-label">Toplam Satış Miktarı</div>
+                    </div>
+                    <div class="stat-icon green">💸</div>
                 </div>
             </div>
 
@@ -253,6 +263,16 @@
                         <div class="stat-label">Aktif Referans Kodu</div>
                     </div>
                     <div class="stat-icon purple">🎫</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value">@stats.ActiveVideos / @stats.TotalVideos</div>
+                        <div class="stat-label">Aktif / Toplam Video</div>
+                    </div>
+                    <div class="stat-icon blue">📚</div>
                 </div>
             </div>
         </div>
@@ -305,6 +325,14 @@
                 <div class="action-content">
                     <h3>Proje Yönetimi</h3>
                     <p>Projeleri ekle, düzenle, sil ve görüntüle</p>
+                </div>
+            </a>
+
+            <a asp-action="EgitimVideolar" class="action-card">
+                <div class="action-icon">📚</div>
+                <div class="action-content">
+                    <h3>Eğitim Videoları</h3>
+                    <p>Topraktar Akademisi videolarını yönet</p>
                 </div>
             </a>
         </div>

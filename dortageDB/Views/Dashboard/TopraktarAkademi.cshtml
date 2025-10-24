@@ -1,0 +1,947 @@
+@{
+    ViewData["Title"] = "Topraktar Akademi";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+
+<style>
+    .akademi-header {
+        background: linear-gradient(135deg, #000a68 0%, #001a88 100%);
+        padding: 40px;
+        border-radius: 16px;
+        color: white;
+        margin-bottom: 32px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .akademi-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .akademi-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .akademi-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: white;
+    }
+
+    .akademi-subtitle {
+        font-size: 16px;
+        opacity: 0.9;
+        color: white;
+        margin-bottom: 24px;
+    }
+
+    .akademi-stats {
+        display: flex;
+        gap: 32px;
+        margin-top: 24px;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    .stat-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .stat-label {
+        font-size: 13px;
+        opacity: 0.8;
+    }
+
+    .filter-section {
+        margin-bottom: 24px;
+    }
+
+    .category-tabs {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .category-tab {
+        padding: 10px 20px;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+        color: #374151;
+    }
+
+    .category-tab:hover {
+        border-color: #000a68;
+        background: rgba(0, 10, 104, 0.02);
+    }
+
+    .category-tab.active {
+        background: #000a68;
+        color: white;
+        border-color: #000a68;
+    }
+
+    .search-box {
+        position: relative;
+        max-width: 400px;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 12px 40px 12px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: #000a68;
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+    }
+
+    .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .course-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+
+    .course-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        border-color: #000a68;
+    }
+
+    .course-thumbnail {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #000a68, #001a88);
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .course-thumbnail::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 10, 104, 0.3);
+        transition: all 0.3s;
+    }
+
+    .course-card:hover .course-thumbnail::before {
+        background: rgba(0, 10, 104, 0.5);
+    }
+
+    .play-button {
+        width: 64px;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000a68;
+        font-size: 24px;
+        transition: all 0.3s;
+        position: relative;
+        z-index: 1;
+    }
+
+    .course-card:hover .play-button {
+        transform: scale(1.1);
+        background: white;
+    }
+
+    .course-duration {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        z-index: 1;
+    }
+
+    .course-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        z-index: 1;
+    }
+
+    .badge-new {
+        background: #10b981;
+        color: white;
+    }
+
+    .badge-popular {
+        background: #FFC107;
+        color: #000a68;
+    }
+
+    .course-content {
+        padding: 20px;
+    }
+
+    .course-category {
+        font-size: 12px;
+        color: #000a68;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .course-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+    .course-description {
+        font-size: 14px;
+        color: #6b7280;
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+
+    .course-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 16px;
+        border-top: 1px solid #f3f4f6;
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .progress-section {
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 32px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .progress-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        background: #f9fafb;
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+
+    .progress-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #000a68, #001a88);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+    }
+
+    .progress-info {
+        flex: 1;
+    }
+
+    .progress-title {
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 8px;
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #000a68, #001a88);
+        border-radius: 4px;
+        transition: width 0.6s ease;
+    }
+
+    .progress-percentage {
+        font-size: 20px;
+        font-weight: 700;
+        color: #000a68;
+        min-width: 60px;
+        text-align: right;
+    }
+
+    .featured-section {
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 32px;
+    }
+
+    .featured-course {
+        display: flex;
+        gap: 24px;
+        padding: 24px;
+        background: linear-gradient(135deg, rgba(0, 10, 104, 0.05), rgba(0, 26, 136, 0.05));
+        border-radius: 12px;
+        border: 2px solid #000a68;
+    }
+
+    .featured-thumbnail {
+        width: 280px;
+        height: 180px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #000a68, #001a88);
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .featured-thumbnail::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 10, 104, 0.3);
+        border-radius: 12px;
+        transition: all 0.3s;
+    }
+
+    .featured-course:hover .featured-thumbnail::before {
+        background: rgba(0, 10, 104, 0.5);
+    }
+
+    .featured-info {
+        flex: 1;
+    }
+
+    .featured-tag {
+        display: inline-block;
+        background: #FFC107;
+        color: #000a68;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+
+    .featured-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 12px;
+    }
+
+    .featured-description {
+        font-size: 15px;
+        color: #6b7280;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .featured-meta {
+        display: flex;
+        gap: 24px;
+        margin-bottom: 20px;
+    }
+
+    .btn-watch {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #000a68;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-family: inherit;
+    }
+
+    .btn-watch:hover {
+        background: #001a88;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 10, 104, 0.3);
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 16px;
+    }
+
+    .empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    @@media (max-width: 1024px) {
+        .courses-grid {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .akademi-stats {
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .featured-course {
+            flex-direction: column;
+        }
+
+        .featured-thumbnail {
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .akademi-header {
+            padding: 24px;
+        }
+        .featured-section {
+            padding: 10px;
+        }
+
+        .akademi-title {
+            font-size: 24px;
+        }
+
+        .akademi-stats {
+            flex-direction: column;
+        }
+
+        .courses-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .category-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .category-tab {
+            padding: 8px 12px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .search-box {
+            max-width: 100%;
+        }
+    }
+
+    /* Video Modal */
+    .video-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .video-modal.active {
+        display: flex;
+    }
+
+    .video-modal-content {
+        position: relative;
+        width: 100%;
+        max-width: 1200px;
+        background: #000;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .video-modal-close {
+        position: absolute;
+        top: -50px;
+        right: 0;
+        width: 44px;
+        height: 44px;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #000;
+        transition: all 0.2s;
+        z-index: 1;
+        font-weight: 300;
+    }
+
+    .video-modal-close:hover {
+        transform: scale(1.1);
+        background: #f3f4f6;
+    }
+
+    .video-modal-iframe {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: none;
+    }
+
+    @@media (max-width: 768px) {
+        .video-modal-content {
+            max-width: 100%;
+        }
+
+        .video-modal-close {
+            top: -50px;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div class="topraktar-main-panel">
+    <div class="main-content">
+        <!-- Akademi Header -->
+        <div class="akademi-header">
+            <div class="akademi-header-content">
+                <h1 class="akademi-title">
+                    🎓 Topraktar Akademi
+                </h1>
+                <p class="akademi-subtitle">
+                    Başarılı bir Topraktar olmak için ihtiyacınız olan tüm eğitimler burada!
+                </p>
+                <div class="akademi-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-content">
+                            <div class="stat-value">25+</div>
+                            <div class="stat-label">Eğitim Videosu</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-content">
+                            <div class="stat-value">12 Saat</div>
+                            <div class="stat-label">Toplam İçerik</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Tamamlanan</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- İlerleme Durumu -->
+        <div class="progress-section">
+            <h2 class="section-title">
+                📊 İlerleme Durumu
+            </h2>
+            <div class="progress-item">
+                <div class="progress-icon">🎯</div>
+                <div class="progress-info">
+                    <div class="progress-title">Genel İlerleme</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="progress-percentage">0%</div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-icon">🚀</div>
+                <div class="progress-info">
+                    <div class="progress-title">Başlangıç Rehberi</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="progress-percentage">0%</div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-icon">💼</div>
+                <div class="progress-info">
+                    <div class="progress-title">Satış Teknikleri</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="progress-percentage">0%</div>
+            </div>
+        </div>
+
+        <!-- Öne Çıkan Eğitim -->
+        @if (ViewBag.OneCikanVideo != null)
+        {
+            var oneCikan = ViewBag.OneCikanVideo as dortageDB.Entities.EgitimVideo;
+            var kategoriAdi = dortageDB.Entities.EgitimKategorileri.GetAll()
+                .FirstOrDefault(k => k.Key == oneCikan.Kategori).Value ?? oneCikan.Kategori;
+
+            <div class="featured-section">
+                <h2 class="section-title">
+                    ⭐ Öne Çıkan Eğitim
+                </h2>
+                <div class="featured-course">
+                    <div class="featured-thumbnail" style="background-image: url('https://img.youtube.com/vi/@oneCikan.YoutubeVideoID/maxresdefault.jpg');" onclick="openVideoModal('@oneCikan.YoutubeVideoID')">
+                        <div class="play-button">▶</div>
+                        <div class="course-duration">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            @oneCikan.Sure
+                        </div>
+                    </div>
+                    <div class="featured-info">
+                        <span class="featured-tag">📌 ÖNERİLEN</span>
+                        <h3 class="featured-title">@oneCikan.Baslik</h3>
+                        <p class="featured-description">
+                            @oneCikan.Aciklama
+                        </p>
+                        <div class="featured-meta">
+                            <div class="meta-item">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                @oneCikan.IzlenmeSayisi izlenme
+                            </div>
+                            <div class="meta-item">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                </svg>
+                                @kategoriAdi
+                            </div>
+                        </div>
+                        <button onclick="openVideoModal('@oneCikan.YoutubeVideoID')" class="btn-watch" style="border: none; background: transparent; padding: 0;">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            Şimdi İzle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Filtreler -->
+        <div class="filter-section">
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">
+                    Tümü (@ViewBag.ToplamCount)
+                </button>
+                <button class="category-tab" data-category="baslangic">
+                    🚀 Başlangıç (@ViewBag.BaslangicCount)
+                </button>
+                <button class="category-tab" data-category="satis">
+                    💼 Satış Teknikleri (@ViewBag.SatisCount)
+                </button>
+                <button class="category-tab" data-category="arsa">
+                    🏞️ Arsa Bilgisi (@ViewBag.ArsaCount)
+                </button>
+                <button class="category-tab" data-category="musteri">
+                    👥 Müşteri İlişkileri (@ViewBag.MusteriCount)
+                </button>
+                <button class="category-tab" data-category="pazarlama">
+                    📱 Dijital Pazarlama (@ViewBag.PazarlamaCount)
+                </button>
+                <button class="category-tab" data-category="basari">
+                    ⭐ Başarı Hikayeleri (@ViewBag.BasariCount)
+                </button>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Eğitim ara..." id="searchInput">
+                <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Eğitim Kartları -->
+        <div class="courses-grid" id="coursesGrid">
+            @if (ViewBag.Videolar != null)
+            {
+                @foreach (var video in ViewBag.Videolar as List<dortageDB.Entities.EgitimVideo>)
+                {
+                    var kategoriAdi = dortageDB.Entities.EgitimKategorileri.GetAll()
+                        .FirstOrDefault(k => k.Key == video.Kategori).Value ?? video.Kategori;
+
+                    <div class="course-card" data-category="@video.Kategori">
+                        <div class="course-thumbnail" style="background-image: url('https://img.youtube.com/vi/@video.YoutubeVideoID/maxresdefault.jpg');" onclick="openVideoModal('@video.YoutubeVideoID')">
+                            <div class="play-button">▶</div>
+                            <div class="course-duration">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                @video.Sure
+                            </div>
+                            @if (video.Yeni)
+                            {
+                                <div class="course-badge badge-new">Yeni</div>
+                            }
+                            else if (video.Populer)
+                            {
+                                <div class="course-badge badge-popular">Popüler</div>
+                            }
+                        </div>
+                        <div class="course-content">
+                            <div class="course-category">@kategoriAdi</div>
+                            <h3 class="course-title">@video.Baslik</h3>
+                            <p class="course-description">
+                                @video.Aciklama
+                            </p>
+                            <div class="course-meta">
+                                <div class="meta-item">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    @video.IzlenmeSayisi
+                                </div>
+                                <div class="meta-item" style="cursor: pointer;" onclick="openVideoModal('@video.YoutubeVideoID')">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                    </svg>
+                                    İzle
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                    <div class="empty-icon">📹</div>
+                    <h3>Henüz video eklenmemiş</h3>
+                    <p>Yakında eğitim videoları eklenecektir</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Video Modal -->
+<div class="video-modal" id="videoModal">
+    <div class="video-modal-content">
+        <button class="video-modal-close" onclick="closeVideoModal()">×</button>
+        <iframe class="video-modal-iframe" id="videoIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</div>
+
+<script>
+    function openVideoModal(videoId) {
+        const modal = document.getElementById('videoModal');
+        const iframe = document.getElementById('videoIframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoModal() {
+        const modal = document.getElementById('videoModal');
+        const iframe = document.getElementById('videoIframe');
+        modal.classList.remove('active');
+        iframe.src = '';
+        document.body.style.overflow = '';
+    }
+
+    // Close modal on background click
+    document.getElementById('videoModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeVideoModal();
+        }
+    });
+
+    // Close modal on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeVideoModal();
+        }
+    });
+</script>
+
+<script>
+    // Kategori filtreleme
+    const categoryTabs = document.querySelectorAll('.category-tab');
+    const courseCards = document.querySelectorAll('.course-card');
+
+    categoryTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+
+            // Aktif tab değiştir
+            categoryTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            // Kursları filtrele
+            courseCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Arama fonksiyonu
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+
+        courseCards.forEach(card => {
+            const title = card.querySelector('.course-title').textContent.toLowerCase();
+            const description = card.querySelector('.course-description').textContent.toLowerCase();
+
+            if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+
+    // İlerleme barı animasyonu
+    document.addEventListener('DOMContentLoaded', () => {
+        const progressBars = document.querySelectorAll('.progress-bar');
+
+        setTimeout(() => {
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = width;
+            });
+        }, 500);
+    });
+
+    console.log('Topraktar Akademi loaded successfully!');
+</script>

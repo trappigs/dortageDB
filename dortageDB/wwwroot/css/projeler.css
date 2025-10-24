@@ -874,8 +874,11 @@
     border-radius: var(--radius-lg);
     padding: 32px;
     border: 2px solid var(--border-color);
-    position: sticky;
-    top: 20px;
+    top: 100px !important;
+    align-self: flex-start;
+    /*max-height: calc(100vh - 120px);*/
+    overflow-y: auto;
+    transform: none !important;
 }
 
 .price-box {
@@ -895,6 +898,14 @@
     font-size: 2rem;
     font-weight: 800;
     color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.price-suffix {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--text-light);
+    font-weight: 500;
 }
 
 .price-range-box {
@@ -951,6 +962,79 @@
     font-size: 0.95rem;
     font-weight: 600;
     color: var(--success-color);
+}
+
+/* Sidebar Features */
+.detail-features-sidebar {
+    margin-top: 24px;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    border: 2px solid var(--border-color);
+}
+
+.sidebar-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.detail-features-sidebar .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.detail-features-sidebar .feature-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s;
+}
+
+.detail-features-sidebar .feature-item:hover {
+    border-color: var(--primary-color);
+    background: rgba(0, 10, 104, 0.02);
+}
+
+.detail-features-sidebar .feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: rgba(0, 10, 104, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.detail-features-sidebar .feature-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--primary-color);
+}
+
+.detail-features-sidebar .feature-content {
+    flex: 1;
+}
+
+.detail-features-sidebar .feature-content h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.detail-features-sidebar .feature-content p {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin: 0;
 }
 
 .proje-detail-content {

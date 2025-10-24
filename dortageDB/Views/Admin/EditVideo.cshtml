@@ -1,0 +1,327 @@
+@model dortageDB.Entities.EgitimVideo
+
+@{
+    ViewData["Title"] = "Video Düzenle";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/admin-panel.css" asp-append-version="true" />
+
+<style>
+    .youtube-preview {
+        margin-top: 20px;
+        padding: 20px;
+        background: #f9fafb;
+        border-radius: 12px;
+        border: 2px dashed #e5e7eb;
+    }
+
+    .youtube-preview iframe {
+        width: 100%;
+        max-width: 560px;
+        height: 315px;
+        border-radius: 8px;
+    }
+
+    .form-help {
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 6px;
+    }
+
+    .switch-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 8px;
+        margin-bottom: 16px;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #000a68;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(24px);
+    }
+
+    .stats-box {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(0, 10, 104, 0.05), rgba(0, 26, 136, 0.05));
+        border-radius: 12px;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000a68;
+    }
+
+    .stat-info strong {
+        font-size: 20px;
+        color: #1f2937;
+    }
+
+    .stat-info span {
+        font-size: 13px;
+        color: #6b7280;
+    }
+</style>
+
+<div class="admin-panel">
+    <div class="panel-header">
+        <div>
+            <h1 class="panel-title">✏️ Video Düzenle</h1>
+            <p class="panel-subtitle">@Model.Baslik</p>
+        </div>
+        <a asp-action="EgitimVideolar" class="btn btn-secondary">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Geri Dön
+        </a>
+    </div>
+
+    <div class="panel-content">
+        <!-- İstatistikler -->
+        <div class="stats-box">
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <strong>@Model.IzlenmeSayisi</strong><br />
+                    <span>İzlenme</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <strong>@Model.BegeniSayisi</strong><br />
+                    <span>Beğeni</span>
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="EditVideo" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <input type="hidden" asp-for="VideoID" />
+            <input type="hidden" asp-for="IzlenmeSayisi" />
+            <input type="hidden" asp-for="BegeniSayisi" />
+            <input type="hidden" asp-for="EklenmeTarihi" />
+
+            <div class="form-grid">
+                <!-- Başlık -->
+                <div class="form-group col-span-2">
+                    <label asp-for="Baslik" class="form-label"></label>
+                    <input asp-for="Baslik" class="form-control" />
+                    <span asp-validation-for="Baslik" class="text-danger"></span>
+                </div>
+
+                <!-- Açıklama -->
+                <div class="form-group col-span-2">
+                    <label asp-for="Aciklama" class="form-label"></label>
+                    <textarea asp-for="Aciklama" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Aciklama" class="text-danger"></span>
+                </div>
+
+                <!-- YouTube Video ID -->
+                <div class="form-group">
+                    <label asp-for="YoutubeVideoID" class="form-label">YouTube Video ID</label>
+                    <input asp-for="YoutubeVideoID" class="form-control" id="youtubeVideoID" />
+                    <div class="form-help">
+                        YouTube URL'inden ID'yi alın: https://www.youtube.com/watch?v=<strong>dQw4w9WgXcQ</strong>
+                    </div>
+                    <span asp-validation-for="YoutubeVideoID" class="text-danger"></span>
+                </div>
+
+                <!-- Kategori -->
+                <div class="form-group">
+                    <label asp-for="Kategori" class="form-label"></label>
+                    <select asp-for="Kategori" class="form-control">
+                        @foreach (var kategori in ViewBag.Kategoriler as Dictionary<string, string>)
+                        {
+                            <option value="@kategori.Key" selected="@(kategori.Key == Model.Kategori)">@kategori.Value</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Kategori" class="text-danger"></span>
+                </div>
+
+                <!-- Süre -->
+                <div class="form-group">
+                    <label asp-for="Sure" class="form-label">Video Süresi</label>
+                    <input asp-for="Sure" class="form-control" />
+                    <div class="form-help">Format: dakika:saniye (örn: 12:30)</div>
+                    <span asp-validation-for="Sure" class="text-danger"></span>
+                </div>
+
+                <!-- Sıra -->
+                <div class="form-group">
+                    <label asp-for="Sira" class="form-label">Sıra</label>
+                    <input asp-for="Sira" type="number" class="form-control" />
+                    <div class="form-help">Yüksek değerler önce gösterilir</div>
+                    <span asp-validation-for="Sira" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Switches -->
+            <div style="margin-top: 24px;">
+                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Video Özellikleri</h3>
+
+                <div class="switch-container">
+                    <label class="switch">
+                        <input asp-for="Aktif" type="checkbox" />
+                        <span class="slider"></span>
+                    </label>
+                    <div>
+                        <strong>Aktif</strong>
+                        <div style="font-size: 13px; color: #6b7280;">Video akademide görünür olsun</div>
+                    </div>
+                </div>
+
+                <div class="switch-container">
+                    <label class="switch">
+                        <input asp-for="OneEikan" type="checkbox" />
+                        <span class="slider"></span>
+                    </label>
+                    <div>
+                        <strong>Öne Çıkan</strong>
+                        <div style="font-size: 13px; color: #6b7280;">Videoyu öne çıkan bölümde göster</div>
+                    </div>
+                </div>
+
+                <div class="switch-container">
+                    <label class="switch">
+                        <input asp-for="Yeni" type="checkbox" />
+                        <span class="slider"></span>
+                    </label>
+                    <div>
+                        <strong>Yeni</strong>
+                        <div style="font-size: 13px; color: #6b7280;">"Yeni" rozeti ekle</div>
+                    </div>
+                </div>
+
+                <div class="switch-container">
+                    <label class="switch">
+                        <input asp-for="Populer" type="checkbox" />
+                        <span class="slider"></span>
+                    </label>
+                    <div>
+                        <strong>Popüler</strong>
+                        <div style="font-size: 13px; color: #6b7280;">"Popüler" rozeti ekle</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YouTube Preview -->
+            <div class="youtube-preview">
+                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Önizleme</h3>
+                <iframe id="youtubeIframe"
+                        src="https://www.youtube.com/embed/@Model.YoutubeVideoID"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- Buttons -->
+            <div class="form-actions" style="margin-top: 32px;">
+                <button type="submit" class="btn btn-primary">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Değişiklikleri Kaydet
+                </button>
+                <a asp-action="EgitimVideolar" class="btn btn-secondary">İptal</a>
+                <a asp-action="DeleteVideo" asp-route-id="@Model.VideoID" class="btn btn-danger">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Sil
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // YouTube preview update
+        const videoIDInput = document.getElementById('youtubeVideoID');
+        const iframe = document.getElementById('youtubeIframe');
+
+        videoIDInput.addEventListener('input', function() {
+            const videoID = this.value.trim();
+            if (videoID) {
+                iframe.src = `https://www.youtube.com/embed/${videoID}`;
+            }
+        });
+    </script>
+}

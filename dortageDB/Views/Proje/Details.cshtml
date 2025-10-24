@@ -135,143 +135,6 @@
                     <p>@Model.Aciklama</p>
                 </div>
 
-                <!-- Özellikler -->
-                <div class="detail-features" data-aos="fade-up" data-aos-delay="200">
-                    <h2 class="section-title">Proje Özellikleri</h2>
-                    <div class="features-grid">
-                        <div class="feature-item">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                    <polyline points="9 22 9 12 15 12 15 22" />
-                                </svg>
-                            </div>
-                            <div class="feature-content">
-                                <h4>Tapu Durumu</h4>
-                                <p>@(Model.MustakilTapu ? "Müstakil Tapu" : "Hisseli Tapu")</p>
-                            </div>
-                        </div>
-
-                        <div class="feature-item">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                    <polyline points="14 2 14 8 20 8" />
-                                    <line x1="16" y1="13" x2="8" y2="13" />
-                                    <line x1="16" y1="17" x2="8" y2="17" />
-                                    <polyline points="10 9 9 9 8 9" />
-                                </svg>
-                            </div>
-                            <div class="feature-content">
-                                <h4>İmar Durumu</h4>
-                                <p>@(Model.Imarlimi ? "İmarlı" : "İmarsız")</p>
-                            </div>
-                        </div>
-
-                        @if (Model.MinMetreKare.HasValue || Model.MaxMetreKare.HasValue || Model.MetreKare.HasValue)
-                        {
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                                        <line x1="12" y1="22.08" x2="12" y2="12" />
-                                    </svg>
-                                </div>
-                                <div class="feature-content">
-                                    <h4>Arsa Büyüklüğü</h4>
-                                    <p>
-                                        @if (Model.MinMetreKare.HasValue && Model.MaxMetreKare.HasValue)
-                                        {
-                                            if (Model.MinMetreKare == Model.MaxMetreKare)
-                                            {
-                                                @Model.MinMetreKare.Value.ToString("N0") <text> m²</text>
-                                            }
-                                            else
-                                            {
-                                                @Model.MinMetreKare.Value.ToString("N0") <text> - </text> @Model.MaxMetreKare.Value.ToString("N0") <text> m²</text>
-                                            }
-                                        }
-                                        else if (Model.MinMetreKare.HasValue)
-                                        {
-                                            @Model.MinMetreKare.Value.ToString("N0") <text> m² +</text>
-                                        }
-                                        else if (Model.MaxMetreKare.HasValue)
-                                        {
-                                            <text>Max </text> @Model.MaxMetreKare.Value.ToString("N0") <text> m²</text>
-                                        }
-                                        else if (Model.MetreKare.HasValue)
-                                        {
-                                            @Model.MetreKare.Value.ToString("N0") <text> m²</text>
-                                        }
-                                    </p>
-                                </div>
-                            </div>
-                        }
-
-                        <div class="feature-item">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                                    <line x1="1" y1="10" x2="23" y2="10" />
-                                </svg>
-                            </div>
-                            <div class="feature-content">
-                                <h4>Ödeme Seçenekleri</h4>
-                                <p>
-                                    @if (Model.TaksitImkani && Model.TakasImkani)
-                                    {
-                                        <span>Taksit & Takas</span>
-                                    }
-                                    else if (Model.TaksitImkani)
-                                    {
-                                        <span>Taksit İmkanı</span>
-                                    }
-                                    else if (Model.TakasImkani)
-                                    {
-                                        <span>Takas İmkanı</span>
-                                    }
-                                    else
-                                    {
-                                        <span>Peşin Ödeme</span>
-                                    }
-                                </p>
-                            </div>
-                        </div>
-
-                        @if (!string.IsNullOrEmpty(Model.Altyapi))
-                        {
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                                    </svg>
-                                </div>
-                                <div class="feature-content">
-                                    <h4>Altyapı</h4>
-                                    <p>@Model.Altyapi</p>
-                                </div>
-                            </div>
-                        }
-
-                        @if (!string.IsNullOrEmpty(Model.KrediyeUygunluk))
-                        {
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <line x1="12" y1="1" x2="12" y2="23" />
-                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                                    </svg>
-                                </div>
-                                <div class="feature-content">
-                                    <h4>Krediye Uygunluk</h4>
-                                    <p>@Model.KrediyeUygunluk</p>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-
                 <!-- Yakınlık Bilgileri Section -->
                 @if (!string.IsNullOrEmpty(Model.YakinProjeler) || !string.IsNullOrEmpty(Model.YakinBolgeler) ||
                      !string.IsNullOrEmpty(Model.UlasimBilgileri) || !string.IsNullOrEmpty(Model.SosyalTesisler))
@@ -356,21 +219,10 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="detail-quick-info" data-aos="fade-left" data-aos-delay="200">
+                <div class="detail-quick-info">
                     <div class="price-box">
-                        <span class="price-label">Fiyat Aralığı</span>
-                        @if (Model.MinFiyat == Model.MaxFiyat)
-                        {
-                            <span class="price-value">@Model.MinFiyat.ToString("N0") ₺</span>
-                        }
-                        else
-                        {
-                            <div class="price-range-box">
-                                <span class="price-value">@Model.MinFiyat.ToString("N0") ₺</span>
-                                <span class="price-sep">-</span>
-                                <span class="price-value">@Model.MaxFiyat.ToString("N0") ₺</span>
-                            </div>
-                        }
+                        <span class="price-value">@Model.MinFiyat.ToString("N0") ₺</span>
+                        <span class="price-suffix">'den başlayan fiyatlarla</span>
                     </div>
                     <div class="stock-box">
                         <div class="stock-progress">
@@ -383,6 +235,143 @@
                             </div>
                         </div>
                         <div class="stock-remaining">@kalanParsel Parsel Kaldı</div>
+                    </div>
+
+                    <!-- Proje Özellikleri -->
+                    <div class="detail-features-sidebar">
+                        <h3 class="sidebar-title">Proje Özellikleri</h3>
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                        <polyline points="9 22 9 12 15 12 15 22" />
+                                    </svg>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Tapu Durumu</h4>
+                                    <p>@(Model.MustakilTapu ? "Müstakil Tapu" : "Hisseli Tapu")</p>
+                                </div>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                        <polyline points="14 2 14 8 20 8" />
+                                        <line x1="16" y1="13" x2="8" y2="13" />
+                                        <line x1="16" y1="17" x2="8" y2="17" />
+                                        <polyline points="10 9 9 9 8 9" />
+                                    </svg>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>İmar Durumu</h4>
+                                    <p>@(Model.Imarlimi ? "İmarlı" : "İmarsız")</p>
+                                </div>
+                            </div>
+
+                            @if (Model.MinMetreKare.HasValue || Model.MaxMetreKare.HasValue || Model.MetreKare.HasValue)
+                            {
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                            <line x1="12" y1="22.08" x2="12" y2="12" />
+                                        </svg>
+                                    </div>
+                                    <div class="feature-content">
+                                        <h4>Arsa Büyüklüğü</h4>
+                                        <p>
+                                            @if (Model.MinMetreKare.HasValue && Model.MaxMetreKare.HasValue)
+                                            {
+                                                if (Model.MinMetreKare == Model.MaxMetreKare)
+                                                {
+                                                    @Model.MinMetreKare.Value.ToString("N0") <text> m²</text>
+                                                }
+                                                else
+                                                {
+                                                    @Model.MinMetreKare.Value.ToString("N0") <text> - </text> @Model.MaxMetreKare.Value.ToString("N0") <text> m²</text>
+                                                }
+                                            }
+                                            else if (Model.MinMetreKare.HasValue)
+                                            {
+                                                @Model.MinMetreKare.Value.ToString("N0") <text> m² +</text>
+                                            }
+                                            else if (Model.MaxMetreKare.HasValue)
+                                            {
+                                                <text>Max </text> @Model.MaxMetreKare.Value.ToString("N0") <text> m²</text>
+                                            }
+                                            else if (Model.MetreKare.HasValue)
+                                            {
+                                                @Model.MetreKare.Value.ToString("N0") <text> m²</text>
+                                            }
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                                        <line x1="1" y1="10" x2="23" y2="10" />
+                                    </svg>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Ödeme Seçenekleri</h4>
+                                    <p>
+                                        @if (Model.TaksitImkani && Model.TakasImkani)
+                                        {
+                                            <span>Taksit & Takas</span>
+                                        }
+                                        else if (Model.TaksitImkani)
+                                        {
+                                            <span>Taksit İmkanı</span>
+                                        }
+                                        else if (Model.TakasImkani)
+                                        {
+                                            <span>Takas İmkanı</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Peşin Ödeme</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.Altyapi))
+                            {
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                                        </svg>
+                                    </div>
+                                    <div class="feature-content">
+                                        <h4>Altyapı</h4>
+                                        <p>@Model.Altyapi</p>
+                                    </div>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.KrediyeUygunluk))
+                            {
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="12" y1="1" x2="12" y2="23" />
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                        </svg>
+                                    </div>
+                                    <div class="feature-content">
+                                        <h4>Krediye Uygunluk</h4>
+                                        <p>@Model.KrediyeUygunluk</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
                 @* 

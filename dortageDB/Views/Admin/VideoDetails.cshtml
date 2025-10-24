@@ -1,0 +1,282 @@
+@model dortageDB.Entities.EgitimVideo
+
+@{
+    ViewData["Title"] = "Video Detayları";
+    Layout = "_LayoutTopraktar";
+}
+
+<link rel="stylesheet" href="~/css/admin-panel.css" asp-append-version="true" />
+
+<style>
+    .video-preview {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 24px;
+    }
+
+    .video-preview iframe {
+        width: 100%;
+        height: 450px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .video-details {
+        display: grid;
+        gap: 16px;
+    }
+
+    .detail-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 16px;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 8px;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #6b7280;
+    }
+
+    .detail-value {
+        color: #1f2937;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-right: 8px;
+    }
+
+    .badge-active {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .badge-featured {
+        background: #FFC107;
+        color: #000a68;
+    }
+
+    .badge-new {
+        background: #10b981;
+        color: white;
+    }
+
+    .badge-popular {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 12px;
+        background: linear-gradient(135deg, rgba(0, 10, 104, 0.1), rgba(0, 10, 104, 0.2));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000a68;
+    }
+
+    .stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 4px;
+    }
+
+    .stat-label {
+        font-size: 13px;
+        color: #6b7280;
+    }
+</style>
+
+<div class="admin-panel">
+    <div class="panel-header">
+        <div>
+            <h1 class="panel-title">📹 Video Detayları</h1>
+            <p class="panel-subtitle">@Model.Baslik</p>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <a asp-action="EditVideo" asp-route-id="@Model.VideoID" class="btn btn-warning">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Düzenle
+            </a>
+            <a asp-action="EgitimVideolar" class="btn btn-secondary">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Geri Dön
+            </a>
+        </div>
+    </div>
+
+    <div class="panel-content">
+        <!-- İstatistikler -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </div>
+                <div class="stat-value">@Model.IzlenmeSayisi</div>
+                <div class="stat-label">Toplam İzlenme</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                    </svg>
+                </div>
+                <div class="stat-value">@Model.BegeniSayisi</div>
+                <div class="stat-label">Toplam Beğeni</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <div class="stat-value">@Model.Sure</div>
+                <div class="stat-label">Video Süresi</div>
+            </div>
+        </div>
+
+        <!-- Video Önizleme -->
+        <div class="video-preview">
+            <iframe
+                src="https://www.youtube.com/embed/@Model.YoutubeVideoID"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+
+            <div class="video-details">
+                <div class="detail-row">
+                    <div class="detail-label">Video ID:</div>
+                    <div class="detail-value">@Model.VideoID</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Başlık:</div>
+                    <div class="detail-value"><strong>@Model.Baslik</strong></div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Açıklama:</div>
+                    <div class="detail-value">@Model.Aciklama</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Kategori:</div>
+                    <div class="detail-value">
+                        @{
+                            var kategoriAdi = dortageDB.Entities.EgitimKategorileri.GetAll()
+                                .FirstOrDefault(k => k.Key == Model.Kategori).Value ?? Model.Kategori;
+                        }
+                        <span class="badge" style="background: rgba(0, 10, 104, 0.1); color: #000a68;">
+                            @kategoriAdi
+                        </span>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">YouTube Video ID:</div>
+                    <div class="detail-value">
+                        <code style="background: #f3f4f6; padding: 4px 8px; border-radius: 4px;">@Model.YoutubeVideoID</code>
+                        <a href="https://www.youtube.com/watch?v=@Model.YoutubeVideoID" target="_blank" class="btn btn-sm btn-info" style="margin-left: 12px;">
+                            YouTube'da Aç
+                        </a>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Etiketler:</div>
+                    <div class="detail-value">
+                        <span class="badge @(Model.Aktif ? "badge-active" : "badge-inactive")">
+                            @(Model.Aktif ? "Aktif" : "Pasif")
+                        </span>
+                        @if (Model.OneEikan)
+                        {
+                            <span class="badge badge-featured">⭐ Öne Çıkan</span>
+                        }
+                        @if (Model.Yeni)
+                        {
+                            <span class="badge badge-new">Yeni</span>
+                        }
+                        @if (Model.Populer)
+                        {
+                            <span class="badge badge-popular">Popüler</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Sıra:</div>
+                    <div class="detail-value"><strong>@Model.Sira</strong></div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Eklenme Tarihi:</div>
+                    <div class="detail-value">@Model.EklenmeTarihi.ToString("dd MMMM yyyy HH:mm")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="EditVideo" asp-route-id="@Model.VideoID" class="btn btn-warning">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Düzenle
+            </a>
+            <a asp-action="DeleteVideo" asp-route-id="@Model.VideoID" class="btn btn-danger">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Sil
+            </a>
+            <a asp-action="EgitimVideolar" class="btn btn-secondary">Listeye Dön</a>
+        </div>
+    </div>
+</div>

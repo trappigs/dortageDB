@@ -180,5 +180,32 @@ namespace dortageDB.Controllers
         {
             return View();
         }
+
+        public IActionResult TopraktarAkademi()
+        {
+            // Aktif videoları getir
+            var videolar = _context.EgitimVideolar
+                .Where(v => v.Aktif)
+                .OrderByDescending(v => v.Sira)
+                .ThenByDescending(v => v.EklenmeTarihi)
+                .ToList();
+
+            // Öne çıkan video
+            var oneCikanVideo = videolar.FirstOrDefault(v => v.OneEikan);
+
+            // Kategori başına video sayıları
+            ViewBag.BaslangicCount = videolar.Count(v => v.Kategori == "baslangic");
+            ViewBag.SatisCount = videolar.Count(v => v.Kategori == "satis");
+            ViewBag.ArsaCount = videolar.Count(v => v.Kategori == "arsa");
+            ViewBag.MusteriCount = videolar.Count(v => v.Kategori == "musteri");
+            ViewBag.PazarlamaCount = videolar.Count(v => v.Kategori == "pazarlama");
+            ViewBag.BasariCount = videolar.Count(v => v.Kategori == "basari");
+            ViewBag.ToplamCount = videolar.Count;
+
+            ViewBag.OneCikanVideo = oneCikanVideo;
+            ViewBag.Videolar = videolar;
+
+            return View();
+        }
     }
 }

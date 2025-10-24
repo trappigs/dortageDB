@@ -376,7 +376,7 @@
         <ul class="nav-menu">
             <li class="nav-item">
                 <a asp-controller="Dashboard" asp-action="Index"
-                   class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                   class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                     <svg class="nav-icon" viewBox="0 0 24 24">
                         <rect x="3" y="3" width="7" height="7"></rect>
                         <rect x="14" y="3" width="7" height="7"></rect>
@@ -437,7 +437,8 @@
             </li>
 
             <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a asp-controller="Dashboard" asp-action="TopraktarAkademi"
+                   class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "TopraktarAkademi" ? "active" : "")">
                     <svg class="nav-icon" viewBox="0 0 24 24">
                         <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
                         <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
@@ -610,6 +611,11 @@
         // ===================================
         const pageLoading = document.getElementById('pageLoading');
 
+        // Function to hide loading
+        function hideLoading() {
+            pageLoading?.classList.remove('active');
+        }
+
         // Show loading on form submissions
         document.addEventListener('submit', function(e) {
             if (!e.target.hasAttribute('data-no-loading')) {
@@ -617,20 +623,34 @@
             }
         });
 
-        // Show loading on navigation links (except same page links)
+        // Show loading on navigation links (except same page links and external links)
         document.querySelectorAll('a[href]').forEach(link => {
             link.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
-                if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+                const target = this.getAttribute('target');
+
+                // Don't show loading for:
+                // - Hash links (#)
+                // - JavaScript links
+                // - External links (target="_blank")
+                // - Links with data-no-loading attribute
+                if (href &&
+                    !href.startsWith('#') &&
+                    !href.startsWith('javascript:') &&
+                    target !== '_blank' &&
+                    !this.hasAttribute('data-no-loading')) {
                     pageLoading?.classList.add('active');
                 }
             });
         });
 
-        // Hide loading when page is fully loaded
-        window.addEventListener('load', () => {
-            pageLoading?.classList.remove('active');
-        });
+        // Hide loading when page is fully loaded (multiple fallbacks)
+        window.addEventListener('load', hideLoading);
+        window.addEventListener('DOMContentLoaded', hideLoading);
+        window.addEventListener('pageshow', hideLoading);
+
+        // Fallback: Force hide after 3 seconds if still showing
+        setTimeout(hideLoading, 3000);
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
