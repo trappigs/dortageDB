@@ -53,6 +53,7 @@ html, body {
     position: relative;
     z-index: 1;
     color: var(--white);
+    margin-top: 35px;
 }
 
 .hero-subtitle {
@@ -205,7 +206,7 @@ html, body {
 .steps-timeline {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 30px;
     position: relative;
 }
@@ -219,6 +220,8 @@ html, body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     transition: var(--transition);
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .step-item:hover {
@@ -260,6 +263,7 @@ html, body {
     font-size: 1rem;
     line-height: 1.7;
     color: var(--text-dark);
+    flex-grow: 1;
 }
 
 .step-connector {
