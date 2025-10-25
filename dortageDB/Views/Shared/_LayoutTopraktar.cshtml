@@ -281,7 +281,7 @@
                 </svg>
             </button>
             <a asp-controller="Home" asp-action="Index" class="top-navbar-logo">
-                <img src="~/images/logo.png" alt="Dortage Logo" />
+                <img src="~/images/logo.svg" alt="Dortage Logo" />
                 <span>TOPRAKTAR</span>
             </a>
         </div>
@@ -344,7 +344,7 @@
             {
                 <span class="user-role" style="background: rgba(239, 68, 68, 0.2); color: #dc2626;">Admin</span>
             }
-            <div class="user-code">REF: TRK@(user?.Id.ToString() ?? "N/A")</div>
+            @* <div class="user-code">REF: TRK@(user?.Id.ToString() ?? "N/A")</div> *@
         </div>
 
         <!-- Navigation Menu -->
@@ -369,7 +369,7 @@
                 totalMusteriler = context.Musteriler.Count(m => m.TopraktarID == currentUserId.Value);
 
                 pendingRandevular = context.Randevular
-                .Count(r => r.TopraktarID == currentUserId.Value && r.RandevuDurum == dortageDB.Entities.RandevuDurum.pending);
+                .Count(r => r.TopraktarID == currentUserId.Value && r.RandevuDurum == dortageDB.Entities.RandevuDurum.OnayBekliyor);
             }
         }
 

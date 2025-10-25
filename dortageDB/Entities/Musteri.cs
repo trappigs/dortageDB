@@ -18,13 +18,7 @@ namespace dortageDB.Entities
         [Required, StringLength(15)]
         public string Telefon { get; set; } = null!;
 
-        [StringLength(200), EmailAddress]
-        public string? Eposta { get; set; }
-
-        [Required, StringLength(100)]
-        public string Sehir { get; set; } = null!;
-
-        public bool Cinsiyet { get; set; } // false=Kadın, true=Erkek
+        public bool? Cinsiyet { get; set; } // false=Kadın, true=Erkek
 
         public DateTime EklenmeTarihi { get; set; } = DateTime.Now;
 

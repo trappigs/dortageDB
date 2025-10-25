@@ -425,41 +425,6 @@
                                 <span class="input-hint">Format: (5XX) XXX XX XX</span>
                                 <span asp-validation-for="Telefon" class="text-danger"></span>
                             </div>
-
-                            <div class="form-group">
-                                <label asp-for="Eposta">E-posta</label>
-                                <div class="input-wrapper">
-                                    <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    <input asp-for="Eposta" type="email" placeholder="ornek@email.com" />
-                                </div>
-                                <span class="input-hint">Opsiyonel</span>
-                                <span asp-validation-for="Eposta" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label asp-for="Sehir">Şehir <span class="required">*</span></label>
-                            <div class="input-wrapper">
-                                <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                <select asp-for="Sehir">
-                                    <option value="">Şehir seçin</option>
-                                    <option value="İstanbul">İstanbul</option>
-                                    <option value="Ankara">Ankara</option>
-                                    <option value="İzmir">İzmir</option>
-                                    <option value="Bursa">Bursa</option>
-                                    <option value="Antalya">Antalya</option>
-                                    <option value="Adana">Adana</option>
-                                    <option value="Konya">Konya</option>
-                                    <option value="Gaziantep">Gaziantep</option>
-                                    <option value="Kayseri">Kayseri</option>
-                                </select>
-                            </div>
-                            <span asp-validation-for="Sehir" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -486,6 +451,7 @@
 </div>
 
 <partial name="_ValidationScriptsPartial" />
+
 <script>
     // Phone formatting
     const phoneInput = document.getElementById('phoneInput');

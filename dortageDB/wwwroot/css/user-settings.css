@@ -5,6 +5,17 @@
     padding: 100px 20px 20px;
 }
 
+/* Topraktar Layout Uyumu */
+.topraktar-main-panel .breadcrumb {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.topraktar-main-panel h1 {
+    margin-top: 0;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -53,7 +64,7 @@
     gap: 24px;
 }
 
-.sidebar {
+.settings-sidebar {
     width: 300px;
     position: sticky;
     top: 20px;
@@ -127,7 +138,7 @@
         background: var(--gray-100);
     }
 
-.user-name {
+.settings-user-name {
     font-size: 20px;
     font-weight: 700;
     color: var(--gray-900);
@@ -425,6 +436,10 @@ input, select, textarea {
         padding: 140px 12px 12px;
     }
 
+    .topraktar-main-panel .main-content {
+        padding: 12px;
+    }
+
     .container {
         padding: 12px;
     }
@@ -443,7 +458,7 @@ input, select, textarea {
         gap: 16px;
     }
 
-    .sidebar {
+    .settings-sidebar {
         width: 100%;
         position: static;
     }

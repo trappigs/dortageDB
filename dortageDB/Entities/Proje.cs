@@ -8,6 +8,8 @@ public class Proje
 
     public required string Aciklama { get; set; }
 
+    public string? KisaAciklama { get; set; } // Kart görünümünde gösterilecek kısa açıklama
+
     public required string Konum { get; set; }
 
     public string? Sehir { get; set; }
@@ -27,6 +29,10 @@ public class Proje
     public string? KapakGorseli { get; set; }
 
     public string? GaleriGorselleri { get; set; } // JSON array olarak saklanacak
+
+    public string? Tour360Url { get; set; } // 360 derece sanal tur iframe URL'i veya turlar klasöründeki proje adı
+
+    public string? SunumDosyaUrl { get; set; } // Proje sunumu (PDF, PPT vb.)
 
     public bool Imarlimi { get; set; } = true;
 

@@ -207,10 +207,6 @@
                     <span class="detail-value">@Model.RandevuZaman.ToString("dd MMMM yyyy, HH:mm")</span>
                 </div>
                 <div class="detail-row">
-                    <span class="detail-label">Bölge:</span>
-                    <span class="detail-value">@Model.Bolge</span>
-                </div>
-                <div class="detail-row">
                     <span class="detail-label">Randevu Tipi:</span>
                     <span class="detail-value">@Model.RandevuTipi</span>
                 </div>
@@ -220,19 +216,19 @@
                         <span class="status-badge status-@Model.RandevuDurum.ToString()">
                             @switch (Model.RandevuDurum)
                             {
-                                case RandevuDurum.pending:
+                                case RandevuDurum.OnayBekliyor:
                                     <text>⏳ Bekliyor</text>
                                     break;
-                                case RandevuDurum.confirmed:
+                                case RandevuDurum.GorusmeBekleniyor:
                                     <text>✓ Onaylandı</text>
                                     break;
-                                case RandevuDurum.completed:
+                                case RandevuDurum.OdemeAlindi:
                                     <text>✓ Tamamlandı</text>
                                     break;
-                                case RandevuDurum.cancelled:
+                                case RandevuDurum.Iptal:
                                     <text>✗ İptal Edildi</text>
                                     break;
-                                case RandevuDurum.no_show:
+                                case RandevuDurum.Gerceklesmedi:
                                     <text>⊘ Gelmedi</text>
                                     break;
                             }

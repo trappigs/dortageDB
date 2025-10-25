@@ -1,4 +1,4 @@
-@model dortageDB.Entities.Proje
+﻿@model dortageDB.Entities.Proje
 @{
     ViewData["Title"] = "Proje Düzenle";
     Layout = "_LayoutTopraktar";
@@ -222,6 +222,12 @@
                             <textarea asp-for="Aciklama" class="form-control" rows="3" required></textarea>
                         </div>
 
+                        <div class="mb-3">
+                            <label asp-for="KisaAciklama" class="form-label">Kısa Açıklama (Kart Görünümü)</label>
+                            <textarea asp-for="KisaAciklama" class="form-control" rows="2" placeholder="Proje kartlarında gösterilecek kısa açıklama..."></textarea>
+                            <small class="text-muted">Bu açıklama proje listesinde kartların üzerinde gösterilecektir.</small>
+                        </div>
+
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label asp-for="Sehir" class="form-label">Şehir</label>
@@ -369,6 +375,68 @@
                             <input asp-for="KrediyeUygunluk" class="form-control" />
                         </div>
 
+                        <!-- 360 Derece Sanal Tur -->
+                        <div class="card mb-3" style="border: 2px solid #10b981;">
+                            <div class="card-header" style="background-color: #10b981; color: white;">
+                                <h5 class="mb-0"><i class="bi bi-globe"></i> 360° Sanal Tur</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Tur Seçimi</label>
+                                    <select id="tour360Select" class="form-select" onchange="updateTour360Url()">
+                                        <option value="">Tur Seçiniz</option>
+                                        <option value="inkoy">İnköy Projesi</option>
+                                    </select>
+                                    <small class="text-muted">
+                                        Turlar klasöründen bir krpano projesi seçin
+                                    </small>
+                                </div>
+                                <div class="mb-0">
+                                    <label asp-for="Tour360Url" class="form-label">Veya Manuel URL</label>
+                                    <input asp-for="Tour360Url" class="form-control" placeholder="https://... veya tur klasör adı (örn: inkoy)" />
+                                    <small class="text-muted">
+                                        Otomatik doldurulur veya manuel URL girebilirsiniz
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Proje Sunumu -->
+                        <div class="card mb-3" style="border: 2px solid #f59e0b;">
+                            <div class="card-header" style="background-color: #f59e0b; color: white;">
+                                <h5 class="mb-0"><i class="bi bi-file-earmark-arrow-down"></i> Proje Sunumu</h5>
+                            </div>
+                            <div class="card-body">
+                                @if (!string.IsNullOrEmpty(Model.SunumDosyaUrl))
+                                {
+                                    <div class="alert alert-info mb-3">
+                                        <i class="bi bi-info-circle"></i> Mevcut sunum:
+                                        <a href="@Model.SunumDosyaUrl" target="_blank" class="alert-link">Sunumu Görüntüle</a>
+                                    </div>
+                                }
+                                <div class="mb-3">
+                                    <label class="form-label">Sunum Dosyası Yükle</label>
+                                    <input type="file" id="sunumFileInput" class="form-control" accept=".pdf,.ppt,.pptx" />
+                                    <small class="text-muted">
+                                        PDF veya PowerPoint dosyası yükleyebilirsiniz (Maksimum 10MB)
+                                    </small>
+                                </div>
+                                <div id="sunumUploadProgress" style="display: none;" class="mb-3">
+                                    <div class="progress">
+                                        <div id="sunumProgressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <p id="sunumProgressText" class="text-center mt-2 mb-0"></p>
+                                </div>
+                                <div id="sunumPreview" style="display: none;" class="alert alert-success">
+                                    <i class="bi bi-check-circle"></i> <span id="sunumFileName"></span>
+                                    <button type="button" class="btn btn-sm btn-danger float-end" onclick="removeSunum()">
+                                        <i class="bi bi-trash"></i> Kaldır
+                                    </button>
+                                </div>
+                                <input type="hidden" asp-for="SunumDosyaUrl" id="sunumDosyaUrlInput" />
+                            </div>
+                        </div>
+
                         <!-- Yakınlık Bilgileri Section -->
                         <div class="card mb-3" style="border: 2px solid #000a68;">
                             <div class="card-header" style="background-color: #000a68; color: white;">
@@ -376,31 +444,31 @@
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label asp-for="YakinProjeler" class="form-label">Yakında Gerçekleşecek Projeler</label>
-                                    <textarea asp-for="YakinProjeler" class="form-control" rows="3"
-                                        placeholder="Örn: 500m mesafede yeni AVM projesi, 1km mesafede yeni toplu konut projesi"></textarea>
-                                    <small class="text-muted">Projenin yakınında planlanmış veya devam eden projeleri belirtin.</small>
-                                </div>
-
-                                <div class="mb-3">
                                     <label asp-for="YakinBolgeler" class="form-label">Yakınındaki Önemli Bölgeler</label>
-                                    <textarea asp-for="YakinBolgeler" class="form-control" rows="3"
-                                        placeholder="Örn: OSB'ye 2km, Otoyola 500m, Havalimanına 15km, Merkezi İş Bölgesine 5km"></textarea>
-                                    <small class="text-muted">Sitelere, OSB bölgesine, otoyola yakınlık gibi bilgileri girin.</small>
+                                    <textarea asp-for="YakinBolgeler" class="form-control" rows="4"
+                                        placeholder="Her satır bir madde olarak gösterilecektir. Örnek:&#10;OSB'ye 2km&#10;Otoyola 500m&#10;Havalimanına 15km&#10;Merkezi İş Bölgesine 5km"></textarea>
+                                    <small class="text-muted"><strong>ÖNEMLİ:</strong> Her satıra bir bilgi yazın. Her satır ✓ işareti ile madde olarak gösterilecektir.</small>
                                 </div>
 
                                 <div class="mb-3">
                                     <label asp-for="UlasimBilgileri" class="form-label">Ulaşım Bilgileri</label>
-                                    <textarea asp-for="UlasimBilgileri" class="form-control" rows="3"
-                                        placeholder="Örn: Metrobüs durağı 300m, Otobüs durağı 100m, Ana caddeye 200m"></textarea>
-                                    <small class="text-muted">Toplu taşıma ve ulaşım imkanlarını belirtin.</small>
+                                    <textarea asp-for="UlasimBilgileri" class="form-control" rows="4"
+                                        placeholder="Her satır bir madde olarak gösterilecektir. Örnek:&#10;Metrobüs durağı 300m&#10;Otobüs durağı 100m&#10;Ana caddeye 200m&#10;Dolmuş durağı 50m"></textarea>
+                                    <small class="text-muted"><strong>ÖNEMLİ:</strong> Her satıra bir bilgi yazın. Her satır ✓ işareti ile madde olarak gösterilecektir.</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="SosyalTesisler" class="form-label">Yakınındaki Sosyal Tesisler</label>
+                                    <textarea asp-for="SosyalTesisler" class="form-control" rows="4"
+                                        placeholder="Her satır bir madde olarak gösterilecektir. Örnek:&#10;Devlet Hastanesi 1km&#10;İlkokul 400m&#10;AVM 800m&#10;Park 150m"></textarea>
+                                    <small class="text-muted"><strong>ÖNEMLİ:</strong> Her satıra bir bilgi yazın. Her satır ✓ işareti ile madde olarak gösterilecektir.</small>
                                 </div>
 
                                 <div class="mb-0">
-                                    <label asp-for="SosyalTesisler" class="form-label">Yakınındaki Sosyal Tesisler</label>
-                                    <textarea asp-for="SosyalTesisler" class="form-control" rows="3"
-                                        placeholder="Örn: Devlet Hastanesi 1km, İlkokul 400m, AVM 800m, Park 150m"></textarea>
-                                    <small class="text-muted">Hastane, okul, AVM, park gibi sosyal tesisleri belirtin.</small>
+                                    <label asp-for="YakinProjeler" class="form-label">Yakın Projeler</label>
+                                    <textarea asp-for="YakinProjeler" class="form-control" rows="4"
+                                        placeholder="Her satır bir madde olarak gösterilecektir. Örnek:&#10;500m mesafede yeni AVM projesi&#10;1km mesafede yeni toplu konut projesi&#10;2km mesafede sanayi sitesi"></textarea>
+                                    <small class="text-muted"><strong>ÖNEMLİ:</strong> Her satıra bir bilgi yazın. Her satır ✓ işareti ile madde olarak gösterilecektir.</small>
                                 </div>
                             </div>
                         </div>
@@ -707,5 +775,131 @@
 
         galleryImages.splice(index, 1);
         renderGallery();
+    }
+
+    // 360 Tur Seçimi
+    function updateTour360Url() {
+        const select = document.getElementById('tour360Select');
+        const input = document.getElementById('Tour360Url');
+        if (select.value) {
+            input.value = select.value;
+        }
+    }
+
+    // Sayfa yüklendiğinde mevcut değeri seçili yap
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentValue = document.getElementById('Tour360Url').value;
+        if (currentValue && !currentValue.startsWith('http')) {
+            document.getElementById('tour360Select').value = currentValue;
+        }
+
+        // Mevcut sunum varsa göster
+        const currentSunumUrl = sunumDosyaUrlInput.value;
+        if (currentSunumUrl) {
+            const fileName = currentSunumUrl.split('/').pop();
+            sunumPreview.style.display = 'block';
+            sunumFileName.textContent = fileName || 'Mevcut Sunum';
+        }
+    });
+
+    // ===================================
+    // SUNUM DOSYASI YÜKLEME FONKSİYONLARI
+    // ===================================
+
+    const sunumFileInput = document.getElementById('sunumFileInput');
+    const sunumUploadProgress = document.getElementById('sunumUploadProgress');
+    const sunumProgressBar = document.getElementById('sunumProgressBar');
+    const sunumProgressText = document.getElementById('sunumProgressText');
+    const sunumPreview = document.getElementById('sunumPreview');
+    const sunumFileName = document.getElementById('sunumFileName');
+    const sunumDosyaUrlInput = document.getElementById('sunumDosyaUrlInput');
+
+    sunumFileInput.addEventListener('change', async function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Dosya boyutu kontrolü (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('Dosya boyutu 10MB\'dan büyük olamaz!');
+            sunumFileInput.value = '';
+            return;
+        }
+
+        // Dosya türü kontrolü
+        const allowedTypes = ['application/pdf', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Sadece PDF veya PowerPoint dosyası yükleyebilirsiniz!');
+            sunumFileInput.value = '';
+            return;
+        }
+
+        // Upload işlemi
+        try {
+            sunumUploadProgress.style.display = 'block';
+            sunumProgressText.textContent = 'Dosya yükleniyor...';
+            sunumProgressBar.style.width = '50%';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('/Admin/UploadSunum', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                sunumProgressBar.style.width = '100%';
+                sunumProgressText.textContent = 'Dosya başarıyla yüklendi!';
+
+                // Hidden input'a URL'yi kaydet
+                sunumDosyaUrlInput.value = result.url;
+
+                // Preview göster
+                setTimeout(() => {
+                    sunumUploadProgress.style.display = 'none';
+                    sunumPreview.style.display = 'block';
+                    sunumFileName.textContent = file.name;
+                    sunumProgressBar.style.width = '0%';
+                }, 1000);
+            } else {
+                alert('Dosya yüklenirken bir hata oluştu: ' + result.message);
+                sunumUploadProgress.style.display = 'none';
+                sunumFileInput.value = '';
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('Dosya yüklenirken bir hata oluştu!');
+            sunumUploadProgress.style.display = 'none';
+            sunumFileInput.value = '';
+        }
+    });
+
+    function removeSunum() {
+        if (!confirm('Sunumu kaldırmak istediğinizden emin misiniz?')) {
+            return;
+        }
+
+        const sunumUrl = sunumDosyaUrlInput.value;
+
+        // Sunucudan dosyayı sil
+        if (sunumUrl) {
+            const formData = new FormData();
+            formData.append('fileUrl', sunumUrl);
+
+            fetch('/Admin/DeleteSunum', {
+                method: 'POST',
+                body: formData
+            }).catch(error => {
+                console.error('Delete error:', error);
+            });
+        }
+
+        // UI'ı temizle
+        sunumDosyaUrlInput.value = '';
+        sunumFileInput.value = '';
+        sunumPreview.style.display = 'none';
+        sunumFileName.textContent = '';
     }
 </script>

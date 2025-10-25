@@ -1,0 +1,94 @@
+﻿<krpano>
+	
+	<!--
+		minimap_zoomrect.xml
+		krpano 1.21
+		
+		https://krpano.com/plugins/xmlextensions/#minimap_zoomrect
+	
+		A helper script for adding a zooming-indicator for a mini-overview-map.
+		
+		A rectangle will be added within the image layer and the size and position
+		will automatically be updated depending on the zooming and panning.
+		Additionally the rectangle will be dragable to pan around and the map-image
+		will be clickable to pan to a certain position.
+		
+		Example:
+		
+		<layer name="minimap"
+		       url="map.jpg"
+		       bgborder="1 0xFFFFFF"
+		       align="lefttop" x="10" y="10"
+		       ...
+		       style="minimap_zoomrect"
+		       zoomrect_border="1 0x0000FF"
+		       zoomrect_dragable="true"
+		       zoomrect_movetoclick="true"
+		       />
+	-->
+
+	<style name="minimap_zoomrect"
+		maskchildren="true"
+		handcursor="false"
+		onloaded.addevent="minimap_zoomrect_init();"
+		onclick.addevent="minimap_zoomrect_onclick_moveto();"
+		/>
+	
+	<action name="minimap_zoomrect_init" scope="local">
+		addlayer(auto, zoomrect);
+		
+		if(!isvalue(caller.zoomrect_dragable),    def(caller.zoomrect_dragable,    boolean, true));
+		if(!isvalue(caller.zoomrect_movetoclick), def(caller.zoomrect_movetoclick, boolean, true));
+		
+		set(caller.scalechildren,false);
+		
+		set(zoomrect,
+			parent=get(caller.name),
+			type='container',
+			bgborder=calc(caller.zoomrect_border ? caller.zoomrect_border : '1 0x0000FF 1.0'),
+			bgcapture=true,
+			ondown='minimap_zoomrect_dragging();'
+		);
+		
+		calc(events[calc(caller.name+'_zoomrect')].onviewchanged, 'minimap_zoomrect_onviewchanged(' + zoomrect.name + ')');
+		copy(events[calc(caller.name+'_zoomrect')].keep, caller.keep);
+	</action>
+	
+	<action name="minimap_zoomrect_onclick_moveto" scope="local">
+		if(caller.zoomrect_movetoclick,
+			tween(view.hlookat, calc((caller.hitx-0.5) * image.hfov));
+			tween(view.vlookat, calc((caller.hity-0.5) * image.vfov));
+		);
+	</action>
+	
+	<action name="minimap_zoomrect_onviewchanged" scope="local" args="zoomrect_name">
+		copy(zoomrect, layer[get(zoomrect_name)]);
+		set(zoomrect.align, 'center');
+		calc(zoomrect.width, ((view.hfov / image.hfov) * 100) + '%');
+		calc(zoomrect.height, ((view.vfov / image.vfov) * 100) + '%');
+		calc(zoomrect.x, ((view.hlookat / image.hfov) * 100) + '%');
+		calc(zoomrect.y, ((view.vlookat / image.vfov) * 100) + '%');
+	</action>
+		
+	<action name="minimap_zoomrect_dragging" scope="local">
+		copy(parentlayer, layer[get(caller.parent)]);
+		if(parentlayer.zoomrect_dragable,
+			copy(sx, mouse.x);
+			copy(sy, mouse.y);
+			asyncloop(caller.pressed,
+				calc(dx, (mouse.x - sx));
+				calc(dy, (mouse.y - sy));
+				copy(sx, mouse.x);
+				copy(sy, mouse.y);
+				set(caller.align, 'lefttop');
+				calc(caller.x, caller.pixelx + dx);
+				calc(caller.y, caller.pixely + dy);
+				calc(h, (caller.x + caller.pixelwidth/2) / parentlayer.pixelwidth - 0.5);
+				calc(v, (caller.y + caller.pixelheight/2) / parentlayer.pixelheight - 0.5);
+				calc(view.hlookat, h * image.hfov);
+				calc(view.vlookat, v * image.vfov);
+			);
+		);
+	</action>
+
+</krpano>

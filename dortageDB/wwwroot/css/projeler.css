@@ -901,7 +901,10 @@
 
 .price-box {
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: var(--white);
+    border-radius: var(--radius-md);
 }
 
 .price-label {
@@ -937,6 +940,53 @@
     color: var(--text-light);
     font-size: 1.5rem;
     font-weight: 400;
+}
+
+.location-box {
+    padding: 20px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.location-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 50%;
+    background: #000a68;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.location-icon i {
+    color: #fff;
+}
+
+.location-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.location-main {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.3;
+}
+
+.location-sub {
+    font-size: 0.875rem;
+    color: var(--text-muted);
 }
 
 .stock-box {
@@ -1761,19 +1811,103 @@
     border-bottom: 2px solid var(--border-color);
 }
 
+/* ===================================
+   360 DERECE SANAL TUR
+   =================================== */
+
+.detail-360-tour {
+    margin: 40px 0;
+}
+
+.tour-360-container {
+    position: relative;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 2px solid var(--border-color);
+}
+
+.tour-360-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.tour-360-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.tour-fullscreen-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 10, 104, 0.9);
+    color: var(--white);
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.tour-fullscreen-btn:hover {
+    background: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 10, 104, 0.3);
+}
+
+.tour-fullscreen-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Mobil responsive - 360 Tour */
+@media (max-width: 768px) {
+    .tour-360-wrapper {
+        padding-top: 140%; /* Mobilde daha yüksek - 1:1 aspect ratio */
+    }
+
+    .tour-fullscreen-btn {
+        bottom: 10px;
+        right: 10px;
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }
+
+    .tour-fullscreen-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* ===================================
+   PROXIMITY GRID
+   =================================== */
+
 .proximity-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
 }
 
 .proximity-card {
     background: white;
     border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 24px;
+    padding: 20px;
     display: flex;
-    gap: 16px;
+    gap: 12px;
     transition: all 0.3s ease;
 }
 
@@ -1861,5 +1995,289 @@
 
     .proximity-content p {
         font-size: 0.9rem;
+    }
+}
+
+/* ===================================
+   DEGER CARD STYLES (From Hakkimizda)
+   =================================== */
+
+.deger-card {
+    background: var(--white);
+    padding: 40px 30px;
+    border-radius: 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.deger-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.deger-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.deger-card:hover .deger-icon {
+    transform: rotateY(360deg);
+}
+
+.deger-icon i {
+    font-size: 2rem;
+    color: var(--white);
+}
+
+.deger-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+}
+
+.deger-text {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.deger-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    width: 100%;
+    max-width: 100%;
+}
+
+.deger-list li {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    padding: 8px 0 8px 24px;
+    position: relative;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.deger-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .deger-card {
+        padding: 30px 25px;
+    }
+
+    .deger-list li {
+        font-size: 0.9rem;
+        padding: 6px 0 6px 20px;
+    }
+}
+
+/* ===================================
+   PRESENTATION DOWNLOAD SECTION
+   =================================== */
+
+.detail-presentation {
+    background: var(--white);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-top: 40px;
+}
+
+.detail-presentation .section-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.presentation-box {
+    background: linear-gradient(135deg, rgba(0, 10, 104, 0.03) 0%, rgba(0, 26, 136, 0.05) 100%);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    transition: all 0.3s ease;
+}
+
+.presentation-box:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 24px rgba(0, 10, 104, 0.15);
+    transform: translateY(-2px);
+}
+
+.presentation-icon {
+    flex-shrink: 0;
+    width: 70px;
+    height: 70px;
+    background: var(--primary-color);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 10, 104, 0.2);
+}
+
+.presentation-icon svg {
+    width: 36px;
+    height: 36px;
+    stroke: var(--white);
+    stroke-width: 2;
+}
+
+.presentation-content {
+    flex: 1;
+}
+
+.presentation-content h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 8px 0;
+}
+
+.presentation-content p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    margin: 0 0 12px 0;
+    line-height: 1.6;
+}
+
+.presentation-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-type {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.presentation-download-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 10, 104, 0.2);
+}
+
+.presentation-download-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 10, 104, 0.3);
+    color: var(--white);
+}
+
+.presentation-download-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--white);
+    stroke-width: 2;
+}
+
+/* Responsive Presentation Section */
+@media (max-width: 992px) {
+    .presentation-box {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+    }
+
+    .presentation-content {
+        text-align: center;
+    }
+
+    .presentation-info {
+        justify-content: center;
+    }
+
+    .presentation-download-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .detail-presentation {
+        padding: 24px;
+        margin-top: 30px;
+    }
+
+    .detail-presentation .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .detail-presentation .section-title svg {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .presentation-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .presentation-icon svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .presentation-content h3 {
+        font-size: 1.1rem;
+    }
+
+    .presentation-content p {
+        font-size: 0.9rem;
+    }
+
+    .presentation-download-btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
     }
 }

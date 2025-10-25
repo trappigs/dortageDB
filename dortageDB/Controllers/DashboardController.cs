@@ -1,4 +1,4 @@
-ï»¿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using dortageDB.Data;
 using Microsoft.EntityFrameworkCore;
@@ -22,12 +22,12 @@ namespace dortageDB.Controllers
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userId = int.Parse(userIdString!);
 
-            // Toplam MÃ¼ÅŸteri SayÄ±sÄ± (bu topraktarÄ±n eklediÄŸi mÃ¼ÅŸteriler)
+            // Toplam Müþteri Sayýsý (bu topraktarýn eklediði müþteriler)
             var totalCustomers = _context.Musteriler
                 .Where(m => m.TopraktarID == userId)
                 .Count();
 
-            // Toplam SatÄ±ÅŸ SayÄ±sÄ±
+            // Toplam Satýþ Sayýsý
             var totalSales = _context.Satislar
                 .Where(s => s.TopraktarID == userId)
                 .Count();
@@ -39,17 +39,17 @@ namespace dortageDB.Controllers
 
             // Bekleyen Randevular
             var pendingAppointments = _context.Randevular
-                .Where(r => r.TopraktarID == userId && r.RandevuDurum == RandevuDurum.pending)
+                .Where(r => r.TopraktarID == userId && r.RandevuDurum == RandevuDurum.OnayBekliyor)
                 .Count();
 
-            // Bu Ay Eklenen MÃ¼ÅŸteriler
+            // Bu Ay Eklenen Müþteriler
             var thisMonthStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             var customersThisMonth = _context.Musteriler
                 .Where(m => m.TopraktarID == userId && m.EklenmeTarihi >= thisMonthStart)
                 .Count();
 
-            // Bu Ay YapÄ±lan SatÄ±ÅŸlar
+            // Bu Ay Yapýlan Satýþlar
             var salesThisMonth = _context.Satislar
                 .Where(s => s.TopraktarID == userId && s.SatilmaTarihi >= thisMonthStart)
                 .Count();
@@ -59,15 +59,15 @@ namespace dortageDB.Controllers
                 .Where(s => s.TopraktarID == userId && s.SatilmaTarihi >= thisMonthStart)
                 .Sum(s => (decimal?)s.OdenecekKomisyon) ?? 0;
 
-            // BugÃ¼nkÃ¼ Randevular
+            // Bugünkü Randevular
             var today = DateTime.Today;
             var todayAppointments = _context.Randevular
                 .Where(r => r.TopraktarID == userId &&
-                           r.RandevuDurum == RandevuDurum.pending &&
+                           r.RandevuDurum == RandevuDurum.OnayBekliyor &&
                            r.RandevuZaman.Date == today)
                 .Count();
 
-            // YÃ¼zde hesaplamalarÄ± (geÃ§en aya gÃ¶re)
+            // Yüzde hesaplamalarý (geçen aya göre)
             var lastMonthStart = thisMonthStart.AddMonths(-1);
             var lastMonthEnd = thisMonthStart.AddDays(-1);
 
@@ -89,7 +89,7 @@ namespace dortageDB.Controllers
                            s.SatilmaTarihi <= lastMonthEnd)
                 .Sum(s => (decimal?)s.OdenecekKomisyon) ?? 0;
 
-            // YÃ¼zde deÄŸiÅŸim hesaplama
+            // Yüzde deðiþim hesaplama
             int customerPercentChange = customersLastMonth > 0
                 ? (int)Math.Round(((double)(customersThisMonth - customersLastMonth) / customersLastMonth) * 100)
                 : 0;
@@ -102,10 +102,10 @@ namespace dortageDB.Controllers
                 ? (int)Math.Round(((double)(commissionThisMonth - commissionLastMonth) / (double)commissionLastMonth) * 100)
                 : 0;
 
-            // Son Aktiviteler iÃ§in veri topla
+            // Son Aktiviteler için veri topla
             var recentActivities = new List<object>();
 
-            // Son 5 satÄ±ÅŸ
+            // Son 5 satýþ
             var recentSales = _context.Satislar
                 .Where(s => s.TopraktarID == userId)
                 .OrderByDescending(s => s.SatilmaTarihi)
@@ -114,7 +114,7 @@ namespace dortageDB.Controllers
                 .Select(s => new
                 {
                     Type = "sale",
-                    Title = $"{s.Musteri.Ad} {s.Musteri.Soyad} - SatÄ±ÅŸ tamamlandÄ±",
+                    Title = $"{s.Musteri.Ad} {s.Musteri.Soyad} - Satýþ tamamlandý",
                     Time = s.SatilmaTarihi,
                     Icon = "success"
                 })
@@ -129,13 +129,13 @@ namespace dortageDB.Controllers
                 .Select(r => new
                 {
                     Type = "appointment",
-                    Title = $"{r.Musteri.Ad} {r.Musteri.Soyad} - Randevu oluÅŸturuldu",
+                    Title = $"{r.Musteri.Ad} {r.Musteri.Soyad} - Randevu oluþturuldu",
                     Time = r.OlusturulmaTarihi,
                     Icon = "warning"
                 })
                 .ToList();
 
-            // Son 5 mÃ¼ÅŸteri
+            // Son 5 müþteri
             var recentCustomers = _context.Musteriler
                 .Where(m => m.TopraktarID == userId)
                 .OrderByDescending(m => m.EklenmeTarihi)
@@ -143,13 +143,13 @@ namespace dortageDB.Controllers
                 .Select(m => new
                 {
                     Type = "customer",
-                    Title = $"{m.Ad} {m.Soyad} - Yeni mÃ¼ÅŸteri eklendi",
+                    Title = $"{m.Ad} {m.Soyad} - Yeni müþteri eklendi",
                     Time = m.EklenmeTarihi,
                     Icon = "info"
                 })
                 .ToList();
 
-            // TÃ¼m aktiviteleri birleÅŸtir ve tarihe gÃ¶re sÄ±rala
+            // Tüm aktiviteleri birleþtir ve tarihe göre sýrala
             recentActivities.AddRange(recentSales);
             recentActivities.AddRange(recentAppointments);
             recentActivities.AddRange(recentCustomers);
@@ -159,7 +159,7 @@ namespace dortageDB.Controllers
                 .Take(5)
                 .ToList();
 
-            // ViewBag'e verileri gÃ¶nder
+            // ViewBag'e verileri gönder
             ViewBag.TotalCustomers = totalCustomers;
             ViewBag.TotalSales = totalSales;
             ViewBag.TotalCommission = totalCommission;
@@ -183,17 +183,17 @@ namespace dortageDB.Controllers
 
         public IActionResult TopraktarAkademi()
         {
-            // Aktif videolarÄ± getir
+            // Aktif videolarý getir
             var videolar = _context.EgitimVideolar
                 .Where(v => v.Aktif)
                 .OrderByDescending(v => v.Sira)
                 .ThenByDescending(v => v.EklenmeTarihi)
                 .ToList();
 
-            // Ã–ne Ã§Ä±kan video
+            // Öne çýkan video
             var oneCikanVideo = videolar.FirstOrDefault(v => v.OneEikan);
 
-            // Kategori baÅŸÄ±na video sayÄ±larÄ±
+            // Kategori baþýna video sayýlarý
             ViewBag.BaslangicCount = videolar.Count(v => v.Kategori == "baslangic");
             ViewBag.SatisCount = videolar.Count(v => v.Kategori == "satis");
             ViewBag.ArsaCount = videolar.Count(v => v.Kategori == "arsa");

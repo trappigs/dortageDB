@@ -1,4 +1,4 @@
-@model IEnumerable<dortageDB.Entities.Proje>
+﻿@model IEnumerable<dortageDB.Entities.Proje>
 @{
     ViewData["Title"] = "Projelerimiz";
     Layout = "_LayoutFullWidth";
@@ -103,7 +103,7 @@
                                 </span>
                                 <span class="checkbox-text">
                                     <i class="fas fa-credit-card"></i>
-                                    Taksit İmkanı
+                                    Taksit Seçeneği
                                 </span>
                             </label>
                         </div>
@@ -117,7 +117,7 @@
                                 </span>
                                 <span class="checkbox-text">
                                     <i class="fas fa-exchange-alt"></i>
-                                    Takas İmkanı
+                                    Takas Seçeneği
                                 </span>
                             </label>
                         </div>
@@ -203,7 +203,7 @@
                             }
 
                             <div class="card-description-overlay">
-                                <p>@(string.IsNullOrEmpty(proje.Aciklama) ? "Daha fazla bilgi için projeyi inceleyiniz." : proje.Aciklama)</p>
+                                <p>@(!string.IsNullOrEmpty(proje.KisaAciklama) ? proje.KisaAciklama : (!string.IsNullOrEmpty(proje.Aciklama) ? proje.Aciklama : "Daha fazla bilgi için projeyi inceleyiniz."))</p>
                             </div>
                         </a>
 
@@ -212,9 +212,12 @@
                                 <i class="fas fa-map-marker-alt"></i>
                                 <span>@proje.Konum</span>
                             </div>
+                            <div class="location-info">
+                                <i class="fa-solid fa-turkish-lira-sign"></i>
+                                    <span>@proje.MinFiyat.ToString("N0")'den başlayan fiyatlarla</span></div>
                             <div class="card-actions">
                                 <a href="@Url.Action("Details", "Proje", new { id = proje.ProjeID })" title="@proje.ProjeAdi Detayları" class="btn btn-primary">PROJEYİ İNCELE</a>
-                                <a href="#" class="btn btn-secondary">FORM DOLDURUN</a>
+                                @* <a href="#" class="btn btn-secondary">FORM DOLDURUN</a> *@
                             </div>
                         </div>
 

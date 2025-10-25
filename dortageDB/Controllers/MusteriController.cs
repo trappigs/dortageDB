@@ -103,8 +103,6 @@ namespace dortageDB.Controllers
                     Ad = model.Ad,
                     Soyad = model.Soyad,
                     Telefon = cleanPhone,
-                    Eposta = model.Eposta,
-                    Sehir = model.Sehir,
                     Cinsiyet = model.Cinsiyet,
                     TcNo = model.TcNo,
                     TopraktarID = currentUser!.Id
@@ -157,8 +155,6 @@ namespace dortageDB.Controllers
                 Ad = musteri.Ad,
                 Soyad = musteri.Soyad,
                 Telefon = musteri.Telefon,
-                Eposta = musteri.Eposta,
-                Sehir = musteri.Sehir,
                 Cinsiyet = musteri.Cinsiyet,
                 TcNo = musteri.TcNo
             };
@@ -230,8 +226,6 @@ namespace dortageDB.Controllers
                 musteri.Ad = model.Ad;
                 musteri.Soyad = model.Soyad;
                 musteri.Telefon = cleanPhone;
-                musteri.Eposta = model.Eposta;
-                musteri.Sehir = model.Sehir;
                 musteri.Cinsiyet = model.Cinsiyet;
                 musteri.TcNo = model.TcNo;
 

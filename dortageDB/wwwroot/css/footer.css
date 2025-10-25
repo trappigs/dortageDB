@@ -112,7 +112,7 @@
 .footer-social-icon {
     width: 36px;
     height: 36px;
-    display: flex;
+    /*display: flex;*/
     align-items: center;
     justify-content: center;
     color: var(--footer-white);

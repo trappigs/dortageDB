@@ -1,4 +1,4 @@
-@model dortageDB.Entities.Proje
+﻿@model dortageDB.Entities.Proje
 @{
     ViewData["Title"] = Model.ProjeAdi;
     Layout = "_LayoutFullWidth";
@@ -90,7 +90,7 @@
                             <div class="gallery-overlay">
                                 <button class="gallery-fullscreen-btn" onclick="openLightbox(0)">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
                                     </svg>
                                     Tam Ekran
                                 </button>
@@ -134,88 +134,6 @@
                     <h2 class="section-title">Proje Hakkında</h2>
                     <p>@Model.Aciklama</p>
                 </div>
-
-                <!-- Yakınlık Bilgileri Section -->
-                @if (!string.IsNullOrEmpty(Model.YakinProjeler) || !string.IsNullOrEmpty(Model.YakinBolgeler) ||
-                     !string.IsNullOrEmpty(Model.UlasimBilgileri) || !string.IsNullOrEmpty(Model.SosyalTesisler))
-                {
-                    <div class="detail-proximity" data-aos="fade-up" data-aos-delay="300">
-                        <h2 class="section-title">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 28px; height: 28px; margin-right: 8px;">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
-                            Konum ve Yakınlık Bilgileri
-                        </h2>
-
-                        <div class="proximity-grid">
-                            @if (!string.IsNullOrEmpty(Model.YakinBolgeler))
-                            {
-                                <div class="proximity-card">
-                                    <div class="proximity-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-                                            <circle cx="12" cy="10" r="3"/>
-                                        </svg>
-                                    </div>
-                                    <div class="proximity-content">
-                                        <h4>Önemli Bölgelere Yakınlık</h4>
-                                        <p>@Model.YakinBolgeler</p>
-                                    </div>
-                                </div>
-                            }
-
-                            @if (!string.IsNullOrEmpty(Model.UlasimBilgileri))
-                            {
-                                <div class="proximity-card">
-                                    <div class="proximity-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                                        </svg>
-                                    </div>
-                                    <div class="proximity-content">
-                                        <h4>Ulaşım</h4>
-                                        <p>@Model.UlasimBilgileri</p>
-                                    </div>
-                                </div>
-                            }
-
-                            @if (!string.IsNullOrEmpty(Model.SosyalTesisler))
-                            {
-                                <div class="proximity-card">
-                                    <div class="proximity-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                                            <polyline points="9 22 9 12 15 12 15 22"/>
-                                        </svg>
-                                    </div>
-                                    <div class="proximity-content">
-                                        <h4>Sosyal Tesisler</h4>
-                                        <p>@Model.SosyalTesisler</p>
-                                    </div>
-                                </div>
-                            }
-
-                            @if (!string.IsNullOrEmpty(Model.YakinProjeler))
-                            {
-                                <div class="proximity-card">
-                                    <div class="proximity-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                                            <line x1="12" y1="22.08" x2="12" y2="12"/>
-                                        </svg>
-                                    </div>
-                                    <div class="proximity-content">
-                                        <h4>Yakın Projeler</h4>
-                                        <p>@Model.YakinProjeler</p>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                }
             </div>
 
             <div class="col-lg-4">
@@ -224,7 +142,8 @@
                         <span class="price-value">@Model.MinFiyat.ToString("N0") ₺</span>
                         <span class="price-suffix">'den başlayan fiyatlarla</span>
                     </div>
-                    <div class="stock-box">
+
+                    @* <div class="stock-box">
                         <div class="stock-progress">
                             <div class="stock-info">
                                 <span>@Model.SatilanParsel / @Model.ToplamParsel Parsel</span>
@@ -235,12 +154,32 @@
                             </div>
                         </div>
                         <div class="stock-remaining">@kalanParsel Parsel Kaldı</div>
-                    </div>
+                    </div> *@
 
                     <!-- Proje Özellikleri -->
                     <div class="detail-features-sidebar">
                         <h3 class="sidebar-title">Proje Özellikleri</h3>
                         <div class="features-list">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Konum</h4>
+                                    <p>
+                                        @Model.Konum
+                                        @if (!string.IsNullOrEmpty(Model.Sehir))
+                                        {
+                                            <br />
+                                            @* <small style="color: #6b7280;">@Model.Sehir/@Model.Ilce</small> *@
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+
                             <div class="feature-item">
                                 <div class="feature-icon">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -454,6 +393,187 @@
                     </a>
                 </div>
             </div>
+            <!-- 360 Derece Sanal Tur -->
+            @if (!string.IsNullOrEmpty(Model.Tour360Url))
+            {
+                <div class="detail-360-tour" data-aos="fade-up" data-aos-delay="200">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 28px; height: 28px; margin-right: 8px;">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M2 12h20" />
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                        </svg>
+                        360° Sanal Tur
+                    </h2>
+                    <div class="tour-360-container">
+                        <div class="tour-360-wrapper">
+                            @{
+                                string tourSrc = Model.Tour360Url;
+                                // Eğer http ile başlamıyorsa, turlar klasöründen yükle
+                                if (!tourSrc.StartsWith("http"))
+                                {
+                                    tourSrc = $"/turlar/{tourSrc}/index.html";
+                                }
+                            }
+                            <iframe src="@tourSrc"
+                                    class="tour-360-iframe"
+                                    allowfullscreen
+                                    allow="accelerometer; gyroscope; vr">
+                            </iframe>
+                        </div>
+                        <button class="tour-fullscreen-btn" onclick="openTourFullscreen()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                            </svg>
+                            Tam Ekran
+                        </button>
+                    </div>
+                </div>
+            }
+
+
+
+            <!-- Yakınlık Bilgileri Section -->
+            @if (!string.IsNullOrEmpty(Model.YakinProjeler) || !string.IsNullOrEmpty(Model.YakinBolgeler) ||
+                        !string.IsNullOrEmpty(Model.UlasimBilgileri) || !string.IsNullOrEmpty(Model.SosyalTesisler))
+            {
+                <div class="detail-proximity" data-aos="fade-up" data-aos-delay="300">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 28px; height: 28px; margin-right: 8px;">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        Konum ve Yakınlık Bilgileri
+                    </h2>
+
+                    <div class="row g-4">
+                        @if (!string.IsNullOrEmpty(Model.YakinBolgeler))
+                        {
+                            <div class="col-lg-3 col-md-6">
+                                <div class="deger-card">
+                                    <div class="deger-icon">
+                                        <i class="fa fa-map-marker-alt"></i>
+                                    </div>
+                                    <h3 class="deger-title">Önemli Bölgelere Yakınlık</h3>
+                                    <ul class="deger-list">
+                                        @foreach (var item in Model.YakinBolgeler.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                                        {
+                                            <li>@item.Trim()</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UlasimBilgileri))
+                        {
+                            <div class="col-lg-3 col-md-6">
+                                <div class="deger-card">
+                                    <div class="deger-icon">
+                                        <i class="fa fa-bus"></i>
+                                    </div>
+                                    <h3 class="deger-title">Ulaşım</h3>
+                                    <ul class="deger-list">
+                                        @foreach (var item in Model.UlasimBilgileri.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                                        {
+                                            <li>@item.Trim()</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.SosyalTesisler))
+                        {
+                            <div class="col-lg-3 col-md-6">
+                                <div class="deger-card">
+                                    <div class="deger-icon">
+                                        <i class="fa fa-building"></i>
+                                    </div>
+                                    <h3 class="deger-title">Sosyal Tesisler</h3>
+                                    <ul class="deger-list">
+                                        @foreach (var item in Model.SosyalTesisler.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                                        {
+                                            <li>@item.Trim()</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.YakinProjeler))
+                        {
+                            <div class="col-lg-3 col-md-6">
+                                <div class="deger-card">
+                                    <div class="deger-icon">
+                                        <i class="fa fa-project-diagram"></i>
+                                    </div>
+                                    <h3 class="deger-title">Yakın Projeler</h3>
+                                    <ul class="deger-list">
+                                        @foreach (var item in Model.YakinProjeler.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                                        {
+                                            <li>@item.Trim()</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Proje Sunumu İndir -->
+            @if (!string.IsNullOrEmpty(Model.SunumDosyaUrl))
+            {
+                <div class="detail-presentation" data-aos="fade-up" data-aos-delay="250">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 28px; height: 28px; margin-right: 8px;">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10 9 9 9 8 9" />
+                        </svg>
+                        Proje Sunumu
+                    </h2>
+                    <div class="presentation-box">
+                        <div class="presentation-icon">
+                            @{
+                                var sunumExtension = System.IO.Path.GetExtension(Model.SunumDosyaUrl).ToLowerInvariant();
+                                var isPdf = sunumExtension == ".pdf";
+                            }
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                @if (isPdf)
+                                {
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                    <line x1="9" y1="13" x2="15" y2="13" />
+                                    <line x1="9" y1="17" x2="15" y2="17" />
+                                }
+                                else
+                                {
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                }
+                            </svg>
+                        </div>
+                        <div class="presentation-content">
+                            <h3>Proje Detaylı Sunumu</h3>
+                            <p>Projeyle ilgili tüm detayları içeren sunumu indirebilirsiniz.</p>
+                            <div class="presentation-info">
+                                <span class="file-type">@(isPdf ? "PDF Dosyası" : "PowerPoint Sunumu")</span>
+                            </div>
+                        </div>
+                        <a href="@Model.SunumDosyaUrl" target="_blank" download class="btn btn-primary presentation-download-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            Sunumu İndir
+                        </a>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </section>
@@ -466,8 +586,8 @@
         </span>
         <button class="lightbox-close" onclick="closeLightbox()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
         </button>
     </div>
@@ -475,7 +595,7 @@
     <div class="lightbox-content">
         <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"/>
+                <polyline points="15 18 9 12 15 6" />
             </svg>
         </button>
 
@@ -485,7 +605,7 @@
 
         <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6"/>
+                <polyline points="9 18 15 12 9 6" />
             </svg>
         </button>
     </div>
@@ -505,6 +625,7 @@
 @section Scripts {
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="~/css/projeler.css" asp-append-version="true" />
 
     <script>
@@ -607,5 +728,19 @@
                 closeLightbox();
             }
         });
+
+        // 360 Tour Tam Ekran
+        function openTourFullscreen() {
+            const iframe = document.querySelector('.tour-360-iframe');
+            if (iframe) {
+                if (iframe.requestFullscreen) {
+                    iframe.requestFullscreen();
+                } else if (iframe.webkitRequestFullscreen) {
+                    iframe.webkitRequestFullscreen();
+                } else if (iframe.msRequestFullscreen) {
+                    iframe.msRequestFullscreen();
+                }
+            }
+        }
     </script>
 }

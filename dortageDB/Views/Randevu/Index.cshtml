@@ -92,24 +92,36 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
-        .appointment-item.pending {
+        .appointment-item.OnayBekliyor {
             border-left-color: #f59e0b;
         }
 
-        .appointment-item.confirmed {
+        .appointment-item.GorusmeBekleniyor {
             border-left-color: #3b82f6;
         }
 
-        .appointment-item.completed {
-            border-left-color: #10b981;
+        .appointment-item.KararBekleniyor {
+            border-left-color: #8b5cf6;
         }
 
-        .appointment-item.cancelled {
+        .appointment-item.Olumsuz {
             border-left-color: #ef4444;
         }
 
-        .appointment-item.no_show {
+        .appointment-item.KaporaAlindi {
+            border-left-color: #f59e0b;
+        }
+
+        .appointment-item.OdemeAlindi {
+            border-left-color: #10b981;
+        }
+
+        .appointment-item.Gerceklesmedi {
             border-left-color: #9ca3af;
+        }
+
+        .appointment-item.Iptal {
+            border-left-color: #dc2626;
         }
 
     .appointment-time {
@@ -170,29 +182,44 @@
         font-weight: 600;
     }
 
-    .status-pending {
+    .status-OnayBekliyor {
         background: #fef3c7;
         color: #92400e;
     }
 
-    .status-confirmed {
+    .status-GorusmeBekleniyor {
         background: #dbeafe;
         color: #1e40af;
     }
 
-    .status-completed {
-        background: #d1fae5;
-        color: #065f46;
+    .status-KararBekleniyor {
+        background: #ede9fe;
+        color: #6b21a8;
     }
 
-    .status-cancelled {
+    .status-Olumsuz {
         background: #fee2e2;
         color: #991b1b;
     }
 
-    .status-no_show {
+    .status-KaporaAlindi {
+        background: #fed7aa;
+        color: #9a3412;
+    }
+
+    .status-OdemeAlindi {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-Gerceklesmedi {
         background: #f3f4f6;
         color: #4b5563;
+    }
+
+    .status-Iptal {
+        background: #fee2e2;
+        color: #7f1d1d;
     }
 
     .appointment-actions {
@@ -352,14 +379,20 @@
             <button class="filter-tab active" data-filter="all">
                 Tümü (@Model.Count())
             </button>
-            <button class="filter-tab" data-filter="pending">
-                Bekleyen (@Model.Count(r => r.RandevuDurum == RandevuDurum.pending))
+            <button class="filter-tab" data-filter="OnayBekliyor">
+                ⏳ Onay Bekliyor (@Model.Count(r => r.RandevuDurum == RandevuDurum.OnayBekliyor))
             </button>
-            <button class="filter-tab" data-filter="confirmed">
-                Onaylı (@Model.Count(r => r.RandevuDurum == RandevuDurum.confirmed))
+            <button class="filter-tab" data-filter="GorusmeBekleniyor">
+                📅 Görüşme Bekleniyor (@Model.Count(r => r.RandevuDurum == RandevuDurum.GorusmeBekleniyor))
             </button>
-            <button class="filter-tab" data-filter="completed">
-                Tamamlandı (@Model.Count(r => r.RandevuDurum == RandevuDurum.completed))
+            <button class="filter-tab" data-filter="KararBekleniyor">
+                ⏱️ Karar Bekleniyor (@Model.Count(r => r.RandevuDurum == RandevuDurum.KararBekleniyor))
+            </button>
+            <button class="filter-tab" data-filter="KaporaAlindi">
+                💰 Kapora Alındı (@Model.Count(r => r.RandevuDurum == RandevuDurum.KaporaAlindi))
+            </button>
+            <button class="filter-tab" data-filter="OdemeAlindi">
+                ✅ Ödeme Alındı (@Model.Count(r => r.RandevuDurum == RandevuDurum.OdemeAlindi))
             </button>
         </div>
 
@@ -382,13 +415,6 @@
                             <div class="appointment-details">
                                 <div class="detail-item">
                                     <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <circle cx="12" cy="10" r="3" />
-                                    </svg>
-                                    @randevu.Bolge
-                                </div>
-                                <div class="detail-item">
-                                    <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                                     </svg>
                                     @randevu.RandevuTipi
@@ -403,48 +429,31 @@
 
                             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                                 <span class="appointment-status status-@randevu.RandevuDurum.ToString()">
-                                    @switch (randevu.RandevuDurum)
-                                    {
-                                        case RandevuDurum.pending:
-                                            <text>⏳ Bekliyor</text>
-                                            break;
-                                        case RandevuDurum.confirmed:
-                                            <text>✓ Onaylandı</text>
-                                            break;
-                                        case RandevuDurum.completed:
-                                            <text>✓ Tamamlandı</text>
-                                            break;
-                                        case RandevuDurum.cancelled:
-                                            <text>✗ İptal Edildi</text>
-                                            break;
-                                        case RandevuDurum.no_show:
-                                            <text>⊘ Gelmedi</text>
-                                            break;
-                                    }
+                                    @dortageDB.Helpers.RandevuHelper.GetDurumIcon(randevu.RandevuDurum) @dortageDB.Helpers.RandevuHelper.GetDurumText(randevu.RandevuDurum)
                                 </span>
 
                                 <div class="appointment-actions">
                                     @* SADECE ADMIN durum değiştirebilir *@
                                     @if (User.IsInRole("admin"))
                                     {
-                                        @if (randevu.RandevuDurum == RandevuDurum.pending)
+                                        @if (randevu.RandevuDurum == RandevuDurum.OnayBekliyor)
                                         {
                                             <form asp-action="UpdateStatus" method="post" style="display: inline;">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="id" value="@randevu.RandevuID" />
-                                                <input type="hidden" name="status" value="confirmed" />
+                                                <input type="hidden" name="status" value="GorusmeBekleniyor" />
                                                 <button type="submit" class="btn-action btn-status">
                                                     Onayla
                                                     <span class="admin-only-badge">Admin</span>
                                                 </button>
                                             </form>
                                         }
-                                        @if (randevu.RandevuDurum == RandevuDurum.confirmed)
+                                        @if (randevu.RandevuDurum == RandevuDurum.GorusmeBekleniyor)
                                         {
                                             <form asp-action="UpdateStatus" method="post" style="display: inline;">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="id" value="@randevu.RandevuID" />
-                                                <input type="hidden" name="status" value="completed" />
+                                                <input type="hidden" name="status" value="OdemeAlindi" />
                                                 <button type="submit" class="btn-action btn-status">
                                                     Tamamla
                                                     <span class="admin-only-badge">Admin</span>

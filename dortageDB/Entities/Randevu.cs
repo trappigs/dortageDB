@@ -3,7 +3,17 @@
 namespace dortageDB.Entities
 {
 
-    public enum RandevuDurum { pending, confirmed, completed, no_show, cancelled }
+    public enum RandevuDurum
+    {
+        OnayBekliyor,           // 1- Onay Bekliyor
+        GorusmeBekleniyor,      // 2- Görüşme Bekleniyor
+        KararBekleniyor,        // 3- Görüşüldü - Karar Bekleniyor
+        Olumsuz,                // 4- Görüşüldü - Olumsuz
+        KaporaAlindi,           // 5- Görüşüldü - Kapora Alındı
+        OdemeAlindi,            // 6- Görüşüldü - Ödeme Alındı
+        Gerceklesmedi,          // 7- Gerçekleşmedi
+        Iptal                   // 8- İptal
+    }
 
     public class Randevu
     {
@@ -23,9 +33,6 @@ namespace dortageDB.Entities
         public Proje? Proje { get; set; }
 
         // Randevu Bilgileri
-        [Required, StringLength(100)]
-        public string Bolge { get; set; } = null!; // Şehir/İl bilgisi
-
         [StringLength(500)]
         public string? Aciklama { get; set; } // Adres detayı veya not
 
@@ -35,7 +42,7 @@ namespace dortageDB.Entities
         [Required, StringLength(50)]
         public string RandevuTipi { get; set; } = null!;
 
-        public RandevuDurum RandevuDurum { get; set; } = RandevuDurum.pending;
+        public RandevuDurum RandevuDurum { get; set; } = RandevuDurum.OnayBekliyor;
 
         public DateTime OlusturulmaTarihi { get; set; } = DateTime.Now;
     }

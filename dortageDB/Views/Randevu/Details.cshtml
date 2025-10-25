@@ -221,19 +221,19 @@
                 <span class="randevu-status status-@Model.RandevuDurum.ToString()">
                     @switch (Model.RandevuDurum)
                     {
-                        case RandevuDurum.pending:
+                        case RandevuDurum.OnayBekliyor:
                             <text>⏳ Bekliyor</text>
                             break;
-                        case RandevuDurum.confirmed:
+                        case RandevuDurum.GorusmeBekleniyor:
                             <text>✓ Onaylandı</text>
                             break;
-                        case RandevuDurum.completed:
+                        case RandevuDurum.OdemeAlindi:
                             <text>✓ Tamamlandı</text>
                             break;
-                        case RandevuDurum.cancelled:
+                        case RandevuDurum.Iptal:
                             <text>✗ İptal Edildi</text>
                             break;
-                        case RandevuDurum.no_show:
+                        case RandevuDurum.Gerceklesmedi:
                             <text>⊘ Gelmedi</text>
                             break;
                     }
@@ -268,12 +268,12 @@
                     @* SADECE ADMIN durum değiştirebilir *@
                     @if (User.IsInRole("admin"))
                     {
-                        @if (Model.RandevuDurum == RandevuDurum.pending)
+                        @if (Model.RandevuDurum == RandevuDurum.OnayBekliyor)
                         {
                             <form asp-action="UpdateStatus" method="post" style="display: inline;">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="id" value="@Model.RandevuID" />
-                                <input type="hidden" name="status" value="confirmed" />
+                                <input type="hidden" name="status" value="GorusmeBekleniyor" />
                                 <button type="submit" class="btn btn-success">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <polyline points="20 6 9 17 4 12"></polyline>
@@ -283,12 +283,12 @@
                                 </button>
                             </form>
                         }
-                        @if (Model.RandevuDurum == RandevuDurum.confirmed)
+                        @if (Model.RandevuDurum == RandevuDurum.GorusmeBekleniyor)
                         {
                             <form asp-action="UpdateStatus" method="post" style="display: inline;">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="id" value="@Model.RandevuID" />
-                                <input type="hidden" name="status" value="completed" />
+                                <input type="hidden" name="status" value="OdemeAlindi" />
                                 <button type="submit" class="btn btn-success">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <polyline points="20 6 9 17 4 12"></polyline>
@@ -342,17 +342,6 @@
                         <span class="info-label">Telefon:</span>
                         <span class="info-value">@Model.Musteri.Telefon</span>
                     </div>
-                    @if (!string.IsNullOrEmpty(Model.Musteri.Eposta))
-                    {
-                        <div class="info-row">
-                            <span class="info-label">E-posta:</span>
-                            <span class="info-value">@Model.Musteri.Eposta</span>
-                        </div>
-                    }
-                    <div class="info-row">
-                        <span class="info-label">Şehir:</span>
-                        <span class="info-value">@Model.Musteri.Sehir</span>
-                    </div>
                 </div>
 
                 <div class="info-card">
@@ -382,15 +371,10 @@
                 <div class="info-card map-card">
                     <h2>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
+                            <path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                         </svg>
-                        Konum ve Bölge Bilgisi
+                        Randevu Bilgileri
                     </h2>
-                    <div class="info-row">
-                        <span class="info-label">Bölge:</span>
-                        <span class="info-value">@Model.Bolge</span>
-                    </div>
                     <div class="info-row">
                         <span class="info-label">Randevu Tipi:</span>
                         <span class="info-value">@Model.RandevuTipi</span>

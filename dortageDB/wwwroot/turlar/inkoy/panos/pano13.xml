@@ -1,0 +1,8 @@
+<krpano>
+	<preview url="pano13.tiles/preview.jpg"/>
+	<image prealign="0|0.0|0">
+		<cube url="pano13.tiles/%s/l%l/%0v/l%l_%s_%0v_%0h.jpg" multires="512,1024,2048,4160,8256"/>
+	</image>
+	<hotspot name="h1" style="hotts" rotate="90" sapma="125.38" ath="-8.12823164426058" atv="-0.871369294605806" ongit="tn12"/>
+	<hotspot name="h2" style="hotts" rotate="90" sapma="11.47" ath="101.664" atv="0.288461538461537" ongit="tn14"/>
+</krpano>

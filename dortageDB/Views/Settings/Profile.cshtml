@@ -3,16 +3,20 @@
 
 @{
     ViewData["Title"] = "Profil Ayarları";
+    Layout = "_LayoutTopraktar";
 }
 
+<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/user-settings.css" asp-append-version="true" />
 
-<div class="settings-container">
-    <div class="breadcrumb">
-        <a asp-controller="Home" asp-action="Index">Ana Sayfa</a> >
-        <a asp-controller="Dashboard" asp-action="Index">Dashboard</a> >
-        Profil Ayarları
-    </div>
+<div class="topraktar-main-panel">
+    <div class="main-content">
+        <div class="container-fluid px-4">
+            <div class="breadcrumb">
+                <a asp-controller="Home" asp-action="Index">Ana Sayfa</a> >
+                <a asp-controller="Dashboard" asp-action="Index">Dashboard</a> >
+                Profil Ayarları
+            </div>
 
     <h1>Hesap Ayarları</h1>
     <p class="subtitle">Profil bilgilerinizi ve hesap ayarlarınızı yönetin</p>
@@ -33,7 +37,7 @@
 
     <div class="layout">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="settings-sidebar">
             <!-- Profile Preview Card -->
             <div class="profile-preview">
                 <div class="avatar-container">
@@ -52,7 +56,7 @@
                         📷
                     </button>
                 </div>
-                <div class="user-name">@Model.Ad @Model.Soyad</div>
+                <div class="settings-user-name">@Model.Ad @Model.Soyad</div>
                 @if (User.IsInRole("topraktar"))
                 {
                     <span class="user-role">Topraktar</span>
@@ -127,9 +131,13 @@
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label asp-for="TcNo">TC Kimlik No</label>
-                            <input asp-for="TcNo" type="text" maxlength="11" placeholder="XXXXXXXXXXX" id="tcInput" />
-                            <span asp-validation-for="TcNo" class="text-danger"></span>
+                            <label asp-for="Cinsiyet">Cinsiyet <span class="required">*</span></label>
+                            <select asp-for="Cinsiyet" required>
+                                <option value="">Seçiniz</option>
+                                <option value="false">Kadın</option>
+                                <option value="true">Erkek</option>
+                            </select>
+                            <span asp-validation-for="Cinsiyet" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
@@ -148,14 +156,6 @@
                             </select>
                             <span asp-validation-for="Sehir" class="text-danger"></span>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="Cinsiyet">Cinsiyet <span class="required">*</span></label>
-                        <select asp-for="Cinsiyet" required>
-                            <option value="false">Kadın</option>
-                            <option value="true">Erkek</option>
-                        </select>
                     </div>
 
                     <!-- Action Bar -->
@@ -239,10 +239,13 @@
 
         </main>
     </div>
-</div>
 
-<!-- Toast Notification -->
-<div class="toast" id="toast"></div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

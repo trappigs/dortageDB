@@ -244,42 +244,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="Eposta">E-posta</label>
-                        <div class="input-wrapper">
-                            <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                            <input asp-for="Eposta" type="email" placeholder="ornek@email.com" />
-                        </div>
-                        <span asp-validation-for="Eposta" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label asp-for="Sehir">Şehir <span class="required">*</span></label>
-                        <div class="input-wrapper">
-                            <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
-                            <select asp-for="Sehir" style="padding-left: 48px;">
-                                <option value="">Şehir seçin</option>
-                                <option value="İstanbul">İstanbul</option>
-                                <option value="Ankara">Ankara</option>
-                                <option value="İzmir">İzmir</option>
-                                <option value="Bursa">Bursa</option>
-                                <option value="Antalya">Antalya</option>
-                                <option value="Adana">Adana</option>
-                                <option value="Konya">Konya</option>
-                                <option value="Gaziantep">Gaziantep</option>
-                                <option value="Kayseri">Kayseri</option>
-                            </select>
-                        </div>
-                        <span asp-validation-for="Sehir" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
                         <label asp-for="Cinsiyet">Cinsiyet <span class="required">*</span></label>
                         <div class="input-wrapper">
                             <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -291,17 +255,6 @@
                             </select>
                         </div>
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="TcNo">TC Kimlik No</label>
-                    <div class="input-wrapper">
-                        <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                        </svg>
-                        <input asp-for="TcNo" type="text" placeholder="11 haneli TC No" maxlength="11" id="tcInput" />
-                    </div>
-                    <span asp-validation-for="TcNo" class="text-danger"></span>
                 </div>
 
                 <div class="form-actions">
@@ -342,13 +295,6 @@
             }
         }
 
-        e.target.value = value;
-    });
-
-    // TC No formatting
-    document.getElementById('tcInput')?.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 11) value = value.slice(0, 11);
         e.target.value = value;
     });
 </script>

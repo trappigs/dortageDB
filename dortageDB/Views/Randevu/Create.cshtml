@@ -192,30 +192,8 @@
                     <input type="hidden" name="id" value="@ViewData["RandevuId"]" />
                 }
 
-                <!-- MÜŞTERİ SEÇİMİ -->
-                <div class="form-group">
-                    <label style="margin-bottom: 16px; display: block;">
-                        <input type="checkbox" asp-for="YeniMusteri" id="yeniMusteriCheckbox" style="margin-right: 8px; width: auto; height: auto;">
-                        <strong>Yeni Müşteri Ekle</strong>
-                    </label>
-                </div>
-
-                <!-- MEVCUT MÜŞTERİ SEÇİMİ -->
-                <div id="mevcutMusteriSection" class="form-group">
-                    <label asp-for="MusteriId">Müşteri Seçin <span class="required">*</span></label>
-                    <div class="input-wrapper">
-                        <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <select asp-for="MusteriId" asp-items="ViewBag.Musteriler" style="padding-left: 48px;">
-                            <option value="">Müşteri seçin</option>
-                        </select>
-                    </div>
-                    <span asp-validation-for="MusteriId" class="text-danger"></span>
-                </div>
-
                 <!-- YENİ MÜŞTERİ FORMU -->
-                <div id="yeniMusteriSection" style="display: none; border: 2px solid #000a68; padding: 20px; border-radius: 12px; background: #f8f9ff; margin-bottom: 20px;">
+                <div id="yeniMusteriSection" style="border: 2px solid #000a68; padding: 20px; border-radius: 12px; background: #f8f9ff; margin-bottom: 20px;">
                     <h4 style="color: #000a68; margin-bottom: 16px;">📋 Yeni Müşteri Bilgileri</h4>
 
                     <div class="form-row">
@@ -231,113 +209,10 @@
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label asp-for="YeniMusteriTelefon">Telefon <span class="required">*</span></label>
-                            <input asp-for="YeniMusteriTelefon" class="form-control phone-mask" placeholder="(555) 123-4567" />
-                            <span asp-validation-for="YeniMusteriTelefon" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="YeniMusteriEposta">E-posta</label>
-                            <input asp-for="YeniMusteriEposta" type="email" class="form-control" placeholder="ornek@email.com" />
-                            <span asp-validation-for="YeniMusteriEposta" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label asp-for="YeniMusteriSehir">Şehir <span class="required">*</span></label>
-                            <select asp-for="YeniMusteriSehir" class="form-control">
-                                <option value="">Şehir Seçiniz</option>
-                                <option value="Adana">Adana</option>
-                                <option value="Adıyaman">Adıyaman</option>
-                                <option value="Afyonkarahisar">Afyonkarahisar</option>
-                                <option value="Ağrı">Ağrı</option>
-                                <option value="Aksaray">Aksaray</option>
-                                <option value="Amasya">Amasya</option>
-                                <option value="Ankara">Ankara</option>
-                                <option value="Antalya">Antalya</option>
-                                <option value="Ardahan">Ardahan</option>
-                                <option value="Artvin">Artvin</option>
-                                <option value="Aydın">Aydın</option>
-                                <option value="Balıkesir">Balıkesir</option>
-                                <option value="Bartın">Bartın</option>
-                                <option value="Batman">Batman</option>
-                                <option value="Bayburt">Bayburt</option>
-                                <option value="Bilecik">Bilecik</option>
-                                <option value="Bingöl">Bingöl</option>
-                                <option value="Bitlis">Bitlis</option>
-                                <option value="Bolu">Bolu</option>
-                                <option value="Burdur">Burdur</option>
-                                <option value="Bursa">Bursa</option>
-                                <option value="Çanakkale">Çanakkale</option>
-                                <option value="Çankırı">Çankırı</option>
-                                <option value="Çorum">Çorum</option>
-                                <option value="Denizli">Denizli</option>
-                                <option value="Diyarbakır">Diyarbakır</option>
-                                <option value="Düzce">Düzce</option>
-                                <option value="Edirne">Edirne</option>
-                                <option value="Elazığ">Elazığ</option>
-                                <option value="Erzincan">Erzincan</option>
-                                <option value="Erzurum">Erzurum</option>
-                                <option value="Eskişehir">Eskişehir</option>
-                                <option value="Gaziantep">Gaziantep</option>
-                                <option value="Giresun">Giresun</option>
-                                <option value="Gümüşhane">Gümüşhane</option>
-                                <option value="Hakkari">Hakkari</option>
-                                <option value="Hatay">Hatay</option>
-                                <option value="Iğdır">Iğdır</option>
-                                <option value="Isparta">Isparta</option>
-                                <option value="İstanbul">İstanbul</option>
-                                <option value="İzmir">İzmir</option>
-                                <option value="Kahramanmaraş">Kahramanmaraş</option>
-                                <option value="Karabük">Karabük</option>
-                                <option value="Karaman">Karaman</option>
-                                <option value="Kars">Kars</option>
-                                <option value="Kastamonu">Kastamonu</option>
-                                <option value="Kayseri">Kayseri</option>
-                                <option value="Kilis">Kilis</option>
-                                <option value="Kırıkkale">Kırıkkale</option>
-                                <option value="Kırklareli">Kırklareli</option>
-                                <option value="Kırşehir">Kırşehir</option>
-                                <option value="Kocaeli">Kocaeli</option>
-                                <option value="Konya">Konya</option>
-                                <option value="Kütahya">Kütahya</option>
-                                <option value="Malatya">Malatya</option>
-                                <option value="Manisa">Manisa</option>
-                                <option value="Mardin">Mardin</option>
-                                <option value="Mersin">Mersin</option>
-                                <option value="Muğla">Muğla</option>
-                                <option value="Muş">Muş</option>
-                                <option value="Nevşehir">Nevşehir</option>
-                                <option value="Niğde">Niğde</option>
-                                <option value="Ordu">Ordu</option>
-                                <option value="Osmaniye">Osmaniye</option>
-                                <option value="Rize">Rize</option>
-                                <option value="Sakarya">Sakarya</option>
-                                <option value="Samsun">Samsun</option>
-                                <option value="Şanlıurfa">Şanlıurfa</option>
-                                <option value="Siirt">Siirt</option>
-                                <option value="Sinop">Sinop</option>
-                                <option value="Şırnak">Şırnak</option>
-                                <option value="Sivas">Sivas</option>
-                                <option value="Tekirdağ">Tekirdağ</option>
-                                <option value="Tokat">Tokat</option>
-                                <option value="Trabzon">Trabzon</option>
-                                <option value="Tunceli">Tunceli</option>
-                                <option value="Uşak">Uşak</option>
-                                <option value="Van">Van</option>
-                                <option value="Yalova">Yalova</option>
-                                <option value="Yozgat">Yozgat</option>
-                                <option value="Zonguldak">Zonguldak</option>
-                            </select>
-                            <span asp-validation-for="YeniMusteriSehir" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="YeniMusteriTcNo">TC Kimlik No</label>
-                            <input asp-for="YeniMusteriTcNo" class="form-control" placeholder="12345678901" maxlength="11" />
-                            <span asp-validation-for="YeniMusteriTcNo" class="text-danger"></span>
-                        </div>
+                    <div class="form-group">
+                        <label asp-for="YeniMusteriTelefon">Telefon <span class="required">*</span></label>
+                        <input asp-for="YeniMusteriTelefon" class="form-control phone-mask" placeholder="(555) 123-4567" />
+                        <span asp-validation-for="YeniMusteriTelefon" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
@@ -357,7 +232,7 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label asp-for="RandevuZaman">Randevu Tarihi ve Saati <span class="required">*</span></label>
+                        <label asp-for="RandevuZaman">Randevu Tarihi <span class="required">*</span></label>
                         <div class="input-wrapper">
                             <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -365,56 +240,63 @@
                                 <line x1="8" y1="2" x2="8" y2="6"></line>
                                 <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
-                            <input asp-for="RandevuZaman" type="datetime-local" id="randevuZamanInput" />
-                        </div>
-                        <div class="quick-time-buttons">
-                            <button type="button" class="quick-time-btn" onclick="setQuickTime(1)">Yarın 10:00</button>
-                            <button type="button" class="quick-time-btn" onclick="setQuickTime(1, 14)">Yarın 14:00</button>
-                            <button type="button" class="quick-time-btn" onclick="setQuickTime(2)">2 Gün Sonra</button>
-                            <button type="button" class="quick-time-btn" onclick="setQuickTime(7)">1 Hafta Sonra</button>
+                            <input asp-for="RandevuZaman" type="date" id="randevuTarihInput" />
                         </div>
                         <span asp-validation-for="RandevuZaman" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="RandevuTipi">Randevu Tipi <span class="required">*</span></label>
+                        <label>Randevu Saati <span class="required">*</span></label>
                         <div class="input-wrapper">
                             <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
                             </svg>
-                            <select asp-for="RandevuTipi" style="padding-left: 48px;">
-                                <option value="">Tip seçin</option>
-                                <option value="Keşif">Keşif</option>
-                                <option value="Sunum">Sunum</option>
-                                <option value="Sözleşme">Sözleşme</option>
-                                <option value="Diğer">Diğer</option>
+                            <select id="randevuSaatInput" style="padding-left: 48px;">
+                                <option value="">Saat seçin</option>
+                                <option value="06:00">06:00</option>
+                                <option value="07:00">07:00</option>
+                                <option value="08:00">08:00</option>
+                                <option value="09:00">09:00</option>
+                                <option value="10:00">10:00</option>
+                                <option value="11:00">11:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="13:00">13:00</option>
+                                <option value="14:00">14:00</option>
+                                <option value="15:00">15:00</option>
+                                <option value="16:00">16:00</option>
+                                <option value="17:00">17:00</option>
+                                <option value="18:00">18:00</option>
+                                <option value="19:00">19:00</option>
+                                <option value="20:00">20:00</option>
                             </select>
                         </div>
-                        <span asp-validation-for="RandevuTipi" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="Bolge">Şehir/İl <span class="required">*</span></label>
+                    <label asp-for="RandevuTipi">Randevu Tipi <span class="required">*</span></label>
                     <div class="input-wrapper">
                         <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <circle cx="12" cy="10" r="3" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                         </svg>
-                        <select asp-for="Bolge" asp-items="ViewBag.Bolgeler">
-                            <option value="">Şehir Seçiniz</option>
+                        <select asp-for="RandevuTipi" style="padding-left: 48px;">
+                            <option value="">Tip seçin</option>
+                            <option value="Ofis">Ofis</option>
+                            <option value="Online">Online</option>
+                            <option value="Yer Gösterimi">Yer Gösterimi</option>
                         </select>
                     </div>
-                    <span asp-validation-for="Bolge" class="text-danger"></span>
+                    <span asp-validation-for="RandevuTipi" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="Aciklama">Adres Detayı / Açıklama</label>
+                    <label asp-for="Aciklama">Açıklama</label>
                     <div class="input-wrapper">
                         <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <textarea asp-for="Aciklama" placeholder="Randevu adresi detayı veya özel notlar (opsiyonel)" rows="3"></textarea>
+                        <textarea asp-for="Aciklama" placeholder="Randevu ile ilgili özel notlar (opsiyonel)" rows="3"></textarea>
                     </div>
                     <span asp-validation-for="Aciklama" class="text-danger"></span>
                 </div>
@@ -426,19 +308,19 @@
                         <div style="padding: 12px; background: #f3f4f6; border-radius: 8px; font-weight: 600;">
                             @switch ((RandevuDurum)ViewData["RandevuDurum"])
                             {
-                                case RandevuDurum.pending:
+                                case RandevuDurum.OnayBekliyor:
                                     <span style="color: #92400e;">⏳ Bekliyor</span>
                                     break;
-                                case RandevuDurum.confirmed:
+                                case RandevuDurum.GorusmeBekleniyor:
                                     <span style="color: #1e40af;">✓ Onaylandı</span>
                                     break;
-                                case RandevuDurum.completed:
+                                case RandevuDurum.OdemeAlindi:
                                     <span style="color: #065f46;">✓ Tamamlandı</span>
                                     break;
-                                case RandevuDurum.cancelled:
+                                case RandevuDurum.Iptal:
                                     <span style="color: #991b1b;">✗ İptal Edildi</span>
                                     break;
-                                case RandevuDurum.no_show:
+                                case RandevuDurum.Gerceklesmedi:
                                     <span style="color: #4b5563;">⊘ Gelmedi</span>
                                     break;
                             }
@@ -460,50 +342,57 @@
 
 <partial name="_ValidationScriptsPartial" />
 <script>
-    // Quick time setter
-    function setQuickTime(days, hour = 10) {
-        const input = document.getElementById('randevuZamanInput');
-        const date = new Date();
-        date.setDate(date.getDate() + days);
-        date.setHours(hour);
-        date.setMinutes(0);
-        date.setSeconds(0);
-
-        // Format for datetime-local input
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-
-        input.value = `${year}-${month}-${day}T${hours}:${minutes}`;
-    }
-
-    // Set minimum date to today
+    // Tarih ve saati birleştir
     document.addEventListener('DOMContentLoaded', function() {
-        const input = document.getElementById('randevuZamanInput');
-        if (input && !input.value) {
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            input.min = now.toISOString().slice(0, 16);
+        const tarihInput = document.getElementById('randevuTarihInput');
+        const saatInput = document.getElementById('randevuSaatInput');
+        const form = document.querySelector('form');
+
+        // Set minimum date to today
+        if (tarihInput) {
+            const today = new Date().toISOString().split('T')[0];
+            tarihInput.min = today;
         }
 
-        // Yeni Müşteri Toggle
-        const yeniMusteriCheckbox = document.getElementById('yeniMusteriCheckbox');
-        const mevcutMusteriSection = document.getElementById('mevcutMusteriSection');
-        const yeniMusteriSection = document.getElementById('yeniMusteriSection');
-        const musteriSelect = document.querySelector('select[name="MusteriId"]');
+        // Eğer edit modundaysa ve mevcut değer varsa, tarih ve saati ayır
+        const mevcutDeger = tarihInput.value;
+        if (mevcutDeger && mevcutDeger.includes('T')) {
+            const [tarih, saat] = mevcutDeger.split('T');
+            tarihInput.value = tarih;
+            saatInput.value = saat.substring(0, 5); // HH:mm formatı
+        }
 
-        if (yeniMusteriCheckbox) {
-            yeniMusteriCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    mevcutMusteriSection.style.display = 'none';
-                    yeniMusteriSection.style.display = 'block';
-                    musteriSelect.value = ''; // Mevcut müşteri seçimini temizle
-                } else {
-                    mevcutMusteriSection.style.display = 'block';
-                    yeniMusteriSection.style.display = 'none';
+        // Form submit edildiğinde tarih ve saati birleştir
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                console.log('Form submit event triggered');
+
+                const tarih = tarihInput.value;
+                const saat = saatInput.value;
+
+                console.log('Tarih:', tarih);
+                console.log('Saat:', saat);
+
+                if (!tarih) {
+                    e.preventDefault();
+                    alert('Lütfen randevu tarihi seçiniz.');
+                    return false;
                 }
+
+                if (!saat) {
+                    e.preventDefault();
+                    alert('Lütfen randevu saati seçiniz.');
+                    return false;
+                }
+
+                // Tarih ve saati birleştir ve RandevuZaman input'una ata
+                const birlesikTarih = `${tarih}T${saat}:00`;
+                console.log('Birleşik tarih:', birlesikTarih);
+                tarihInput.value = birlesikTarih;
+
+                // Form'un submit olmasına izin ver
+                console.log('Form submitting...');
+                return true;
             });
         }
     });

@@ -9,13 +9,6 @@ function initializeForm() {
 function attachEventListeners() {
     const form = document.getElementById('registrationForm');
 
-    // TC No validation
-    const tcNoInput = document.getElementById('TcNo');
-    if (tcNoInput) {
-        tcNoInput.addEventListener('input', handleTcNoInput);
-        tcNoInput.addEventListener('blur', handleTcNoBlur);
-    }
-
     // Email validation
     const emailInput = document.getElementById('Email');
     if (emailInput) {
@@ -346,15 +339,6 @@ function validateForm() {
         valid = false;
     } else {
         hideError('PhoneNumber', 'phoneError');
-    }
-
-    // TC No (opsiyonel ama doldurulduysa geçerli olmalı)
-    const tcNo = document.getElementById('TcNo');
-    if (tcNo.value.trim() && !isValidTcNo(tcNo.value)) {
-        showError('TcNo', 'tcNoError');
-        valid = false;
-    } else {
-        hideError('TcNo', 'tcNoError');
     }
 
     // Şehir

@@ -1,4 +1,4 @@
-@{
+﻿@{
     ViewData["Title"] = "Hakkımızda";
     Layout = "_LayoutFullWidth";
 }
@@ -153,16 +153,16 @@
                         <i class="fas fa-handshake"></i>
                     </div>
                     <div class="sayi-number" data-target="850">0</div>
-                    <div class="sayi-label">Başarılı Satış</div>
+                    <div class="sayi-label">Başarılı Satış Adedi</div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="sayi-card">
                     <div class="sayi-icon">
-                        <i class="fas fa-map-marked-alt"></i>
+                        <i class="fas fa-chart-line"></i>
                     </div>
-                    <div class="sayi-number" data-target="45">0</div>
-                    <div class="sayi-label">Farklı Lokasyon</div>
+                    <div class="sayi-number" data-target="250">0</div>
+                    <div class="sayi-label">Gerçekleşen Satış (Milyon ₺)</div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
@@ -215,14 +215,23 @@
 
             const timer = setInterval(() => {
                 current += increment;
+                const label = element.parentElement.querySelector('.sayi-label').textContent;
+
                 if (current >= target) {
-                    element.textContent = target.toLocaleString('tr-TR');
-                    if (element.parentElement.querySelector('.sayi-label').textContent === 'Memnuniyet Oranı') {
+                    if (label === 'Memnuniyet Oranı') {
                         element.textContent = '%' + target;
+                    } else if (label.includes('Milyon ₺')) {
+                        element.textContent = target.toLocaleString('tr-TR') + 'M ₺';
+                    } else {
+                        element.textContent = target.toLocaleString('tr-TR');
                     }
                     clearInterval(timer);
                 } else {
-                    element.textContent = Math.floor(current).toLocaleString('tr-TR');
+                    if (label.includes('Milyon ₺')) {
+                        element.textContent = Math.floor(current).toLocaleString('tr-TR') + 'M ₺';
+                    } else {
+                        element.textContent = Math.floor(current).toLocaleString('tr-TR');
+                    }
                 }
             }, 16);
         }

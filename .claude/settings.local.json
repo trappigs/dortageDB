@@ -25,7 +25,8 @@
       "Read(//c/Users/mami/Desktop/btlast/wwwroot/scripts/**)",
       "Read(//c/Users/mami/Desktop/btlast/Views/**)",
       "WebFetch(domain:bereketlitopraklar.com.tr)",
-      "Bash(Select-String -Pattern \"error|warning\" -Context 2)"
+      "Bash(Select-String -Pattern \"error|warning\" -Context 2)",
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)"
     ],
     "deny": [],
     "ask": []

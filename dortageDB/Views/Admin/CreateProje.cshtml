@@ -1,4 +1,4 @@
-@model dortageDB.Entities.Proje
+﻿@model dortageDB.Entities.Proje
 @{
     ViewData["Title"] = "Yeni Proje Ekle";
     Layout = "_LayoutTopraktar";
@@ -221,6 +221,12 @@
                             <textarea asp-for="Aciklama" class="form-control" rows="3" required></textarea>
                         </div>
 
+                        <div class="mb-3">
+                            <label asp-for="KisaAciklama" class="form-label">Kısa Açıklama (Kart Görünümü)</label>
+                            <textarea asp-for="KisaAciklama" class="form-control" rows="2" placeholder="Proje kartlarında gösterilecek kısa açıklama..."></textarea>
+                            <small class="text-muted">Bu açıklama proje listesinde kartların üzerinde gösterilecektir.</small>
+                        </div>
+
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label asp-for="Sehir" class="form-label">Şehir</label>
@@ -359,6 +365,61 @@
                         <div class="mb-3">
                             <label asp-for="KrediyeUygunluk" class="form-label">Krediye Uygunluk</label>
                             <input asp-for="KrediyeUygunluk" class="form-control" />
+                        </div>
+
+                        <!-- 360 Derece Sanal Tur -->
+                        <div class="card mb-3" style="border: 2px solid #10b981;">
+                            <div class="card-header" style="background-color: #10b981; color: white;">
+                                <h5 class="mb-0"><i class="bi bi-globe"></i> 360° Sanal Tur</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Tur Seçimi</label>
+                                    <select id="tour360Select" class="form-select" onchange="updateTour360Url()">
+                                        <option value="">Tur Seçiniz</option>
+                                        <option value="inkoy">İnköy Projesi</option>
+                                    </select>
+                                    <small class="text-muted">
+                                        Turlar klasöründen bir krpano projesi seçin
+                                    </small>
+                                </div>
+                                <div class="mb-0">
+                                    <label asp-for="Tour360Url" class="form-label">Veya Manuel URL</label>
+                                    <input asp-for="Tour360Url" class="form-control" placeholder="https://... veya tur klasör adı (örn: inkoy)" />
+                                    <small class="text-muted">
+                                        Otomatik doldurulur veya manuel URL girebilirsiniz
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Proje Sunumu -->
+                        <div class="card mb-3" style="border: 2px solid #f59e0b;">
+                            <div class="card-header" style="background-color: #f59e0b; color: white;">
+                                <h5 class="mb-0"><i class="bi bi-file-earmark-arrow-down"></i> Proje Sunumu</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Sunum Dosyası Yükle</label>
+                                    <input type="file" id="sunumFileInput" class="form-control" accept=".pdf,.ppt,.pptx" />
+                                    <small class="text-muted">
+                                        PDF veya PowerPoint dosyası yükleyebilirsiniz (Maksimum 10MB)
+                                    </small>
+                                </div>
+                                <div id="sunumUploadProgress" style="display: none;" class="mb-3">
+                                    <div class="progress">
+                                        <div id="sunumProgressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <p id="sunumProgressText" class="text-center mt-2 mb-0"></p>
+                                </div>
+                                <div id="sunumPreview" style="display: none;" class="alert alert-success">
+                                    <i class="bi bi-check-circle"></i> <span id="sunumFileName"></span>
+                                    <button type="button" class="btn btn-sm btn-danger float-end" onclick="removeSunum()">
+                                        <i class="bi bi-trash"></i> Kaldır
+                                    </button>
+                                </div>
+                                <input type="hidden" asp-for="SunumDosyaUrl" id="sunumDosyaUrlInput" />
+                            </div>
                         </div>
 
                         <div class="row mb-3">
@@ -648,5 +709,125 @@
 
         galleryImages.splice(index, 1);
         renderGallery();
+    }
+
+    // 360 Tur Seçimi
+    function updateTour360Url() {
+        const select = document.getElementById('tour360Select');
+        const input = document.getElementById('Tour360Url');
+        if (select.value) {
+            input.value = select.value;
+        }
+    }
+
+    // Sayfa yüklendiğinde mevcut sunum varsa göster
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentSunumUrl = document.getElementById('sunumDosyaUrlInput').value;
+        if (currentSunumUrl) {
+            const fileName = currentSunumUrl.split('/').pop();
+            document.getElementById('sunumPreview').style.display = 'block';
+            document.getElementById('sunumFileName').textContent = fileName || 'Mevcut Sunum';
+        }
+    });
+
+    // ===================================
+    // SUNUM DOSYASI YÜKLEME FONKSİYONLARI
+    // ===================================
+
+    const sunumFileInput = document.getElementById('sunumFileInput');
+    const sunumUploadProgress = document.getElementById('sunumUploadProgress');
+    const sunumProgressBar = document.getElementById('sunumProgressBar');
+    const sunumProgressText = document.getElementById('sunumProgressText');
+    const sunumPreview = document.getElementById('sunumPreview');
+    const sunumFileName = document.getElementById('sunumFileName');
+    const sunumDosyaUrlInput = document.getElementById('sunumDosyaUrlInput');
+
+    sunumFileInput.addEventListener('change', async function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Dosya boyutu kontrolü (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('Dosya boyutu 10MB\'dan büyük olamaz!');
+            sunumFileInput.value = '';
+            return;
+        }
+
+        // Dosya türü kontrolü
+        const allowedTypes = ['application/pdf', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Sadece PDF veya PowerPoint dosyası yükleyebilirsiniz!');
+            sunumFileInput.value = '';
+            return;
+        }
+
+        // Upload işlemi
+        try {
+            sunumUploadProgress.style.display = 'block';
+            sunumProgressText.textContent = 'Dosya yükleniyor...';
+            sunumProgressBar.style.width = '50%';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('/Admin/UploadSunum', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                sunumProgressBar.style.width = '100%';
+                sunumProgressText.textContent = 'Dosya başarıyla yüklendi!';
+
+                // Hidden input'a URL'yi kaydet
+                sunumDosyaUrlInput.value = result.url;
+
+                // Preview göster
+                setTimeout(() => {
+                    sunumUploadProgress.style.display = 'none';
+                    sunumPreview.style.display = 'block';
+                    sunumFileName.textContent = file.name;
+                    sunumProgressBar.style.width = '0%';
+                }, 1000);
+            } else {
+                alert('Dosya yüklenirken bir hata oluştu: ' + result.message);
+                sunumUploadProgress.style.display = 'none';
+                sunumFileInput.value = '';
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('Dosya yüklenirken bir hata oluştu!');
+            sunumUploadProgress.style.display = 'none';
+            sunumFileInput.value = '';
+        }
+    });
+
+    function removeSunum() {
+        if (!confirm('Sunumu kaldırmak istediğinizden emin misiniz?')) {
+            return;
+        }
+
+        const sunumUrl = sunumDosyaUrlInput.value;
+
+        // Sunucudan dosyayı sil
+        if (sunumUrl) {
+            const formData = new FormData();
+            formData.append('fileUrl', sunumUrl);
+
+            fetch('/Admin/DeleteSunum', {
+                method: 'POST',
+                body: formData
+            }).catch(error => {
+                console.error('Delete error:', error);
+            });
+        }
+
+        // UI'ı temizle
+        sunumDosyaUrlInput.value = '';
+        sunumFileInput.value = '';
+        sunumPreview.style.display = 'none';
+        sunumFileName.textContent = '';
     }
 </script>

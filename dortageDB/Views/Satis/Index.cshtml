@@ -375,10 +375,10 @@
                 <div class="stat-label">Toplam Komisyon</div>
                 <div class="stat-value green">₺@ViewBag.TotalCommission.ToString("N0")</div>
             </div>
-            <div class="stat-card">
+            @* <div class="stat-card">
                 <div class="stat-label">Ortalama Satış</div>
                 <div class="stat-value">₺@ViewBag.AvgSaleValue.ToString("N0")</div>
-            </div>
+            </div> *@
             <div class="stat-card">
                 <div class="stat-label">Bu Ay Satış</div>
                 <div class="stat-value blue">@ViewBag.ThisMonthSales</div>
@@ -386,13 +386,13 @@
                     ↑ ₺@ViewBag.ThisMonthRevenue.ToString("N0")
                 </div>
             </div>
-            <div class="stat-card">
+            @* <div class="stat-card">
                 <div class="stat-label">Ödeme Tipi</div>
                 <div class="stat-value orange">@ViewBag.TaksitCount Taksit</div>
                 <div class="stat-change" style="color: #6b7280;">
                     @ViewBag.PesinCount Peşin
                 </div>
-            </div>
+            </div> *@
         </div>
 
         <!-- Filters -->

@@ -41,13 +41,25 @@
     background: var(--bg-light);
 }
 
+.iletisim-section .row {
+    display: flex;
+    align-items: stretch;
+}
+
+.iletisim-section .row > [class*="col-"] {
+    display: flex;
+    flex-direction: column;
+}
+
 /* İletişim Bilgileri Card */
 .iletisim-info-card {
     background: var(--white);
     border-radius: 16px;
     padding: 40px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    height: 102%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .info-title {
@@ -161,6 +173,9 @@
     border-radius: 16px;
     padding: 40px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .form-title {

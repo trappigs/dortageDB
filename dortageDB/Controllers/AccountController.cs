@@ -166,7 +166,8 @@ namespace dortageDB.Controllers
                     Console.WriteLine("📋 Topraktar profili oluşturuluyor...");
                     var topraktarProfile = new TopraktarProfile
                     {
-                        UserId = user.Id
+                        UserId = user.Id,
+                        UsedReferralCode = model.Code // Kayıt olurken kullandığı referans kodu
                     };
                     _context.TopraktarProfiles.Add(topraktarProfile);
                     await _context.SaveChangesAsync();

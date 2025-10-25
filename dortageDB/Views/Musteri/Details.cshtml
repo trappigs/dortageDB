@@ -315,10 +315,7 @@
                         <h1>@Model.Ad @Model.Soyad</h1>
                         <div class="customer-meta">
                             <span class="meta-badge">
-                                @(Model.Cinsiyet ? "👨 Erkek" : "👩 Kadın")
-                            </span>
-                            <span class="meta-badge">
-                                📍 @Model.Sehir
+                                @(Model.Cinsiyet == true ? "👨 Erkek" : Model.Cinsiyet == false ? "👩 Kadın" : "⚪ Belirtilmemiş")
                             </span>
                         </div>
                     </div>
@@ -354,17 +351,6 @@
                         <span class="info-label">Telefon:</span>
                         <span class="info-value">@Model.Telefon</span>
                     </div>
-                    @if (!string.IsNullOrEmpty(Model.Eposta))
-                    {
-                        <div class="info-row">
-                            <span class="info-label">E-posta:</span>
-                            <span class="info-value">@Model.Eposta</span>
-                        </div>
-                    }
-                    <div class="info-row">
-                        <span class="info-label">Şehir:</span>
-                        <span class="info-value">@Model.Sehir</span>
-                    </div>
                     @if (!string.IsNullOrEmpty(Model.TcNo))
                     {
                         <div class="info-row">
@@ -388,7 +374,7 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">Tamamlanan Randevu:</span>
-                        <span class="info-value">@Model.Randevular.Count(r => r.RandevuDurum == RandevuDurum.completed)</span>
+                        <span class="info-value">@Model.Randevular.Count(r => r.RandevuDurum == RandevuDurum.OdemeAlindi)</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Toplam Satış:</span>
@@ -430,23 +416,23 @@
                                         <div class="timeline-title">Randevu - @randevu.RandevuTipi</div>
                                         <div class="timeline-date">@randevu.RandevuZaman.ToString("dd MMMM yyyy, HH:mm")</div>
                                         <div class="timeline-details">
-                                            📍 @randevu.Bolge | Topraktar: @randevu.Topraktar.Ad @randevu.Topraktar.Soyad
+                                            Topraktar: @randevu.Topraktar.Ad @randevu.Topraktar.Soyad
                                             <br />
                                             Durum: @switch (randevu.RandevuDurum)
                                             {
-                                                                case RandevuDurum.pending:
+                                                                case RandevuDurum.OnayBekliyor:
                                                     <span style="color: #f59e0b;">⏳ Bekliyor</span>
                                                     break;
-                                                case RandevuDurum.confirmed:
+                                                case RandevuDurum.GorusmeBekleniyor:
                                                     <span style="color: #3b82f6;">✓ Onaylandı</span>
                                                     break;
-                                                case RandevuDurum.completed:
+                                                case RandevuDurum.OdemeAlindi:
                                                     <span style="color: #10b981;">✓ Tamamlandı</span>
                                                     break;
-                                                case RandevuDurum.cancelled:
+                                                case RandevuDurum.Iptal:
                                                     <span style="color: #ef4444;">✗ İptal</span>
                                                     break;
-                                                case RandevuDurum.no_show:
+                                                case RandevuDurum.Gerceklesmedi:
                                                     <span style="color: #6b7280;">⊘ Gelmedi</span>
                                                     break;
                                                 }

@@ -44,10 +44,32 @@
         align-items: center;
         gap: 8px;
         transition: all 0.2s;
+        border: none;
+        cursor: pointer;
     }
 
         .btn-back:hover {
             background: #e5e7eb;
+        }
+
+    .btn-new-musteri {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-new-musteri:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
         }
 
     .search-filter-bar {
@@ -220,10 +242,156 @@
             background: #fee2e2;
         }
 
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        overflow-y: auto;
+    }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 25px rgba(0, 0, 0, 0.25);
+        margin: 20px;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: background 0.2s;
+    }
+
+        .modal-close:hover {
+            background: #f3f4f6;
+        }
+
+    .modal-body {
+        margin-bottom: 24px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+            .form-group select:focus,
+            .form-group input:focus {
+                outline: none;
+                border-color: #000a68;
+                box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
+            }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+    .modal-footer {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    .btn-modal {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-cancel {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+        .btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+    .btn-save {
+        background: linear-gradient(135deg, #000a68 0%, #001a88 100%);
+        color: white;
+    }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+        }
+
     @@media (max-width: 768px) {
         .customers-grid
 
     {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
         grid-template-columns: 1fr;
     }
 
@@ -232,6 +400,22 @@
 
 <div class="topraktar-main-panel">
     <div class="main-content">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div style="background: #d1fae5; border: 1px solid #10b981; color: #065f46; padding: 16px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 20px;">✓</span>
+                <span>@TempData["SuccessMessage"]</span>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div style="background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; padding: 16px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 20px;">⚠️</span>
+                <span>@TempData["ErrorMessage"]</span>
+            </div>
+        }
+
         <div class="page-header">
             <div>
                 <h1 class="page-title">
@@ -240,9 +424,14 @@
                 </h1>
                 <p style="color: #6b7280;">Sistemde toplam @Model.Count() müşteri</p>
             </div>
-            <a asp-action="Index" class="btn-back">
-                ← Dashboard'a Dön
-            </a>
+            <div style="display: flex; gap: 12px;">
+                <button type="button" class="btn-new-musteri" onclick="openCreateModal()">
+                    ➕ Yeni Müşteri
+                </button>
+                <a asp-action="Index" class="btn-back">
+                    ← Dashboard'a Dön
+                </a>
+            </div>
         </div>
 
         <div class="search-filter-bar">
@@ -260,12 +449,12 @@
             <div class="customers-grid" id="customersGrid">
                 @foreach (var musteri in Model)
                 {
-                    <div class="customer-card" data-search="@musteri.Ad @musteri.Soyad @musteri.Telefon @musteri.Eposta @musteri.Sehir">
+                    <div class="customer-card" data-search="@musteri.Ad @musteri.Soyad @musteri.Telefon">
                         <div class="customer-header">
                             <div>
                                 <div class="customer-name">@musteri.Ad @musteri.Soyad</div>
                                 <span style="font-size: 13px; color: #9ca3af;">
-                                    @(musteri.Cinsiyet ? "👨 Erkek" : "👩 Kadın")
+                                    @(musteri.Cinsiyet == true ? "👨 Erkek" : musteri.Cinsiyet == false ? "👩 Kadın" : "⚪ Belirtilmemiş")
                                 </span>
                             </div>
                             <div class="customer-avatar">
@@ -279,23 +468,6 @@
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                                 </svg>
                                 @musteri.Telefon
-                            </div>
-                            @if (!string.IsNullOrEmpty(musteri.Eposta))
-                            {
-                                <div class="info-row">
-                                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                        <polyline points="22,6 12,13 2,6"></polyline>
-                                    </svg>
-                                    @musteri.Eposta
-                                </div>
-                            }
-                            <div class="info-row">
-                                <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                    <circle cx="12" cy="10" r="3"></circle>
-                                </svg>
-                                @musteri.Sehir
                             </div>
                             @if (musteri.Topraktar != null)
                             {
@@ -331,9 +503,15 @@
                             <a asp-controller="Musteri" asp-action="Edit" asp-route-id="@musteri.IdMusteri" class="btn-action btn-edit">
                                 Düzenle
                             </a>
-                            @* <a asp-controller="Musteri" asp-action="Delete" asp-route-id="@musteri.IdMusteri" class="btn-action btn-delete">
-                                Sil
-                            </a> *@
+                            <button class="btn-action btn-delete"
+                                    data-id="@musteri.IdMusteri"
+                                    data-name="@musteri.Ad @musteri.Soyad"
+                                    data-phone="@musteri.Telefon"
+                                    data-randevu="@musteri.Randevular.Count"
+                                    data-satis="@musteri.Satislar.Count"
+                                    onclick="openDeleteModal(this)">
+                                🗑️ Sil
+                            </button>
                         </div>
                     </div>
                 }
@@ -350,7 +528,164 @@
     </div>
 </div>
 
+<!-- Create Musteri Modal -->
+<div class="modal-overlay" id="createModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>➕ Yeni Müşteri Ekle</h3>
+            <button type="button" class="modal-close" onclick="closeCreateModal()">×</button>
+        </div>
+        <form asp-controller="Admin" asp-action="CreateMusteri" method="post" id="createMusteriForm">
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ad *</label>
+                        <input type="text" name="Ad" required placeholder="Ad" maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad *</label>
+                        <input type="text" name="Soyad" required placeholder="Soyad" maxlength="100">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Telefon *</label>
+                        <input type="tel" name="Telefon" required placeholder="(5XX) XXX XX XX" id="phoneInput" maxlength="15">
+                    </div>
+                    <div class="form-group">
+                        <label>Cinsiyet</label>
+                        <select name="Cinsiyet">
+                            <option value="">Seçin</option>
+                            <option value="false">Kadın</option>
+                            <option value="true">Erkek</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Topraktar *</label>
+                    <select name="TopraktarID" required>
+                        <option value="">Topraktar Seçin</option>
+                        @{
+                            var userManager = ViewContext.HttpContext.RequestServices
+                            .GetService(typeof(Microsoft.AspNetCore.Identity.UserManager<dortageDB.Entities.AppUser>))
+                            as Microsoft.AspNetCore.Identity.UserManager<dortageDB.Entities.AppUser>;
+                            if (userManager != null)
+                            {
+                                var topraktarlar = await userManager.GetUsersInRoleAsync("topraktar");
+                                foreach (var t in topraktarlar.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
+                                {
+                                    <option value="@t.Id">@t.Ad @t.Soyad (@t.PhoneNumber)</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-cancel" onclick="closeCreateModal()">İptal</button>
+                <button type="submit" class="btn-modal btn-save">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 16px; max-width: 500px; width: 90%; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+        <div style="text-align: center; margin-bottom: 24px;">
+            <div style="width: 80px; height: 80px; background: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 40px;">
+                ⚠️
+            </div>
+            <h2 style="color: #991b1b; font-size: 24px; margin-bottom: 8px;">Müşteri Silme Onayı</h2>
+            <p style="color: #6b7280; font-size: 15px;">Bu işlem geri alınamaz!</p>
+        </div>
+
+        <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 24px;">
+            <div style="margin-bottom: 12px;">
+                <strong style="color: #374151;">Müşteri:</strong>
+                <span id="deleteMusteriName" style="color: #1f2937;"></span>
+            </div>
+            <div style="margin-bottom: 12px;">
+                <strong style="color: #374151;">Telefon:</strong>
+                <span id="deleteMusteriPhone" style="color: #1f2937;"></span>
+            </div>
+            <div style="border-top: 1px solid #e5e7eb; padding-top: 12px; margin-top: 12px;">
+                <div style="color: #dc2626; font-weight: 600; margin-bottom: 8px;">⚠️ Dikkat:</div>
+                <ul style="margin: 0; padding-left: 20px; color: #6b7280; font-size: 14px;">
+                    <li id="deleteRandevuInfo"></li>
+                    <li id="deleteSatisInfo"></li>
+                    <li>Tüm ilişkili veriler silinecektir</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+            <button onclick="closeDeleteModal()" style="flex: 1; padding: 14px; background: #f3f4f6; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; color: #374151; cursor: pointer;">
+                İptal
+            </button>
+            <form id="deleteForm" method="post" style="flex: 1; margin: 0;">
+                <button type="submit" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #dc2626, #991b1b); border: none; border-radius: 10px; font-size: 15px; font-weight: 600; color: white; cursor: pointer;">
+                    Evet, Sil
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
+    // Create Modal functions
+    function openCreateModal() {
+        console.log('➕ Create modal açılıyor');
+        document.getElementById('createMusteriForm').reset();
+        document.getElementById('createModal').classList.add('active');
+    }
+
+    function closeCreateModal() {
+        document.getElementById('createModal').classList.remove('active');
+    }
+
+    // Phone formatting
+    document.getElementById('phoneInput')?.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 10) value = value.slice(0, 10);
+
+        if (value.length > 0) {
+            if (value.length <= 3) {
+                value = '(' + value;
+            } else if (value.length <= 6) {
+                value = '(' + value.slice(0, 3) + ') ' + value.slice(3);
+            } else if (value.length <= 8) {
+                value = '(' + value.slice(0, 3) + ') ' + value.slice(3, 6) + ' ' + value.slice(6);
+            } else {
+                value = '(' + value.slice(0, 3) + ') ' + value.slice(3, 6) + ' ' + value.slice(6, 8) + ' ' + value.slice(8);
+            }
+        }
+
+        e.target.value = value;
+    });
+
+    // Close modals on overlay click & ESC key
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+    });
+
     // Search functionality
     document.getElementById('searchInput')?.addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase();
@@ -364,5 +699,43 @@
                 card.style.display = 'none';
             }
         });
+    });
+
+    // Delete Modal Functions
+    function openDeleteModal(button) {
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        const phone = button.getAttribute('data-phone');
+        const randevuCount = button.getAttribute('data-randevu');
+        const satisCount = button.getAttribute('data-satis');
+
+        document.getElementById('deleteMusteriName').textContent = name;
+        document.getElementById('deleteMusteriPhone').textContent = phone;
+        document.getElementById('deleteRandevuInfo').textContent = randevuCount + ' adet randevu silinecek';
+        document.getElementById('deleteSatisInfo').textContent = satisCount + ' adet satış kaydı silinecek';
+
+        const form = document.getElementById('deleteForm');
+        form.action = '/Admin/DeleteMusteri/' + id;
+
+        const modal = document.getElementById('deleteModal');
+        modal.style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    // Close modal on outside click
+    document.getElementById('deleteModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+
+    // Close modal on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDeleteModal();
+        }
     });
 </script>

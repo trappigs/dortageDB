@@ -65,7 +65,6 @@ namespace dortageDB.Data
 
                 entity.HasIndex(m => m.Telefon).IsUnique();
                 entity.HasIndex(m => m.TcNo).IsUnique();
-                entity.HasIndex(m => m.Eposta).IsUnique(false);
                 entity.HasIndex(m => m.EklenmeTarihi);
                 entity.HasIndex(m => m.TopraktarID);
 

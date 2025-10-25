@@ -1,0 +1,77 @@
+<krpano>
+	<preview url="pano7.tiles/preview.jpg"/>
+	<image prealign="0|0.0|0">
+		<cube url="pano7.tiles/%s/l%l/%0v/l%l_%s_%0v_%0h.jpg" multires="512,1024,2048,3840,7680"/>
+	</image>
+	<hotspot name="hv1" style="havaspot" sapma="-105.71" ath="172.366763226768" atv="-24.7773279352227" ongit="tn6"/>
+	<hotspot name="hv2" style="havaspot" sapma="3.53" ath="94.9122177722225" atv="-17.3684210526316" ongit="tn1"/>
+	<hotspot name="hv3" style="havaspot" sapma="-41.22" ath="36.8516117116169" atv="-16.2753036437247" ongit="tn8"/>
+	<hotspot name="h1" style="hotts" rotate="90" sapma="-164.39" ath="154.535897510558" atv="14.8274173806609" ongit="tn10"/>
+	<hotspot name="h2" style="hotts" rotate="90" sapma="-66.42" ath="76.5013054830287" atv="20.9746872272331" ongit="tn14"/>
+	<hotspot name="h3" style="hotts" rotate="90" sapma="-51.5" ath="44.2819843342037" atv="12.7524003491417" ongit="tn13"/>
+    
+    
+ <hotspot name="p4868-2"  style="letter">
+ <point ath="87.89651422636791"  atv="8.858208020477278"/>
+ <point ath="88.12911369709116"  atv="8.937312333533693"/>
+ <point ath="86.35786673729547"  atv="9.378569947431789"/>
+ <point ath="85.93918480565708"  atv="9.447399372624817"/>
+ <point ath="83.51814550246002"  atv="9.253275150459032"/>
+ <point ath="85.5270967264629"  atv="8.750540629152022"/>
+ </hotspot>
+ 
+ <hotspot name="p4868-1"  style="letter">
+ <point ath="85.54007380052082"  atv="8.748646941494593"/>
+ <point ath="83.47160751100853"  atv="8.649119132749902"/>
+ <point ath="82.94386527454333"  atv="8.695192938441012"/>
+ <point ath="81.56312671926838"  atv="9.055360461241984"/>
+ <point ath="81.59995819370738"  atv="9.093219897705623"/>
+ <point ath="83.5169717291136"  atv="9.254678918966254"/>
+ </hotspot>
+ 
+ <hotspot name="p4871-3"  style="letter">
+ <point ath="67.81490094952073"  atv="18.66363890041279"/>
+ <point ath="67.25473139292933"  atv="17.988481623071088"/>
+ <point ath="67.48105768505229"  atv="14.615543792879937"/>
+ <point ath="82.03575343198423"  atv="16.52131930062994"/>
+ <point ath="80.7398189790747"  atv="19.816043797677803"/>
+ <point ath="79.04527902801817"  atv="20.65208186742738"/>
+ </hotspot>
+ 
+ <hotspot name="p4874-4"  style="letter">
+ <point ath="82.31036489619748"  atv="20.014497950892256"/>
+ <point ath="82.97555539013092"  atv="21.170686083228848"/>
+ <point ath="91.18924324762165"  atv="22.193836284561623"/>
+ <point ath="92.0110851559916"  atv="17.22592863377667"/>
+ <point ath="83.35514182126002"  atv="16.633082115578432"/>
+ </hotspot>
+ 
+
+ <hotspot name="p4874-3"  style="letter">
+ <point ath="92.00061627450799"  atv="17.229011313497193"/>
+ <point ath="101.66021749627464"  atv="17.783143855776903"/>
+ <point ath="101.20567333598908"  atv="19.08627499619969"/>
+ <point ath="101.78093063512509"  atv="22.201094323184897"/>
+ <point ath="100.99914323028983"  atv="22.881030631341833"/>
+ <point ath="91.19662321775644"  atv="22.19515307028419"/>
+ </hotspot>   
+ 
+<hotspot name="u4868-1" style="tunispot2" ath="83.4419475466189" atv="8.894618500604404"  anim="1" maxx1="17"/> 
+<hotspot name="u4868-2" style="tunispot2" ath="85.86629193142619" atv="9.063261162503416"  anim="1" maxx1="17"/> 
+<hotspot name="u4871-3" style="tunispot2" ath="74.1300171983562" atv="17.789651473717473"  anim="1" maxx1="76"/> 
+<hotspot name="u4874-3" style="tunispot2" ath="96.45871375155357" atv="20.024970682418274"  anim="1" maxx1="76"/> 
+<hotspot name="u4874-4" style="tunispot2" ath="87.2668830936683" atv="19.168553793362292"  anim="1" maxx1="76"/> 
+
+
+	<hotspot name="u101" style="gspot" ath="100.981278244028" atv="24.2352434295562" anim="1" maxx="15" minn="100" yazi=""/>
+	<hotspot name="u102" style="gspot" ath="29.7869593285991" atv="14.4635932787591" anim="1" maxx="15" minn="100" yazi=""/>
+	<hotspot name="u103" style="gspot" ath="35.5604883462819" atv="6.59999999999999" anim="1" maxx="15" minn="100" yazi=""/>
+	<hotspot name="u104" style="gspot" ath="-122.863485016648" atv="5" anim="1" maxx="15" minn="100" yazi=""/>
+	<hotspot name="u105" style="gspot" ath="-87.6695437731196" atv="2.22222222222223" anim="1" maxx="15" minn="100" yazi=""/>
+	<hotspot name="u106" style="gspot" ath="170.9203545113" atv="0.984204131227213" anim="1" maxx="15" minn="100" yazi=""/>
+	<hotspot name="u107" style="gspot" ath="161.259079903148" atv="12.138517618469" anim="1" maxx="15" minn="100" yazi=""/>
+	<hotspot name="u108" style="gspot" ath="130.409374869596" atv="0.348987505385605" anim="1" maxx="15" minn="100" yazi=""/>
+<hotspot name="u109" style="gspot" ath="84.45173504070175" atv="9.023571408747536"  anim="1" maxx="15" minn="100" yazi=""/>
+<hotspot name="u110" style="gspot" ath="69.5917777578569" atv="16.982357978661593"  anim="1" maxx="15" minn="100" yazi=""/>
+<hotspot name="u111" style="gspot" ath="91.57749494281845" atv="19.803573211088093"  anim="1" maxx="15" minn="100" yazi=""/>    
+</krpano>

@@ -1,4 +1,4 @@
-﻿using dortageDB.Data;
+using dortageDB.Data;
 using dortageDB.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -35,7 +35,7 @@ namespace dortageDB.Controllers
                 TotalTopraktars = await _userManager.GetUsersInRoleAsync("topraktar"),
                 TotalMusteriler = await _context.Musteriler.CountAsync(),
                 TotalRandevular = await _context.Randevular.CountAsync(),
-                PendingRandevular = await _context.Randevular.CountAsync(r => r.RandevuDurum == RandevuDurum.pending),
+                PendingRandevular = await _context.Randevular.CountAsync(r => r.RandevuDurum == RandevuDurum.OnayBekliyor),
                 TotalSatislar = await _context.Satislar.CountAsync(),
                 TotalSatisMiktari = await _context.Satislar.SumAsync(s => (decimal?)s.ToplamSatisFiyati) ?? 0,
                 TotalKomisyon = await _context.Satislar.SumAsync(s => (decimal?)s.OdenecekKomisyon) ?? 0,
@@ -71,7 +71,7 @@ namespace dortageDB.Controllers
             {
                 if (string.IsNullOrWhiteSpace(code))
                 {
-                    TempData["ErrorMessage"] = "Referans kodu boş olamaz.";
+                    TempData["ErrorMessage"] = "Referans kodu bo� olamaz.";
                     return RedirectToAction(nameof(Referrals));
                 }
 
@@ -100,14 +100,14 @@ namespace dortageDB.Controllers
                 _context.Referrals.Add(referral);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Referans kodu oluşturuldu: {code} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Referans kodu başarıyla oluşturuldu.";
+                _logger.LogInformation($"? Referans kodu olu�turuldu: {code} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Referans kodu ba�ar�yla olu�turuldu.";
                 return RedirectToAction(nameof(Referrals));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Referans kodu oluşturma hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Referans kodu olu�turma hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(Referrals));
             }
         }
@@ -122,21 +122,21 @@ namespace dortageDB.Controllers
                 var referral = await _context.Referrals.FindAsync(id);
                 if (referral == null)
                 {
-                    TempData["ErrorMessage"] = "Referans kodu bulunamadı.";
+                    TempData["ErrorMessage"] = "Referans kodu bulunamad�.";
                     return RedirectToAction(nameof(Referrals));
                 }
 
                 referral.IsActive = !referral.IsActive;
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Referans kodu durumu değiştirildi: {referral.Code} -> {referral.IsActive}");
+                _logger.LogInformation($"? Referans kodu durumu de�i�tirildi: {referral.Code} -> {referral.IsActive}");
                 TempData["SuccessMessage"] = $"Referans kodu {(referral.IsActive ? "aktif" : "pasif")} edildi.";
                 return RedirectToAction(nameof(Referrals));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Referans kodu durum değiştirme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Referans kodu durum de�i�tirme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(Referrals));
             }
         }
@@ -151,27 +151,27 @@ namespace dortageDB.Controllers
                 var referral = await _context.Referrals.FindAsync(id);
                 if (referral == null)
                 {
-                    TempData["ErrorMessage"] = "Referans kodu bulunamadı.";
+                    TempData["ErrorMessage"] = "Referans kodu bulunamad�.";
                     return RedirectToAction(nameof(Referrals));
                 }
 
                 _context.Referrals.Remove(referral);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Referans kodu silindi: {referral.Code}");
-                TempData["SuccessMessage"] = "Referans kodu başarıyla silindi.";
+                _logger.LogInformation($"? Referans kodu silindi: {referral.Code}");
+                TempData["SuccessMessage"] = "Referans kodu ba�ar�yla silindi.";
                 return RedirectToAction(nameof(Referrals));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Referans kodu silme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Referans kodu silme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(Referrals));
             }
         }
 
         // ====================================
-        // TÜM KAYITLARA ERİŞİM
+        // T�M KAYITLARA ER���M
         // ====================================
 
         // GET: Admin/AllMusteriler
@@ -199,7 +199,7 @@ namespace dortageDB.Controllers
             return View(randevular);
         }
 
-        // GET: Admin/AllSatislar - GÜNCELLEME
+        // GET: Admin/AllSatislar - G�NCELLEME
         public async Task<IActionResult> AllSatislar()
         {
             var satislar = await _context.Satislar
@@ -208,7 +208,7 @@ namespace dortageDB.Controllers
                 .OrderByDescending(s => s.SatilmaTarihi)
                 .ToListAsync();
 
-            // Dropdown'lar için veri hazırla
+            // Dropdown'lar i�in veri haz�rla
             ViewBag.Musteriler = await _context.Musteriler
                 .OrderBy(m => m.Ad)
                 .ThenBy(m => m.Soyad)
@@ -229,17 +229,17 @@ namespace dortageDB.Controllers
                 // Validate inputs
                 if (string.IsNullOrWhiteSpace(Bolge) || ToplamSatisFiyati <= 0 || OdenecekKomisyon < 0)
                 {
-                    TempData["ErrorMessage"] = "Geçersiz veri girişi.";
+                    TempData["ErrorMessage"] = "Ge�ersiz veri giri�i.";
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
-                // Müşteri ve Topraktar kontrolü
+                // M��teri ve Topraktar kontrol�
                 var musteri = await _context.Musteriler.FindAsync(SatilanMusteriID);
                 var topraktar = await _userManager.FindByIdAsync(TopraktarID.ToString());
 
                 if (musteri == null || topraktar == null)
                 {
-                    TempData["ErrorMessage"] = "Geçersiz müşteri veya topraktar.";
+                    TempData["ErrorMessage"] = "Ge�ersiz m��teri veya topraktar.";
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
@@ -257,14 +257,14 @@ namespace dortageDB.Controllers
                 _context.Satislar.Add(satis);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Yeni satış oluşturuldu: #{satis.SatisID} - ₺{satis.ToplamSatisFiyati} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Satış başarıyla eklendi.";
+                _logger.LogInformation($"? Yeni sat�� olu�turuldu: #{satis.SatisID} - ?{satis.ToplamSatisFiyati} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Sat�� ba�ar�yla eklendi.";
                 return RedirectToAction(nameof(AllSatislar));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Satış oluşturma hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Sat�� olu�turma hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(AllSatislar));
             }
         }
@@ -281,24 +281,24 @@ namespace dortageDB.Controllers
                 var satis = await _context.Satislar.FindAsync(SatisID);
                 if (satis == null)
                 {
-                    TempData["ErrorMessage"] = "Satış bulunamadı.";
+                    TempData["ErrorMessage"] = "Sat�� bulunamad�.";
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
                 // Validate inputs
                 if (string.IsNullOrWhiteSpace(Bolge) || ToplamSatisFiyati <= 0 || OdenecekKomisyon < 0)
                 {
-                    TempData["ErrorMessage"] = "Geçersiz veri girişi.";
+                    TempData["ErrorMessage"] = "Ge�ersiz veri giri�i.";
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
-                // Müşteri ve Topraktar kontrolü
+                // M��teri ve Topraktar kontrol�
                 var musteri = await _context.Musteriler.FindAsync(SatilanMusteriID);
                 var topraktar = await _userManager.FindByIdAsync(TopraktarID.ToString());
 
                 if (musteri == null || topraktar == null)
                 {
-                    TempData["ErrorMessage"] = "Geçersiz müşteri veya topraktar.";
+                    TempData["ErrorMessage"] = "Ge�ersiz m��teri veya topraktar.";
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
@@ -313,14 +313,14 @@ namespace dortageDB.Controllers
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Satış #{SatisID} güncellendi - ₺{ToplamSatisFiyati} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Satış başarıyla güncellendi.";
+                _logger.LogInformation($"? Sat�� #{SatisID} g�ncellendi - ?{ToplamSatisFiyati} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Sat�� ba�ar�yla g�ncellendi.";
                 return RedirectToAction(nameof(AllSatislar));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Satış güncelleme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Sat�� g�ncelleme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(AllSatislar));
             }
         }
@@ -335,23 +335,23 @@ namespace dortageDB.Controllers
                 var satis = await _context.Satislar.FindAsync(id);
                 if (satis == null)
                 {
-                    TempData["ErrorMessage"] = "Satış bulunamadı.";
+                    TempData["ErrorMessage"] = "Sat�� bulunamad�.";
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
-                var satisInfo = $"#{satis.SatisID} - ₺{satis.ToplamSatisFiyati}";
+                var satisInfo = $"#{satis.SatisID} - ?{satis.ToplamSatisFiyati}";
 
                 _context.Satislar.Remove(satis);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Satış {satisInfo} silindi (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Satış başarıyla silindi.";
+                _logger.LogInformation($"? Sat�� {satisInfo} silindi (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Sat�� ba�ar�yla silindi.";
                 return RedirectToAction(nameof(AllSatislar));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Satış silme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Sat�� silme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(AllSatislar));
             }
         }
@@ -372,12 +372,24 @@ namespace dortageDB.Controllers
                     .Where(s => s.TopraktarID == topraktar.Id)
                     .SumAsync(s => (decimal?)s.OdenecekKomisyon) ?? 0;
 
+                // Calculate total sales (ciro)
+                var totalCiro = await _context.Satislar
+                    .Where(s => s.TopraktarID == topraktar.Id)
+                    .SumAsync(s => (decimal?)s.ToplamSatisFiyati) ?? 0;
+
+                // Get TopraktarProfile for ReferralCode and UsedReferralCode
+                var profile = await _context.TopraktarProfiles
+                    .FirstOrDefaultAsync(p => p.UserId == topraktar.Id);
+
                 topraktarData.Add(new
                 {
                     User = topraktar,
                     RandevuCount = randevuCount,
                     SatisCount = satisCount,
-                    TotalKomisyon = totalKomisyon
+                    TotalKomisyon = totalKomisyon,
+                    TotalCiro = totalCiro,
+                    ReferralCode = profile?.ReferralCode,
+                    UsedReferralCode = profile?.UsedReferralCode // Kay�t olurken kulland��� kod
                 });
             }
 
@@ -389,24 +401,24 @@ namespace dortageDB.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateRandevu(int MusteriId, int TopraktarID,
-            DateTime RandevuZaman, string Bolge, string RandevuTipi)
+            DateTime RandevuZaman, string? Aciklama, string RandevuTipi)
         {
             try
             {
                 // Validate inputs
-                if (string.IsNullOrWhiteSpace(Bolge) || string.IsNullOrWhiteSpace(RandevuTipi))
+                if (string.IsNullOrWhiteSpace(RandevuTipi))
                 {
-                    TempData["ErrorMessage"] = "Geçersiz veri girişi.";
+                    TempData["ErrorMessage"] = "Randevu tipi gereklidir.";
                     return RedirectToAction(nameof(AllRandevular));
                 }
 
-                // Müşteri ve Topraktar kontrolü
+                // M��teri ve Topraktar kontrol�
                 var musteri = await _context.Musteriler.FindAsync(MusteriId);
                 var topraktar = await _userManager.FindByIdAsync(TopraktarID.ToString());
 
                 if (musteri == null || topraktar == null)
                 {
-                    TempData["ErrorMessage"] = "Geçersiz müşteri veya topraktar.";
+                    TempData["ErrorMessage"] = "Ge�ersiz m��teri veya topraktar.";
                     return RedirectToAction(nameof(AllRandevular));
                 }
 
@@ -415,22 +427,22 @@ namespace dortageDB.Controllers
                     MusteriId = MusteriId,
                     TopraktarID = TopraktarID,
                     RandevuZaman = RandevuZaman,
-                    Bolge = Bolge.Trim(),
                     RandevuTipi = RandevuTipi.Trim(),
-                    RandevuDurum = RandevuDurum.pending
+                    Aciklama = string.IsNullOrWhiteSpace(Aciklama) ? null : Aciklama.Trim(),
+                    RandevuDurum = RandevuDurum.OnayBekliyor
                 };
 
                 _context.Randevular.Add(randevu);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Yeni randevu oluşturuldu: #{randevu.RandevuID} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Randevu başarıyla eklendi.";
+                _logger.LogInformation($"? Yeni randevu olu�turuldu: #{randevu.RandevuID} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Randevu ba�ar�yla eklendi.";
                 return RedirectToAction(nameof(AllRandevular));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Randevu oluşturma hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Randevu olu�turma hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(AllRandevular));
             }
         }
@@ -444,7 +456,7 @@ namespace dortageDB.Controllers
                 var randevu = await _context.Randevular.FindAsync(id);
                 if (randevu == null)
                 {
-                    TempData["ErrorMessage"] = "Randevu bulunamadı.";
+                    TempData["ErrorMessage"] = "Randevu bulunamad�.";
                     return RedirectToAction(nameof(AllRandevular));
                 }
 
@@ -454,67 +466,67 @@ namespace dortageDB.Controllers
                     randevu.RandevuDurum = randevuDurum;
                     await _context.SaveChangesAsync();
 
-                    _logger.LogInformation($"✅ Randevu #{id} durumu güncellendi: {randevuDurum} (Admin: {User.Identity.Name})");
-                    TempData["SuccessMessage"] = "Randevu durumu başarıyla güncellendi.";
+                    _logger.LogInformation($"? Randevu #{id} durumu g�ncellendi: {randevuDurum} (Admin: {User.Identity.Name})");
+                    TempData["SuccessMessage"] = "Randevu durumu ba�ar�yla g�ncellendi.";
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Geçersiz durum değeri.";
+                    TempData["ErrorMessage"] = "Ge�ersiz durum de�eri.";
                 }
 
                 return RedirectToAction(nameof(AllRandevular));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Randevu durum güncelleme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Randevu durum g�ncelleme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(AllRandevular));
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditRandevu(int id, DateTime randevuZaman, string bolge, string randevuTipi, string randevuDurum)
+        public async Task<IActionResult> EditRandevu(int id, DateTime randevuZaman, string? aciklama, string randevuTipi, string randevuDurum)
         {
             try
             {
                 var randevu = await _context.Randevular.FindAsync(id);
                 if (randevu == null)
                 {
-                    TempData["ErrorMessage"] = "Randevu bulunamadı.";
+                    TempData["ErrorMessage"] = "Randevu bulunamad�.";
                     return RedirectToAction(nameof(AllRandevular));
                 }
 
                 // Validate inputs
-                if (string.IsNullOrWhiteSpace(bolge) || string.IsNullOrWhiteSpace(randevuTipi) || string.IsNullOrWhiteSpace(randevuDurum))
+                if (string.IsNullOrWhiteSpace(randevuTipi) || string.IsNullOrWhiteSpace(randevuDurum))
                 {
-                    TempData["ErrorMessage"] = "Tüm alanlar doldurulmalıdır.";
+                    TempData["ErrorMessage"] = "Randevu tipi ve durum gereklidir.";
                     return RedirectToAction(nameof(AllRandevular));
                 }
 
                 // Parse and validate randevu durum
                 if (!Enum.TryParse<RandevuDurum>(randevuDurum, true, out var durum))
                 {
-                    TempData["ErrorMessage"] = "Geçersiz randevu durumu.";
+                    TempData["ErrorMessage"] = "Ge�ersiz randevu durumu.";
                     return RedirectToAction(nameof(AllRandevular));
                 }
 
                 // Update randevu
                 randevu.RandevuZaman = randevuZaman;
-                randevu.Bolge = bolge.Trim();
                 randevu.RandevuTipi = randevuTipi.Trim();
+                randevu.Aciklama = string.IsNullOrWhiteSpace(aciklama) ? null : aciklama.Trim();
                 randevu.RandevuDurum = durum;
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Randevu #{id} düzenlendi - Durum: {durum} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Randevu başarıyla güncellendi.";
+                _logger.LogInformation($"? Randevu #{id} d�zenlendi - Durum: {durum} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Randevu ba�ar�yla g�ncellendi.";
                 return RedirectToAction(nameof(AllRandevular));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Randevu düzenleme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Randevu d�zenleme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(AllRandevular));
             }
         }
@@ -530,27 +542,27 @@ namespace dortageDB.Controllers
                 var randevu = await _context.Randevular.FindAsync(id);
                 if (randevu == null)
                 {
-                    TempData["ErrorMessage"] = "Randevu bulunamadı.";
+                    TempData["ErrorMessage"] = "Randevu bulunamad�.";
                     return RedirectToAction(nameof(AllRandevular));
                 }
 
                 _context.Randevular.Remove(randevu);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Randevu #{id} silindi (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Randevu başarıyla silindi.";
+                _logger.LogInformation($"? Randevu #{id} silindi (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Randevu ba�ar�yla silindi.";
                 return RedirectToAction(nameof(AllRandevular));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Randevu silme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Randevu silme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(AllRandevular));
             }
         }
 
         // ====================================
-        // PROJE YÖNETİMİ
+        // PROJE Y�NET�M�
         // ====================================
 
         // GET: Admin/Projeler
@@ -579,7 +591,7 @@ namespace dortageDB.Controllers
             {
                 if (string.IsNullOrWhiteSpace(proje.ProjeAdi) || string.IsNullOrWhiteSpace(proje.Konum))
                 {
-                    TempData["ErrorMessage"] = "Proje adı ve konum zorunludur.";
+                    TempData["ErrorMessage"] = "Proje ad� ve konum zorunludur.";
                     return View(proje);
                 }
 
@@ -589,14 +601,14 @@ namespace dortageDB.Controllers
                 _context.Projeler.Add(proje);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Yeni proje oluşturuldu: {proje.ProjeAdi} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Proje başarıyla oluşturuldu.";
+                _logger.LogInformation($"? Yeni proje olu�turuldu: {proje.ProjeAdi} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Proje ba�ar�yla olu�turuldu.";
                 return RedirectToAction(nameof(Projeler));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Proje oluşturma hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Proje olu�turma hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return View(proje);
             }
         }
@@ -632,7 +644,7 @@ namespace dortageDB.Controllers
             {
                 if (string.IsNullOrWhiteSpace(proje.ProjeAdi) || string.IsNullOrWhiteSpace(proje.Konum))
                 {
-                    TempData["ErrorMessage"] = "Proje adı ve konum zorunludur.";
+                    TempData["ErrorMessage"] = "Proje ad� ve konum zorunludur.";
                     return View(proje);
                 }
 
@@ -645,6 +657,7 @@ namespace dortageDB.Controllers
                 // Update properties
                 existingProje.ProjeAdi = proje.ProjeAdi;
                 existingProje.Aciklama = proje.Aciklama;
+                existingProje.KisaAciklama = proje.KisaAciklama;
                 existingProje.Konum = proje.Konum;
                 existingProje.Sehir = proje.Sehir;
                 existingProje.Ilce = proje.Ilce;
@@ -655,6 +668,8 @@ namespace dortageDB.Controllers
                 existingProje.SatilanParsel = proje.SatilanParsel;
                 existingProje.KapakGorseli = proje.KapakGorseli;
                 existingProje.GaleriGorselleri = proje.GaleriGorselleri;
+                existingProje.Tour360Url = proje.Tour360Url;
+                existingProje.SunumDosyaUrl = proje.SunumDosyaUrl;
                 existingProje.Imarlimi = proje.Imarlimi;
                 existingProje.MustakilTapu = proje.MustakilTapu;
                 existingProje.TaksitImkani = proje.TaksitImkani;
@@ -676,14 +691,14 @@ namespace dortageDB.Controllers
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Proje #{id} güncellendi: {proje.ProjeAdi} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Proje başarıyla güncellendi.";
+                _logger.LogInformation($"? Proje #{id} g�ncellendi: {proje.ProjeAdi} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Proje ba�ar�yla g�ncellendi.";
                 return RedirectToAction(nameof(Projeler));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Proje güncelleme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Proje g�ncelleme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return View(proje);
             }
         }
@@ -717,7 +732,7 @@ namespace dortageDB.Controllers
                 var proje = await _context.Projeler.FindAsync(id);
                 if (proje == null)
                 {
-                    TempData["ErrorMessage"] = "Proje bulunamadı.";
+                    TempData["ErrorMessage"] = "Proje bulunamad�.";
                     return RedirectToAction(nameof(Projeler));
                 }
 
@@ -725,14 +740,14 @@ namespace dortageDB.Controllers
                 _context.Projeler.Remove(proje);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Proje silindi: {projeAdi} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Proje başarıyla silindi.";
+                _logger.LogInformation($"? Proje silindi: {projeAdi} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Proje ba�ar�yla silindi.";
                 return RedirectToAction(nameof(Projeler));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Proje silme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Proje silme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(Projeler));
             }
         }
@@ -759,7 +774,7 @@ namespace dortageDB.Controllers
         }
 
         // ====================================
-        // DOSYA YÜKLEME
+        // DOSYA Y�KLEME
         // ====================================
 
         // POST: Admin/UploadGalleryImage
@@ -770,52 +785,52 @@ namespace dortageDB.Controllers
             {
                 if (file == null || file.Length == 0)
                 {
-                    return Json(new { success = false, message = "Dosya seçilmedi." });
+                    return Json(new { success = false, message = "Dosya se�ilmedi." });
                 }
 
-                // Dosya boyutu kontrolü (5MB)
+                // Dosya boyutu kontrol� (5MB)
                 if (file.Length > 5 * 1024 * 1024)
                 {
-                    return Json(new { success = false, message = "Dosya boyutu 5MB'dan küçük olmalıdır." });
+                    return Json(new { success = false, message = "Dosya boyutu 5MB'dan k���k olmal�d�r." });
                 }
 
-                // Dosya türü kontrolü
+                // Dosya t�r� kontrol�
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
                 var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
                 if (!allowedExtensions.Contains(extension))
                 {
-                    return Json(new { success = false, message = "Sadece resim dosyaları yüklenebilir (.jpg, .jpeg, .png, .webp, .gif)" });
+                    return Json(new { success = false, message = "Sadece resim dosyalar� y�klenebilir (.jpg, .jpeg, .png, .webp, .gif)" });
                 }
 
-                // Uploads klasörünü oluştur
+                // Uploads klas�r�n� olu�tur
                 var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "projeler");
                 if (!Directory.Exists(uploadsPath))
                 {
                     Directory.CreateDirectory(uploadsPath);
                 }
 
-                // Benzersiz dosya adı oluştur
+                // Benzersiz dosya ad� olu�tur
                 var fileName = $"{Guid.NewGuid()}{extension}";
                 var filePath = Path.Combine(uploadsPath, fileName);
 
-                // Dosyayı kaydet
+                // Dosyay� kaydet
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
 
-                // URL'i döndür
+                // URL'i d�nd�r
                 var fileUrl = $"/uploads/projeler/{fileName}";
 
-                _logger.LogInformation($"✅ Görsel yüklendi: {fileName} (Admin: {User.Identity.Name})");
+                _logger.LogInformation($"? G�rsel y�klendi: {fileName} (Admin: {User.Identity.Name})");
 
                 return Json(new { success = true, url = fileUrl });
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Görsel yükleme hatası: {ex.Message}");
-                return Json(new { success = false, message = "Dosya yüklenirken bir hata oluştu." });
+                _logger.LogError($"? G�rsel y�kleme hatas�: {ex.Message}");
+                return Json(new { success = false, message = "Dosya y�klenirken bir hata olu�tu." });
             }
         }
 
@@ -827,10 +842,10 @@ namespace dortageDB.Controllers
             {
                 if (string.IsNullOrEmpty(imageUrl))
                 {
-                    return Json(new { success = false, message = "Görsel URL'si gerekli." });
+                    return Json(new { success = false, message = "G�rsel URL'si gerekli." });
                 }
 
-                // URL'den dosya yolunu çıkar
+                // URL'den dosya yolunu ��kar
                 if (imageUrl.StartsWith("/uploads/projeler/"))
                 {
                     var fileName = Path.GetFileName(imageUrl);
@@ -839,22 +854,113 @@ namespace dortageDB.Controllers
                     if (System.IO.File.Exists(filePath))
                     {
                         System.IO.File.Delete(filePath);
-                        _logger.LogInformation($"✅ Görsel silindi: {fileName} (Admin: {User.Identity.Name})");
+                        _logger.LogInformation($"? G�rsel silindi: {fileName} (Admin: {User.Identity.Name})");
                         return Json(new { success = true });
                     }
                 }
 
-                return Json(new { success = true }); // Dosya yoksa da success döndür
+                return Json(new { success = true }); // Dosya yoksa da success d�nd�r
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Görsel silme hatası: {ex.Message}");
-                return Json(new { success = false, message = "Dosya silinirken bir hata oluştu." });
+                _logger.LogError($"? G�rsel silme hatas�: {ex.Message}");
+                return Json(new { success = false, message = "Dosya silinirken bir hata olu�tu." });
+            }
+        }
+
+        // POST: Admin/UploadSunum
+        [HttpPost]
+        public async Task<IActionResult> UploadSunum(IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    return Json(new { success = false, message = "Dosya se�ilmedi." });
+                }
+
+                // Dosya boyutu kontrol� (10MB)
+                if (file.Length > 10 * 1024 * 1024)
+                {
+                    return Json(new { success = false, message = "Dosya boyutu 10MB'dan k���k olmal�d�r." });
+                }
+
+                // Dosya t�r� kontrol�
+                var allowedExtensions = new[] { ".pdf", ".ppt", ".pptx" };
+                var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(extension))
+                {
+                    return Json(new { success = false, message = "Sadece PDF veya PowerPoint dosyalar� y�klenebilir (.pdf, .ppt, .pptx)" });
+                }
+
+                // Uploads klas�r�n� olu�tur
+                var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "sunumlar");
+                if (!Directory.Exists(uploadsPath))
+                {
+                    Directory.CreateDirectory(uploadsPath);
+                }
+
+                // Benzersiz dosya ad� olu�tur
+                var fileName = $"{Guid.NewGuid()}{extension}";
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                // Dosyay� kaydet
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                // URL'i d�nd�r
+                var fileUrl = $"/uploads/sunumlar/{fileName}";
+
+                _logger.LogInformation($"? Sunum y�klendi: {fileName} (Admin: {User.Identity.Name})");
+
+                return Json(new { success = true, url = fileUrl });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"? Sunum y�kleme hatas�: {ex.Message}");
+                return Json(new { success = false, message = "Dosya y�klenirken bir hata olu�tu." });
+            }
+        }
+
+        // POST: Admin/DeleteSunum
+        [HttpPost]
+        public IActionResult DeleteSunum(string fileUrl)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileUrl))
+                {
+                    return Json(new { success = false, message = "Dosya URL'si gerekli." });
+                }
+
+                // URL'den dosya yolunu ��kar
+                if (fileUrl.StartsWith("/uploads/sunumlar/"))
+                {
+                    var fileName = Path.GetFileName(fileUrl);
+                    var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "sunumlar", fileName);
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                        _logger.LogInformation($"? Sunum silindi: {fileName} (Admin: {User.Identity.Name})");
+                        return Json(new { success = true });
+                    }
+                }
+
+                return Json(new { success = true }); // Dosya yoksa da success d�nd�r
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"? Sunum silme hatas�: {ex.Message}");
+                return Json(new { success = false, message = "Dosya silinirken bir hata olu�tu." });
             }
         }
 
         // ====================================
-        // EĞİTİM VİDEO YÖNETİMİ
+        // E��T�M V�DEO Y�NET�M�
         // ====================================
 
         // GET: Admin/EgitimVideolar
@@ -908,8 +1014,8 @@ namespace dortageDB.Controllers
                 _context.Add(video);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Eğitim videosu eklendi: {video.Baslik} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Video başarıyla eklendi!";
+                _logger.LogInformation($"? E�itim videosu eklendi: {video.Baslik} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "Video ba�ar�yla eklendi!";
                 return RedirectToAction(nameof(EgitimVideolar));
             }
 
@@ -952,8 +1058,8 @@ namespace dortageDB.Controllers
                     _context.Update(video);
                     await _context.SaveChangesAsync();
 
-                    _logger.LogInformation($"✅ Eğitim videosu güncellendi: {video.Baslik} (Admin: {User.Identity.Name})");
-                    TempData["SuccessMessage"] = "Video başarıyla güncellendi!";
+                    _logger.LogInformation($"? E�itim videosu g�ncellendi: {video.Baslik} (Admin: {User.Identity.Name})");
+                    TempData["SuccessMessage"] = "Video ba�ar�yla g�ncellendi!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -1006,16 +1112,16 @@ namespace dortageDB.Controllers
                     _context.EgitimVideolar.Remove(video);
                     await _context.SaveChangesAsync();
 
-                    _logger.LogInformation($"✅ Eğitim videosu silindi: {videoBaslik} (Admin: {User.Identity.Name})");
-                    TempData["SuccessMessage"] = "Video başarıyla silindi!";
+                    _logger.LogInformation($"? E�itim videosu silindi: {videoBaslik} (Admin: {User.Identity.Name})");
+                    TempData["SuccessMessage"] = "Video ba�ar�yla silindi!";
                 }
 
                 return RedirectToAction(nameof(EgitimVideolar));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Video silme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Video silme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
                 return RedirectToAction(nameof(EgitimVideolar));
             }
         }
@@ -1034,7 +1140,7 @@ namespace dortageDB.Controllers
             video.Aktif = !video.Aktif;
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation($"✅ Video durumu değiştirildi: {video.Baslik} -> {(video.Aktif ? "Aktif" : "Pasif")} (Admin: {User.Identity.Name})");
+            _logger.LogInformation($"? Video durumu de�i�tirildi: {video.Baslik} -> {(video.Aktif ? "Aktif" : "Pasif")} (Admin: {User.Identity.Name})");
             TempData["SuccessMessage"] = $"Video {(video.Aktif ? "aktif" : "pasif")} hale getirildi!";
             return RedirectToAction(nameof(EgitimVideolar));
         }
@@ -1042,6 +1148,250 @@ namespace dortageDB.Controllers
         private bool VideoExists(int id)
         {
             return _context.EgitimVideolar.Any(e => e.VideoID == id);
+        }
+
+        // ============================================
+        // M��TER� S�LME
+        // ============================================
+
+        // POST: Admin/DeleteMusteri/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteMusteri(int id)
+        {
+            try
+            {
+                var musteri = await _context.Musteriler
+                    .Include(m => m.Randevular)
+                    .Include(m => m.Satislar)
+                    .FirstOrDefaultAsync(m => m.IdMusteri == id);
+
+                if (musteri == null)
+                {
+                    TempData["ErrorMessage"] = "M��teri bulunamad�.";
+                    return RedirectToAction(nameof(AllMusteriler));
+                }
+
+                // �li�kili randevular� sil
+                if (musteri.Randevular.Any())
+                {
+                    _context.Randevular.RemoveRange(musteri.Randevular);
+                }
+
+                // �li�kili sat��lar� sil
+                if (musteri.Satislar.Any())
+                {
+                    _context.Satislar.RemoveRange(musteri.Satislar);
+                }
+
+                // M��teriyi sil
+                _context.Musteriler.Remove(musteri);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"M��teri silindi: {musteri.Ad} {musteri.Soyad} (ID: {id})");
+                TempData["SuccessMessage"] = $"'{musteri.Ad} {musteri.Soyad}' ba�ar�yla silindi. {musteri.Randevular.Count} randevu ve {musteri.Satislar.Count} sat�� kayd� da silindi.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"M��teri silinirken hata olu�tu: {id}");
+                TempData["ErrorMessage"] = "M��teri silinirken bir hata olu�tu: " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(AllMusteriler));
+        }
+
+        // ====================================
+        // M��TER� OLU�TURMA
+        // ====================================
+
+        // POST: Admin/CreateMusteri
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateMusteri(string Ad, string Soyad, string Telefon,
+            bool? Cinsiyet, int TopraktarID)
+        {
+            try
+            {
+                // Validate topraktar exists
+                var topraktar = await _userManager.FindByIdAsync(TopraktarID.ToString());
+                if (topraktar == null)
+                {
+                    TempData["ErrorMessage"] = "Ge�ersiz topraktar se�imi.";
+                    return RedirectToAction(nameof(AllMusteriler));
+                }
+
+                // Create new Musteri
+                var musteri = new Musteri
+                {
+                    Ad = Ad.Trim(),
+                    Soyad = Soyad.Trim(),
+                    Telefon = Telefon.Trim(),
+                    Cinsiyet = Cinsiyet,
+                    TopraktarID = TopraktarID,
+                    EklenmeTarihi = DateTime.Now
+                };
+
+                _context.Musteriler.Add(musteri);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"? Yeni m��teri olu�turuldu: {Ad} {Soyad} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = $"M��teri ba�ar�yla olu�turuldu: {Ad} {Soyad}";
+                return RedirectToAction(nameof(AllMusteriler));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"? M��teri olu�turma hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllMusteriler));
+            }
+        }
+
+        // ====================================
+        // TOPRAKTAR OLU�TURMA
+        // ====================================
+
+        // POST: Admin/CreateTopraktar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateTopraktar(string Ad, string Soyad, string Email,
+            string PhoneNumber, string Sehir, bool Cinsiyet, string Password, string ConfirmPassword)
+        {
+            try
+            {
+                // Validate passwords match
+                if (Password != ConfirmPassword)
+                {
+                    TempData["ErrorMessage"] = "�ifreler e�le�miyor.";
+                    return RedirectToAction(nameof(AllTopraktars));
+                }
+
+                // Check if email already exists
+                var existingUser = await _userManager.FindByEmailAsync(Email);
+                if (existingUser != null)
+                {
+                    TempData["ErrorMessage"] = "Bu email adresi zaten kullan�l�yor.";
+                    return RedirectToAction(nameof(AllTopraktars));
+                }
+
+                // Create new AppUser
+                var newUser = new AppUser
+                {
+                    UserName = Email,
+                    Email = Email,
+                    Ad = Ad.Trim(),
+                    Soyad = Soyad.Trim(),
+                    PhoneNumber = PhoneNumber,
+                    Sehir = Sehir.Trim(),
+                    Cinsiyet = Cinsiyet,
+                    Kvkk = true,
+                    Pazarlama = false,
+                    EmailConfirmed = true
+                };
+
+                // Create user with password
+                var result = await _userManager.CreateAsync(newUser, Password);
+
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    TempData["ErrorMessage"] = $"Topraktar olu�turulamad�: {errors}";
+                    return RedirectToAction(nameof(AllTopraktars));
+                }
+
+                // Add to topraktar role
+                await _userManager.AddToRoleAsync(newUser, "topraktar");
+
+                _logger.LogInformation($"? Yeni topraktar olu�turuldu: {newUser.Email} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = $"Topraktar ba�ar�yla olu�turuldu: {Ad} {Soyad}";
+                return RedirectToAction(nameof(AllTopraktars));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"? Topraktar olu�turma hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllTopraktars));
+            }
+        }
+
+        // POST: Admin/DeactivateTopraktar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeactivateTopraktar(int id)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id.ToString());
+                if (user == null)
+                {
+                    TempData["ErrorMessage"] = "Kullan�c� bulunamad�.";
+                    return RedirectToAction(nameof(AllTopraktars));
+                }
+
+                // Lock the user account indefinitely
+                user.LockoutEnabled = true;
+                user.LockoutEnd = DateTimeOffset.MaxValue;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    _logger.LogWarning($"?? Topraktar hesab� deaktif edildi: {user.Email} (Admin: {User.Identity.Name})");
+                    TempData["SuccessMessage"] = $"{user.Ad} {user.Soyad} hesab� ba�ar�yla deaktif edildi.";
+                }
+                else
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    TempData["ErrorMessage"] = $"Deaktif etme ba�ar�s�z: {errors}";
+                }
+
+                return RedirectToAction(nameof(AllTopraktars));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"? Topraktar deaktif etme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllTopraktars));
+            }
+        }
+
+        // POST: Admin/ReactivateTopraktar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ReactivateTopraktar(int id)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id.ToString());
+                if (user == null)
+                {
+                    TempData["ErrorMessage"] = "Kullan�c� bulunamad�.";
+                    return RedirectToAction(nameof(AllTopraktars));
+                }
+
+                // Unlock the user account
+                user.LockoutEnd = null;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation($"? Topraktar hesab� aktifle�tirildi: {user.Email} (Admin: {User.Identity.Name})");
+                    TempData["SuccessMessage"] = $"{user.Ad} {user.Soyad} hesab� ba�ar�yla aktifle�tirildi.";
+                }
+                else
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    TempData["ErrorMessage"] = $"Aktifle�tirme ba�ar�s�z: {errors}";
+                }
+
+                return RedirectToAction(nameof(AllTopraktars));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"? Topraktar aktifle�tirme hatas�: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllTopraktars));
+            }
         }
     }
 }

@@ -466,11 +466,11 @@
                 <label>Durum</label>
                 <select id="statusFilter">
                     <option value="">Tümü</option>
-                    <option value="pending">Bekliyor</option>
-                    <option value="confirmed">Onaylandı</option>
-                    <option value="completed">Tamamlandı</option>
-                    <option value="cancelled">İptal</option>
-                    <option value="no_show">Gelmedi</option>
+                    <option value="OnayBekliyor">Bekliyor</option>
+                    <option value="GorusmeBekleniyor">Onaylandı</option>
+                    <option value="OdemeAlindi">Tamamlandı</option>
+                    <option value="Iptal">İptal</option>
+                    <option value="Gerceklesmedi">Gelmedi</option>
                 </select>
             </div>
             <div class="filter-group">
@@ -489,7 +489,6 @@
                             <th>Müşteri</th>
                             <th>Topraktar</th>
                             <th>Tarih & Saat</th>
-                            <th>Bölge</th>
                             <th>Tip</th>
                             <th>Durum</th>
                             <th style="text-align: center;">İşlemler</th>
@@ -519,28 +518,10 @@
                                     </div>
                                 </td>
                                 <td>@tarih</td>
-                                <td>@randevu.Bolge</td>
                                 <td>@randevu.RandevuTipi</td>
                                 <td>
-                                    <span class="status-badge status-@durum.ToLower()">
-                                        @switch (randevu.RandevuDurum)
-                                        {
-                                            case RandevuDurum.pending:
-                                                @:⏳ Bekliyor
-                                                break;
-                                            case RandevuDurum.confirmed:
-                                                @:✓ Onaylandı
-                                                break;
-                                            case RandevuDurum.completed:
-                                                @:✓ Tamamlandı
-                                                break;
-                                            case RandevuDurum.cancelled:
-                                                @:✗ İptal
-                                                break;
-                                            case RandevuDurum.no_show:
-                                                @:⚠ Gelmedi
-                                                break;
-                                        }
+                                    <span class="status-badge @dortageDB.Helpers.RandevuHelper.GetDurumClass(randevu.RandevuDurum)">
+                                        @dortageDB.Helpers.RandevuHelper.GetDurumIcon(randevu.RandevuDurum) @dortageDB.Helpers.RandevuHelper.GetDurumText(randevu.RandevuDurum)
                                     </span>
                                 </td>
                                 <td>
@@ -549,8 +530,8 @@
                                                 data-musteri="@musteriAd"
                                                 data-topraktar="@topraktarAd"
                                                 data-tarih="@tarih"
-                                                data-bolge="@randevu.Bolge"
                                                 data-tip="@randevu.RandevuTipi"
+                                                data-aciklama="@(randevu.Aciklama ?? "")"
                                                 data-durum="@durum"
                                                 onclick="openViewModalData(this)">
                                             👁️ Görüntüle
@@ -558,8 +539,8 @@
                                         <button class="btn-action btn-edit"
                                                 data-id="@randevu.RandevuID"
                                                 data-zaman="@randevu.RandevuZaman.ToString("yyyy-MM-ddTHH:mm")"
-                                                data-bolge="@randevu.Bolge"
                                                 data-tip="@randevu.RandevuTipi"
+                                                data-aciklama="@(randevu.Aciklama ?? "")"
                                                 data-durum="@randevu.RandevuDurum.ToString()"
                                                 onclick="openEditModalData(this)">
                                             ✏️ Düzenle
@@ -595,30 +576,14 @@
             <h3>➕ Yeni Randevu Ekle</h3>
             <button type="button" class="modal-close" onclick="closeCreateModal()">×</button>
         </div>
-        <form asp-controller="Admin" asp-action="CreateRandevu" method="post">
+        <form asp-controller="Admin" asp-action="CreateRandevu" method="post" id="createRandevuForm">
             @Html.AntiForgeryToken()
             <div class="modal-body">
+                <input type="hidden" name="RandevuZaman" id="createRandevuZaman">
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Müşteri *</label>
-                        <select name="MusteriId" required>
-                            <option value="">Müşteri Seçin</option>
-                            @{
-                                var musteriler = ViewContext.HttpContext.RequestServices
-                                .GetService(typeof(dortageDB.Data.AppDbContext)) as dortageDB.Data.AppDbContext;
-                                if (musteriler != null)
-                                {
-                                    foreach (var m in musteriler.Musteriler.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
-                                    {
-                                        <option value="@m.IdMusteri">@m.Ad @m.Soyad (@m.Telefon)</option>
-                                    }
-                                }
-                            }
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label>Topraktar *</label>
-                        <select name="TopraktarID" required>
+                        <select name="TopraktarID" id="createTopraktar" required>
                             <option value="">Topraktar Seçin</option>
                             @{
                                 var userManager = ViewContext.HttpContext.RequestServices
@@ -635,20 +600,52 @@
                             }
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label>Müşteri *</label>
+                        <select name="MusteriId" id="createMusteri" required>
+                            <option value="">Müşteri Seçin</option>
+                            @{
+                                var musteriler = ViewContext.HttpContext.RequestServices
+                                .GetService(typeof(dortageDB.Data.AppDbContext)) as dortageDB.Data.AppDbContext;
+                                if (musteriler != null)
+                                {
+                                    foreach (var m in musteriler.Musteriler.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
+                                    {
+                                        <option value="@m.IdMusteri" data-topraktarid="@m.TopraktarID">@m.Ad @m.Soyad (@m.Telefon)</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Randevu Tarihi & Saati *</label>
-                        <input type="datetime-local" name="RandevuZaman" required>
+                        <label>Randevu Tarihi *</label>
+                        <select id="createTarih" required>
+                            <option value="">Tarih seçin</option>
+                        </select>
                     </div>
                     <div class="form-group">
+                        <label>Randevu Saati *</label>
+                        <select id="createSaat" required>
+                            <option value="">Saat seçin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
                         <label>Randevu Tipi *</label>
-                        <input type="text" name="RandevuTipi" placeholder="Örn: Arazi Gezisi" required maxlength="50">
+                        <select name="RandevuTipi" required>
+                            <option value="">Tip seçin</option>
+                            <option value="Ofis">Ofis</option>
+                            <option value="Online">Online</option>
+                            <option value="Yer Gösterimi">Yer Gösterimi</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group full-width">
-                    <label>Bölge *</label>
-                    <textarea name="Bolge" rows="2" maxlength="500" placeholder="Randevu bölgesi" required></textarea>
+                    <label>Açıklama</label>
+                    <textarea name="Aciklama" rows="3" maxlength="500" placeholder="Randevu ile ilgili notlar..."></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -680,12 +677,12 @@
                 <span class="detail-value" id="viewTarih"></span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Bölge:</span>
-                <span class="detail-value" id="viewBolge"></span>
-            </div>
-            <div class="detail-row">
                 <span class="detail-label">Randevu Tipi:</span>
                 <span class="detail-value" id="viewTip"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Açıklama:</span>
+                <span class="detail-value" id="viewAciklama"></span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Durum:</span>
@@ -706,32 +703,47 @@
             <h3>✏️ Randevuyu Düzenle</h3>
             <button type="button" class="modal-close" onclick="closeEditModal()">×</button>
         </div>
-        <form asp-controller="Admin" asp-action="EditRandevu" method="post">
+        <form asp-controller="Admin" asp-action="EditRandevu" method="post" id="editRandevuForm">
             @Html.AntiForgeryToken()
             <div class="modal-body">
                 <input type="hidden" name="id" id="editRandevuId">
+                <input type="hidden" name="randevuZaman" id="editRandevuZaman">
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Randevu Tarihi & Saati *</label>
-                        <input type="datetime-local" name="randevuZaman" id="editZaman" required>
+                        <label>Randevu Tarihi *</label>
+                        <input type="date" id="editTarih" required>
                     </div>
                     <div class="form-group">
-                        <label>Randevu Tipi *</label>
-                        <input type="text" name="randevuTipi" id="editTip" placeholder="Örn: Arazi Gezisi" required maxlength="50">
+                        <label>Randevu Saati *</label>
+                        <select id="editSaat" required>
+                            <option value="">Saat seçin</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group full-width">
-                    <label>Bölge *</label>
-                    <textarea name="bolge" id="editBolge" rows="2" maxlength="500" required></textarea>
+                    <label>Randevu Tipi *</label>
+                    <select name="randevuTipi" id="editTip" required>
+                        <option value="">Tip seçin</option>
+                        <option value="Ofis">Ofis</option>
+                        <option value="Online">Online</option>
+                        <option value="Yer Gösterimi">Yer Gösterimi</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label>Açıklama</label>
+                    <textarea name="aciklama" id="editAciklama" rows="3" maxlength="500" placeholder="Randevu ile ilgili notlar..."></textarea>
                 </div>
                 <div class="form-group full-width">
                     <label>Randevu Durumu *</label>
                     <select name="randevuDurum" id="editDurum" required>
-                        <option value="pending">⏳ Bekliyor</option>
-                        <option value="confirmed">✓ Onaylandı</option>
-                        <option value="completed">✓ Tamamlandı</option>
-                        <option value="cancelled">✗ İptal</option>
-                        <option value="no_show">⚠ Gelmedi</option>
+                        <option value="OnayBekliyor">⏳ Onay Bekliyor</option>
+                        <option value="GorusmeBekleniyor">📅 Görüşme Bekleniyor</option>
+                        <option value="KararBekleniyor">⏱️ Görüşüldü - Karar Bekleniyor</option>
+                        <option value="Olumsuz">❌ Görüşüldü - Olumsuz</option>
+                        <option value="KaporaAlindi">💰 Görüşüldü - Kapora Alındı</option>
+                        <option value="OdemeAlindi">✅ Görüşüldü - Ödeme Alındı</option>
+                        <option value="Gerceklesmedi">⊘ Gerçekleşmedi</option>
+                        <option value="Iptal">✗ İptal</option>
                     </select>
                 </div>
             </div>
@@ -769,9 +781,28 @@
 <script>
     console.log('✅ AllRandevular sayfası yüklendi');
 
+    // Store original musteri options globally
+    let originalMusteriOptions = [];
+
     // Create Modal
     function openCreateModal() {
         console.log('➕ Create modal açılıyor');
+
+        // Reset form
+        document.getElementById('createRandevuForm').reset();
+        document.getElementById('createTopraktar').disabled = false;
+        document.getElementById('createMusteri').disabled = false;
+
+        // Reset musteri options to show all
+        const musteriSelect = document.getElementById('createMusteri');
+        musteriSelect.innerHTML = '<option value="">Müşteri Seçin</option>';
+        originalMusteriOptions.forEach(opt => {
+            musteriSelect.appendChild(opt.cloneNode(true));
+        });
+
+        // Populate date options (next 30 days)
+        populateCreateDateOptions();
+
         document.getElementById('createModal').classList.add('active');
     }
 
@@ -779,12 +810,63 @@
         document.getElementById('createModal').classList.remove('active');
     }
 
+    // Populate date options for create modal
+    function populateCreateDateOptions() {
+        const tarihSelect = document.getElementById('createTarih');
+        tarihSelect.innerHTML = '<option value="">Tarih seçin</option>';
+
+        const today = new Date();
+
+        // Generate next 30 days
+        for (let i = 0; i < 30; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + i);
+
+            const dateStr = date.toISOString().split('T')[0];
+            const displayDate = date.toLocaleDateString('tr-TR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const option = document.createElement('option');
+            option.value = dateStr;
+            option.textContent = displayDate;
+            tarihSelect.appendChild(option);
+        }
+    }
+
+    // Populate hour options for create modal
+    function populateCreateHourOptions(selectedDate) {
+        const saatSelect = document.getElementById('createSaat');
+        saatSelect.innerHTML = '<option value="">Saat seçin</option>';
+
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        const currentHour = today.getHours();
+
+        // Generate hours from 06:00 to 20:00
+        for (let hour = 6; hour <= 20; hour++) {
+            // If selected date is today, skip past hours
+            if (selectedDate === todayStr && hour <= currentHour) {
+                continue;
+            }
+
+            const hourStr = hour.toString().padStart(2, '0') + ':00';
+            const option = document.createElement('option');
+            option.value = hourStr;
+            option.textContent = hourStr;
+            saatSelect.appendChild(option);
+        }
+    }
+
     // View Modal - DATA ATTRIBUTE İLE
     function openViewModalData(button) {
         const musteri = button.getAttribute('data-musteri');
         const topraktar = button.getAttribute('data-topraktar');
         const tarih = button.getAttribute('data-tarih');
-        const bolge = button.getAttribute('data-bolge');
+        const aciklama = button.getAttribute('data-aciklama');
         const tip = button.getAttribute('data-tip');
         const durum = button.getAttribute('data-durum');
 
@@ -793,8 +875,8 @@
         document.getElementById('viewMusteri').textContent = musteri;
         document.getElementById('viewTopraktar').textContent = topraktar;
         document.getElementById('viewTarih').textContent = tarih;
-        document.getElementById('viewBolge').textContent = bolge;
         document.getElementById('viewTip').textContent = tip;
+        document.getElementById('viewAciklama').textContent = aciklama || '-';
         document.getElementById('viewDurum').textContent = getDurumText(durum);
 
         document.getElementById('viewModal').classList.add('active');
@@ -805,23 +887,157 @@
     }
 
     // Edit Modal - DATA ATTRIBUTE İLE
-        function openEditModalData(button) {
+    function openEditModalData(button) {
         const id = button.getAttribute('data-id');
-        const zaman = button.getAttribute('data-zaman');
-        const bolge = button.getAttribute('data-bolge');
+        const zaman = button.getAttribute('data-zaman'); // Format: yyyy-MM-ddTHH:mm
+        const aciklama = button.getAttribute('data-aciklama');
         const tip = button.getAttribute('data-tip');
         const durum = button.getAttribute('data-durum');
 
         console.log('✏️ Edit modal açılıyor - ID:', id);
 
+        // Parse datetime
+        const [tarih, saat] = zaman.split('T');
+        const saatOnly = saat.substring(0, 2) + ':00'; // Get hour only
+
         document.getElementById('editRandevuId').value = id;
-        document.getElementById('editZaman').value = zaman;
-        document.getElementById('editBolge').value = bolge;
+        document.getElementById('editTarih').value = tarih;
+        document.getElementById('editAciklama').value = aciklama || '';
         document.getElementById('editTip').value = tip;
         document.getElementById('editDurum').value = durum;
 
+        // Populate hour options based on selected date
+        populateHourOptions(tarih, saatOnly);
+
         document.getElementById('editModal').classList.add('active');
     }
+
+    // Generate hour options (06:00 - 20:00)
+    function populateHourOptions(selectedDate, selectedHour = null) {
+        const saatSelect = document.getElementById('editSaat');
+        saatSelect.innerHTML = '<option value="">Saat seçin</option>';
+
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        const currentHour = today.getHours();
+
+        // Generate hours from 06:00 to 20:00
+        for (let hour = 6; hour <= 20; hour++) {
+            // If selected date is today, skip past hours
+            if (selectedDate === todayStr && hour < currentHour) {
+                continue;
+            }
+
+            const hourStr = hour.toString().padStart(2, '0') + ':00';
+            const option = document.createElement('option');
+            option.value = hourStr;
+            option.textContent = hourStr;
+
+            if (selectedHour && hourStr === selectedHour) {
+                option.selected = true;
+            }
+
+            saatSelect.appendChild(option);
+        }
+    }
+
+    // Update hour options when date changes
+    document.addEventListener('DOMContentLoaded', function() {
+        // EDIT MODAL - Date change
+        const tarihInput = document.getElementById('editTarih');
+        tarihInput?.addEventListener('change', function() {
+            populateHourOptions(this.value);
+        });
+
+        // EDIT MODAL - Form submission
+        const editForm = document.getElementById('editRandevuForm');
+        editForm?.addEventListener('submit', function(e) {
+            const tarih = document.getElementById('editTarih').value;
+            const saat = document.getElementById('editSaat').value;
+
+            if (!tarih || !saat) {
+                e.preventDefault();
+                alert('Lütfen tarih ve saat seçin.');
+                return false;
+            }
+
+            const randevuZaman = tarih + 'T' + saat.substring(0, 5);
+            document.getElementById('editRandevuZaman').value = randevuZaman;
+            console.log('✅ Form gönderiliyor - Randevu Zamanı:', randevuZaman);
+        });
+
+        // CREATE MODAL - Store original musteri options
+        const musteriSelect = document.getElementById('createMusteri');
+        originalMusteriOptions = Array.from(musteriSelect?.querySelectorAll('option[data-topraktarid]') || []);
+
+        // CREATE MODAL - Date change
+        const createTarihInput = document.getElementById('createTarih');
+        createTarihInput?.addEventListener('change', function() {
+            populateCreateHourOptions(this.value);
+        });
+
+        // CREATE MODAL - Topraktar selection filters musteriler
+        const topraktarSelect = document.getElementById('createTopraktar');
+
+        topraktarSelect?.addEventListener('change', function() {
+            const selectedTopraktarId = this.value;
+
+            // Clear musteri selection
+            musteriSelect.value = '';
+            musteriSelect.disabled = false;
+
+            // Reset and filter musteri options
+            musteriSelect.innerHTML = '<option value="">Müşteri Seçin</option>';
+
+            originalMusteriOptions.forEach(option => {
+                const optionTopraktarId = option.getAttribute('data-topraktarid');
+
+                // Show only musteriler of selected topraktar
+                if (!selectedTopraktarId || optionTopraktarId === selectedTopraktarId) {
+                    const newOption = option.cloneNode(true);
+                    musteriSelect.appendChild(newOption);
+                }
+            });
+
+            console.log('✅ Topraktar seçildi - Müşteriler filtrelendi');
+        });
+
+        // CREATE MODAL - Musteri selection auto-selects topraktar
+        musteriSelect?.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (!selectedOption || !selectedOption.value) {
+                topraktarSelect.disabled = false;
+                return;
+            }
+
+            const topraktarId = selectedOption.getAttribute('data-topraktarid');
+            if (topraktarId) {
+                topraktarSelect.value = topraktarId;
+                topraktarSelect.disabled = true;
+                console.log('✅ Müşteri seçildi - Topraktar otomatik seçildi:', topraktarId);
+            }
+        });
+
+        // CREATE MODAL - Form submission
+        const createForm = document.getElementById('createRandevuForm');
+        createForm?.addEventListener('submit', function(e) {
+            const tarih = document.getElementById('createTarih').value;
+            const saat = document.getElementById('createSaat').value;
+
+            if (!tarih || !saat) {
+                e.preventDefault();
+                alert('Lütfen tarih ve saat seçin.');
+                return false;
+            }
+
+            const randevuZaman = tarih + 'T' + saat.substring(0, 5);
+            document.getElementById('createRandevuZaman').value = randevuZaman;
+            console.log('✅ Yeni randevu oluşturuluyor - Randevu Zamanı:', randevuZaman);
+
+            // Re-enable topraktar before submit (so it gets posted)
+            topraktarSelect.disabled = false;
+        });
+    });
 
     function closeEditModal() {
         document.getElementById('editModal').classList.remove('active');
