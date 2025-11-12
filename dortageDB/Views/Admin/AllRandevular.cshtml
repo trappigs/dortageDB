@@ -498,12 +498,12 @@
                         @foreach (var randevu in Model)
                         {
                             var musteriAd = $"{randevu.Musteri.Ad} {randevu.Musteri.Soyad}";
-                            var visionerAd = $"{randevu.Visioner.Ad} {randevu.Visioner.Soyad}";
+                            var vekarerAd = $"{randevu.Vekarer.Ad} {randevu.Vekarer.Soyad}";
                             var tarih = randevu.RandevuZaman.ToString("dd MMM yyyy HH:mm");
                             var durum = randevu.RandevuDurum.ToString();
 
                             <tr data-status="@durum.ToLower()"
-                                data-search="@musteriAd @visionerAd">
+                                data-search="@musteriAd @vekarerAd">
                                 <td><strong>#@randevu.RandevuID</strong></td>
                                 <td>
                                     <div style="line-height: 1.4;">
@@ -513,8 +513,8 @@
                                 </td>
                                 <td>
                                     <div style="line-height: 1.4;">
-                                        <strong>@visionerAd</strong><br />
-                                        <span style="font-size: 12px; color: #6b7280;">(@randevu.Visioner.PhoneNumber)</span>
+                                        <strong>@vekarerAd</strong><br />
+                                        <span style="font-size: 12px; color: #6b7280;">(@randevu.Vekarer.PhoneNumber)</span>
                                     </div>
                                 </td>
                                 <td>@tarih</td>
@@ -528,7 +528,7 @@
                                     <div class="action-buttons">
                                         <button class="btn-action btn-view"
                                                 data-musteri="@musteriAd"
-                                                data-visioner="@visionerAd"
+                                                data-vekarer="@vekarerAd"
                                                 data-tarih="@tarih"
                                                 data-tip="@randevu.RandevuTipi"
                                                 data-aciklama="@(randevu.Aciklama ?? "")"
@@ -611,7 +611,7 @@
                                 {
                                     foreach (var m in musteriler.Musteriler.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
                                     {
-                                        <option value="@m.IdMusteri" data-visionerid="@m.VisionerID">@m.Ad @m.Soyad (@m.Telefon)</option>
+                                        <option value="@m.IdMusteri" data-vekarersid="@m.VekarerID">@m.Ad @m.Soyad (@m.Telefon)</option>
                                     }
                                 }
                             }

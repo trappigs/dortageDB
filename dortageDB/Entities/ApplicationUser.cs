@@ -13,9 +13,9 @@ namespace dortageDB.Entities
         public bool Kvkk { get; set; }
         public bool Pazarlama { get; set; }
 
-        public VisionerProfile? VisionerProfile { get; set; }
-        public ICollection<Musteri> Musteriler { get; set; } = new List<Musteri>(); // visioner olarak eklediği müşteriler
-        public ICollection<Randevu> Randevular { get; set; } = new List<Randevu>(); // visioner olarak
-        public ICollection<Satis> Satislar { get; set; } = new List<Satis>();       // visioner olarak
+        public VekarerProfile? VekarerProfile { get; set; }
+        public ICollection<Musteri> Musteriler { get; set; } = new List<Musteri>(); // vekarer olarak eklediği müşteriler
+        public ICollection<Randevu> Randevular { get; set; } = new List<Randevu>(); // vekarer olarak
+        public ICollection<Satis> Satislar { get; set; } = new List<Satis>();       // vekarer olarak
     }
 }

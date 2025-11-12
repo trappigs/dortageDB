@@ -1,4 +1,4 @@
-ï»¿using dortageDB.Data;
+using dortageDB.Data;
 using dortageDB.Entities;
 using dortageDB.ViewModels;
 using dortageDB.Services;
@@ -54,16 +54,16 @@ namespace dortageDB.Controllers
         {
             try
             {
-                Console.WriteLine("=== KAYIT Ä°ÅLEMÄ° BAÅLADI ===");
-                Console.WriteLine($"ğŸ“§ Email: {model.Email}");
-                Console.WriteLine($"ğŸ“± Telefon: {model.PhoneNumber}");
-                Console.WriteLine($"ğŸ†” TC No: {model.TcNo}");
-                Console.WriteLine($"ğŸ”‘ Referans Kodu: {model.Code}");
+                Console.WriteLine("=== KAYIT İŞLEMİ BAŞLADI ===");
+                Console.WriteLine($"?? Email: {model.Email}");
+                Console.WriteLine($"?? Telefon: {model.PhoneNumber}");
+                Console.WriteLine($"?? TC No: {model.TcNo}");
+                Console.WriteLine($"?? Referans Kodu: {model.Code}");
 
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                    Console.WriteLine("âŒ ModelState geÃ§ersiz:");
+                    Console.WriteLine("? ModelState geçersiz:");
                     foreach (var error1 in errors)
                     {
                         Console.WriteLine($"   - {error1}");
@@ -72,47 +72,47 @@ namespace dortageDB.Controllers
                     return View(model);
                 }
 
-                // KVKK kontrolÃ¼
+                // KVKK kontrolü
                 if (!model.Kvkk)
                 {
-                    Console.WriteLine("âŒ KVKK onayÄ± eksik");
-                    ModelState.AddModelError("Kvkk", "KVKK metnini onaylamanÄ±z gerekmektedir.");
+                    Console.WriteLine("? KVKK onayı eksik");
+                    ModelState.AddModelError("Kvkk", "KVKK metnini onaylamanız gerekmektedir.");
                     return View(model);
                 }
 
-                // Pazarlama kontrolÃ¼ (KullanÄ±m KoÅŸullarÄ±)
+                // Pazarlama kontrolü (Kullanım Koşulları)
                 if (!model.Pazarlama)
                 {
-                    Console.WriteLine("âŒ KullanÄ±m koÅŸullarÄ± onayÄ± eksik");
-                    ModelState.AddModelError("Pazarlama", "KullanÄ±m koÅŸullarÄ±nÄ± kabul etmelisiniz.");
+                    Console.WriteLine("? Kullanım koşulları onayı eksik");
+                    ModelState.AddModelError("Pazarlama", "Kullanım koşullarını kabul etmelisiniz.");
                     return View(model);
                 }
 
-                // Referral kodu kontrolÃ¼ - ZORUNLU
+                // Referral kodu kontrolü - ZORUNLU
                 if (string.IsNullOrWhiteSpace(model.Code))
                 {
-                    Console.WriteLine("âŒ Referans kodu boÅŸ");
+                    Console.WriteLine("? Referans kodu boş");
                     ModelState.AddModelError("Code", "Referans kodu zorunludur.");
                     return View(model);
                 }
 
-                Console.WriteLine($"ğŸ” Referans kodu kontrol ediliyor: {model.Code}");
+                Console.WriteLine($"?? Referans kodu kontrol ediliyor: {model.Code}");
                 var (isValid, error) = await _referralService.ValidateAndConsumeAsync(model.Code);
 
                 if (!isValid)
                 {
-                    Console.WriteLine($"âŒ Referans kodu geÃ§ersiz: {error}");
-                    ModelState.AddModelError("Code", error ?? "GeÃ§ersiz referans kodu.");
+                    Console.WriteLine($"? Referans kodu geçersiz: {error}");
+                    ModelState.AddModelError("Code", error ?? "Geçersiz referans kodu.");
                     return View(model);
                 }
 
-                Console.WriteLine("âœ… Referans kodu doÄŸrulandÄ±!");
+                Console.WriteLine("? Referans kodu doğrulandı!");
 
-                // Telefon numarasÄ±nÄ± temizle (formatÄ± kaldÄ±r)
+                // Telefon numarasını temizle (formatı kaldır)
                 var cleanPhone = model.PhoneNumber.Replace("(", "").Replace(")", "").Replace(" ", "").Trim();
-                Console.WriteLine($"ğŸ“± TemizlenmiÅŸ telefon: {cleanPhone}");
+                Console.WriteLine($"?? Temizlenmiş telefon: {cleanPhone}");
 
-                // Yeni kullanÄ±cÄ± oluÅŸtur
+                // Yeni kullanıcı oluştur
                 var user = new AppUser
                 {
                     UserName = model.Email,
@@ -128,88 +128,88 @@ namespace dortageDB.Controllers
                     EmailConfirmed = true
                 };
 
-                Console.WriteLine($"ğŸ“ KullanÄ±cÄ± oluÅŸturuluyor: {user.Email}");
+                Console.WriteLine($"?? Kullanıcı oluşturuluyor: {user.Email}");
 
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (!result.Succeeded)
                 {
-                    Console.WriteLine("âŒ KullanÄ±cÄ± oluÅŸturma baÅŸarÄ±sÄ±z!");
+                    Console.WriteLine("? Kullanıcı oluşturma başarısız!");
                     foreach (var err in result.Errors)
                     {
                         Console.WriteLine($"   - {err.Code}: {err.Description}");
 
-                        // TÃ¼rkÃ§e hata mesajlarÄ±
+                        // Türkçe hata mesajları
                         if (err.Code == "DuplicateUserName")
-                            ModelState.AddModelError("Email", "Bu e-posta adresi zaten kayÄ±tlÄ±.");
+                            ModelState.AddModelError("Email", "Bu e-posta adresi zaten kayıtlı.");
                         else if (err.Code == "DuplicateEmail")
-                            ModelState.AddModelError("Email", "Bu e-posta adresi zaten kayÄ±tlÄ±.");
+                            ModelState.AddModelError("Email", "Bu e-posta adresi zaten kayıtlı.");
                         else if (err.Code == "PasswordTooShort")
-                            ModelState.AddModelError("Password", "Åifre en az 6 karakter olmalÄ±dÄ±r.");
+                            ModelState.AddModelError("Password", "Şifre en az 6 karakter olmalıdır.");
                         else if (err.Code == "PasswordRequiresNonAlphanumeric")
-                            ModelState.AddModelError("Password", "Åifre en az bir Ã¶zel karakter iÃ§ermelidir.");
+                            ModelState.AddModelError("Password", "Şifre en az bir özel karakter içermelidir.");
                         else if (err.Code == "PasswordRequiresDigit")
-                            ModelState.AddModelError("Password", "Åifre en az bir rakam iÃ§ermelidir.");
+                            ModelState.AddModelError("Password", "Şifre en az bir rakam içermelidir.");
                         else if (err.Code == "PasswordRequiresUpper")
-                            ModelState.AddModelError("Password", "Åifre en az bir bÃ¼yÃ¼k harf iÃ§ermelidir.");
+                            ModelState.AddModelError("Password", "Şifre en az bir büyük harf içermelidir.");
                         else
                             ModelState.AddModelError(string.Empty, err.Description);
                     }
                     return View(model);
                 }
 
-                Console.WriteLine("âœ… KullanÄ±cÄ± baÅŸarÄ±yla oluÅŸturuldu!");
+                Console.WriteLine("? Kullanıcı başarıyla oluşturuldu!");
 
-                // Visioner profili oluÅŸtur
-                if (model.VisionerMi)
+                // Vekarer profili oluştur
+                if (model.VekarerMi)
                 {
-                    Console.WriteLine("ğŸ“‹ Visioner profili oluÅŸturuluyor...");
-                    var visionerProfile = new VisionerProfile
+                    Console.WriteLine("?? Vekarer profili oluşturuluyor...");
+                    var VekarerProfile = new VekarerProfile
                     {
                         UserId = user.Id,
-                        UsedReferralCode = model.Code // KayÄ±t olurken kullandÄ±ÄŸÄ± referans kodu
+                        UsedReferralCode = model.Code // Kayıt olurken kullandığı referans kodu
                     };
-                    _context.VisionerProfiles.Add(visionerProfile);
+                    _context.VekarerProfiles.Add(VekarerProfile);
                     await _context.SaveChangesAsync();
-                    Console.WriteLine("âœ… Visioner profili oluÅŸturuldu!");
+                    Console.WriteLine("? Vekarer profili oluşturuldu!");
                 }
 
                 // Roller ata
                 if (model.Roller != null && model.Roller.Any())
                 {
-                    Console.WriteLine("ğŸ‘¤ Ã–zel roller atanÄ±yor...");
+                    Console.WriteLine("?? Özel roller atanıyor...");
                     foreach (var roleName in model.Roller)
                     {
                         if (!await _roleManager.RoleExistsAsync(roleName))
                         {
                             await _roleManager.CreateAsync(new AppRole { Name = roleName });
-                            Console.WriteLine($"ğŸ“ Rol oluÅŸturuldu: {roleName}");
+                            Console.WriteLine($"?? Rol oluşturuldu: {roleName}");
                         }
                         await _userManager.AddToRoleAsync(user, roleName);
-                        Console.WriteLine($"âœ… Rol atandÄ±: {roleName}");
+                        Console.WriteLine($"? Rol atandı: {roleName}");
                     }
                 }
-                else if (model.VisionerMi)
+                else if (model.VekarerMi)
                 {
-                    Console.WriteLine("ğŸ‘¤ Visioner rolÃ¼ atanÄ±yor...");
-                    const string visionerRole = "visioner";
-                    if (!await _roleManager.RoleExistsAsync(visionerRole))
+                    Console.WriteLine("?? Vekarer rolü atanıyor...");
+                    const string VekarerRole = "Vekarer";
+                    if (!await _roleManager.RoleExistsAsync(VekarerRole))
                     {
-                        Console.WriteLine("ğŸ“ Visioner rolÃ¼ oluÅŸturuluyor...");
-                        await _roleManager.CreateAsync(new AppRole { Name = visionerRole });
+                        Console.WriteLine("?? Vekarer rolü oluşturuluyor...");
+                        await _roleManager.CreateAsync(new AppRole { Name = VekarerRole });
                     }
-                    await _userManager.AddToRoleAsync(user, visionerRole);
-                    Console.WriteLine("âœ… Visioner rolÃ¼ atandÄ±!");
+                    await _userManager.AddToRoleAsync(user, VekarerRole);
+                    Console.WriteLine("? Vekarer rolü atandı!");
                 }
 
-                Console.WriteLine("ğŸ‰ KayÄ±t iÅŸlemi tamamlandÄ±! Login sayfasÄ±na yÃ¶nlendiriliyor...");
+                Console.WriteLine("?? Kayıt işlemi tamamlandı! Login sayfasına yönlendiriliyor...");
 
-                TempData["SuccessMessage"] = "KayÄ±t baÅŸarÄ±lÄ±! Referans kodunuz kullanÄ±ldÄ±. GiriÅŸ yapabilirsiniz.";
+                TempData["SuccessMessage"] = "Kayıt başarılı! Referans kodunuz kullanıldı. Giriş yapabilirsiniz.";
                 return RedirectToAction(nameof(Login));
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"ğŸ’¥ HATA: {ex.Message}");
+                Console.WriteLine($"?? HATA: {ex.Message}");
                 Console.WriteLine($"Stack Trace: {ex.StackTrace}");
 
                 if (ex.InnerException != null)
@@ -217,12 +217,12 @@ namespace dortageDB.Controllers
                     Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
                 }
 
-                ModelState.AddModelError(string.Empty, "Bir hata oluÅŸtu. LÃ¼tfen tekrar deneyin.");
+                ModelState.AddModelError(string.Empty, "Bir hata oluştu. Lütfen tekrar deneyin.");
                 return View(model);
             }
         }
 
-        // AccountController.cs - Login metodlarÄ± (gÃ¼ncellenmiÅŸ hali)
+        // AccountController.cs - Login metodları (güncellenmiş hali)
 
         // GET: Account/Login
         [HttpGet]
@@ -246,7 +246,7 @@ namespace dortageDB.Controllers
                 return View(model);
             }
 
-            Console.WriteLine($"ğŸ” Login denemesi: {model.Email}");
+            Console.WriteLine($"?? Login denemesi: {model.Email}");
 
             var result = await _signInManager.PasswordSignInAsync(
                 model.Email,
@@ -257,7 +257,7 @@ namespace dortageDB.Controllers
 
             if (result.Succeeded)
             {
-                Console.WriteLine($"âœ… Login baÅŸarÄ±lÄ±: {model.Email}");
+                Console.WriteLine($"? Login başarılı: {model.Email}");
 
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
@@ -268,13 +268,13 @@ namespace dortageDB.Controllers
 
             if (result.IsLockedOut)
             {
-                Console.WriteLine($"ğŸ”’ Hesap kilitli: {model.Email}");
-                ModelState.AddModelError("", "HesabÄ±nÄ±z kilitlenmiÅŸtir. LÃ¼tfen daha sonra tekrar deneyin.");
+                Console.WriteLine($"?? Hesap kilitli: {model.Email}");
+                ModelState.AddModelError("", "Hesabınız kilitlenmiştir. Lütfen daha sonra tekrar deneyin.");
                 return View(model);
             }
 
-            Console.WriteLine($"âŒ Login baÅŸarÄ±sÄ±z: {model.Email}");
-            ModelState.AddModelError("", "E-posta veya ÅŸifre hatalÄ±.");
+            Console.WriteLine($"? Login başarısız: {model.Email}");
+            ModelState.AddModelError("", "E-posta veya şifre hatalı.");
             return View(model);
         }
 
@@ -312,34 +312,34 @@ namespace dortageDB.Controllers
 
             if (user == null)
             {
-                _logger.LogWarning("Åifre sÄ±fÄ±rlama talebi - KullanÄ±cÄ± bulunamadÄ±: {Email}", model.Email);
+                _logger.LogWarning("Şifre sıfırlama talebi - Kullanıcı bulunamadı: {Email}", model.Email);
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 
-            _logger.LogInformation("Åifre sÄ±fÄ±rlama talebi gÃ¶nderildi: {Email}", model.Email);
+            _logger.LogInformation("Şifre sıfırlama talebi gönderildi: {Email}", model.Email);
 
-            // Token oluÅŸtur
+            // Token oluştur
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            // âœ… DÃœZELTME: email parametresini de ekle
+            // ? DÜZELTME: email parametresini de ekle
             var callbackUrl = Url.Action(
                 action: "ResetPassword",
                 controller: "Account",
-                values: new { token = token, email = user.Email }, // âœ… email eklendi
+                values: new { token = token, email = user.Email }, // ? email eklendi
                 protocol: Request.Scheme);
 
             var emailBody = $@"
-                <h2>Åifre SÄ±fÄ±rlama Talebi</h2>
+                <h2>Şifre Sıfırlama Talebi</h2>
                 <p>Merhaba,</p>
-                <p>Åifrenizi sÄ±fÄ±rlamak iÃ§in aÅŸaÄŸÄ±daki linke tÄ±klayÄ±nÄ±z:</p>
-                <p><a href='{callbackUrl}'>Åifremi SÄ±fÄ±rla</a></p>
-                <p>EÄŸer bu talebi siz yapmadÄ±ysanÄ±z, bu emaili gÃ¶rmezden gelebilirsiniz.</p>
-                <p>Bu link 24 saat geÃ§erlidir.</p>
+                <p>Şifrenizi sıfırlamak için aşağıdaki linke tıklayınız:</p>
+                <p><a href='{callbackUrl}'>Şifremi Sıfırla</a></p>
+                <p>Eğer bu talebi siz yapmadıysanız, bu emaili görmezden gelebilirsiniz.</p>
+                <p>Bu link 24 saat geçerlidir.</p>
             ";
 
             await _emailService.SendEmailAsync(
                 to: model.Email,
-                subject: "Åifre SÄ±fÄ±rlama Talebi",
+                subject: "Şifre Sıfırlama Talebi",
                 htmlBody: emailBody);
 
             return RedirectToAction(nameof(ForgotPasswordConfirmation));
@@ -358,10 +358,10 @@ namespace dortageDB.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string? token = null, string? email = null)
         {
-            // âœ… DÃœZELTME: email parametresi de kontrol ediliyor
+            // ? DÜZELTME: email parametresi de kontrol ediliyor
             if (token == null || email == null)
             {
-                TempData["ErrorMessage"] = "GeÃ§ersiz ÅŸifre sÄ±fÄ±rlama linki.";
+                TempData["ErrorMessage"] = "Geçersiz şifre sıfırlama linki.";
                 return RedirectToAction(nameof(Login));
             }
 
@@ -388,22 +388,22 @@ namespace dortageDB.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                Console.WriteLine($"âŒ Åifre sÄ±fÄ±rlama baÅŸarÄ±sÄ±z - KullanÄ±cÄ± bulunamadÄ±: {model.Email}");
-                // GÃ¼venlik iÃ§in baÅŸarÄ±lÄ± mesajÄ± gÃ¶ster
+                Console.WriteLine($"? Şifre sıfırlama başarısız - Kullanıcı bulunamadı: {model.Email}");
+                // Güvenlik için başarılı mesajı göster
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
 
-            Console.WriteLine($"ğŸ”„ Åifre sÄ±fÄ±rlanÄ±yor: {model.Email}");
+            Console.WriteLine($"?? Şifre sıfırlanıyor: {model.Email}");
 
             var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
 
             if (result.Succeeded)
             {
-                Console.WriteLine($"âœ… Åifre baÅŸarÄ±yla sÄ±fÄ±rlandÄ±: {model.Email}");
+                Console.WriteLine($"? Şifre başarıyla sıfırlandı: {model.Email}");
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
 
-            Console.WriteLine($"âŒ Åifre sÄ±fÄ±rlama baÅŸarÄ±sÄ±z: {model.Email}");
+            Console.WriteLine($"? Şifre sıfırlama başarısız: {model.Email}");
             foreach (var error in result.Errors)
             {
                 Console.WriteLine($"   - {error.Description}");

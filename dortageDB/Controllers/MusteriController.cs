@@ -1,4 +1,4 @@
-ï»¿using dortageDB.Data;
+using dortageDB.Data;
 using dortageDB.Entities;
 using dortageDB.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace dortageDB.Controllers
 {
-    [Authorize(Roles = "visioner,admin")]
+    [Authorize(Roles = "Vekarer,admin")]
     public class MusteriController : Controller
     {
         private readonly AppDbContext _context;
@@ -34,15 +34,15 @@ namespace dortageDB.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // Admin tÃ¼m mÃ¼ÅŸterileri gÃ¶rebilir, diÄŸerleri sadece kendi mÃ¼ÅŸterilerini
+            // Admin tüm müşterileri görebilir, diğerleri sadece kendi müşterilerini
             var musteriler = User.IsInRole("admin")
                 ? await _context.Musteriler
-                    .Include(m => m.Visioner)
+                    .Include(m => m.Vekarer)
                     .OrderByDescending(m => m.IdMusteri)
                     .ToListAsync()
                 : await _context.Musteriler
-                    .Include(m => m.Visioner)
-                    .Where(m => m.VisionerID == user.Id)
+                    .Include(m => m.Vekarer)
+                    .Where(m => m.VekarerID == user.Id)
                     .OrderByDescending(m => m.IdMusteri)
                     .ToListAsync();
 
@@ -62,7 +62,7 @@ namespace dortageDB.Controllers
         {
             try
             {
-                _logger.LogInformation("=== MÃœÅTERÄ° OLUÅTURMA BAÅLADI ===");
+                _logger.LogInformation("=== MÜŞTERİ OLUŞTURMA BAŞLADI ===");
                 _logger.LogInformation($"Ad: {model.Ad}, Soyad: {model.Soyad}");
 
                 if (!ModelState.IsValid)
@@ -70,20 +70,20 @@ namespace dortageDB.Controllers
                     return View(model);
                 }
 
-                // Telefon numarasÄ±nÄ± temizle
+                // Telefon numarasını temizle
                 var cleanPhone = model.Telefon.Replace("(", "").Replace(")", "").Replace(" ", "").Trim();
 
-                // Telefon kontrolÃ¼
+                // Telefon kontrolü
                 var existingPhone = await _context.Musteriler
                     .AnyAsync(m => m.Telefon == cleanPhone);
 
                 if (existingPhone)
                 {
-                    ModelState.AddModelError("Telefon", "Bu telefon numarasÄ± zaten kayÄ±tlÄ±.");
+                    ModelState.AddModelError("Telefon", "Bu telefon numarası zaten kayıtlı.");
                     return View(model);
                 }
 
-                // TC No kontrolÃ¼ (varsa)
+                // TC No kontrolü (varsa)
                 if (!string.IsNullOrWhiteSpace(model.TcNo))
                 {
                     var existingTc = await _context.Musteriler
@@ -91,7 +91,7 @@ namespace dortageDB.Controllers
 
                     if (existingTc)
                     {
-                        ModelState.AddModelError("TcNo", "Bu TC Kimlik No zaten kayÄ±tlÄ±.");
+                        ModelState.AddModelError("TcNo", "Bu TC Kimlik No zaten kayıtlı.");
                         return View(model);
                     }
                 }
@@ -105,20 +105,20 @@ namespace dortageDB.Controllers
                     Telefon = cleanPhone,
                     Cinsiyet = model.Cinsiyet,
                     TcNo = model.TcNo,
-                    VisionerID = currentUser!.Id
+                    VekarerID = currentUser!.Id
                 };
 
                 _context.Musteriler.Add(musteri);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"âœ… MÃ¼ÅŸteri baÅŸarÄ±yla oluÅŸturuldu: {musteri.IdMusteri}");
-                TempData["SuccessMessage"] = "MÃ¼ÅŸteri baÅŸarÄ±yla oluÅŸturuldu.";
+                _logger.LogInformation($"? Müşteri başarıyla oluşturuldu: {musteri.IdMusteri}");
+                TempData["SuccessMessage"] = "Müşteri başarıyla oluşturuldu.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"âŒ MÃ¼ÅŸteri oluÅŸturma hatasÄ±: {ex.Message}");
-                ModelState.AddModelError("", "Bir hata oluÅŸtu. LÃ¼tfen tekrar deneyin.");
+                _logger.LogError($"? Müşteri oluşturma hatası: {ex.Message}");
+                ModelState.AddModelError("", "Bir hata oluştu. Lütfen tekrar deneyin.");
                 return View(model);
             }
         }
@@ -143,10 +143,10 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
-            // Visioner sadece kendi mÃ¼ÅŸterisini dÃ¼zenleyebilir (admin hariÃ§)
-            if (!User.IsInRole("admin") && musteri.VisionerID != user.Id)
+            // Vekarer sadece kendi müşterisini düzenleyebilir (admin hariç)
+            if (!User.IsInRole("admin") && musteri.VekarerID != user.Id)
             {
-                _logger.LogWarning($"âš ï¸ Yetkisiz eriÅŸim denemesi: User {user.Id} tried to edit customer {id}");
+                _logger.LogWarning($"?? Yetkisiz erişim denemesi: User {user.Id} tried to edit customer {id}");
                 return Forbid();
             }
 
@@ -188,28 +188,28 @@ namespace dortageDB.Controllers
                     return NotFound();
                 }
 
-                // Visioner sadece kendi mÃ¼ÅŸterisini dÃ¼zenleyebilir (admin hariÃ§)
-                if (!User.IsInRole("admin") && musteri.VisionerID != user.Id)
+                // Vekarer sadece kendi müşterisini düzenleyebilir (admin hariç)
+                if (!User.IsInRole("admin") && musteri.VekarerID != user.Id)
                 {
-                    _logger.LogWarning($"âš ï¸ Yetkisiz eriÅŸim denemesi: User {user.Id} tried to edit customer {id}");
+                    _logger.LogWarning($"?? Yetkisiz erişim denemesi: User {user.Id} tried to edit customer {id}");
                     return Forbid();
                 }
 
-                // Telefon numarasÄ±nÄ± temizle
+                // Telefon numarasını temizle
                 var cleanPhone = model.Telefon.Replace("(", "").Replace(")", "").Replace(" ", "").Trim();
 
-                // Telefon kontrolÃ¼ (kendisi hariÃ§)
+                // Telefon kontrolü (kendisi hariç)
                 var existingPhone = await _context.Musteriler
                     .AnyAsync(m => m.Telefon == cleanPhone && m.IdMusteri != id);
 
                 if (existingPhone)
                 {
-                    ModelState.AddModelError("Telefon", "Bu telefon numarasÄ± zaten kayÄ±tlÄ±.");
+                    ModelState.AddModelError("Telefon", "Bu telefon numarası zaten kayıtlı.");
                     ViewData["MusteriId"] = id;
                     return View(model);
                 }
 
-                // TC No kontrolÃ¼ (varsa ve kendisi hariÃ§)
+                // TC No kontrolü (varsa ve kendisi hariç)
                 if (!string.IsNullOrWhiteSpace(model.TcNo))
                 {
                     var existingTc = await _context.Musteriler
@@ -217,7 +217,7 @@ namespace dortageDB.Controllers
 
                     if (existingTc)
                     {
-                        ModelState.AddModelError("TcNo", "Bu TC Kimlik No zaten kayÄ±tlÄ±.");
+                        ModelState.AddModelError("TcNo", "Bu TC Kimlik No zaten kayıtlı.");
                         ViewData["MusteriId"] = id;
                         return View(model);
                     }
@@ -231,14 +231,14 @@ namespace dortageDB.Controllers
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"âœ… MÃ¼ÅŸteri gÃ¼ncellendi: {id}");
-                TempData["SuccessMessage"] = "MÃ¼ÅŸteri baÅŸarÄ±yla gÃ¼ncellendi.";
+                _logger.LogInformation($"? Müşteri güncellendi: {id}");
+                TempData["SuccessMessage"] = "Müşteri başarıyla güncellendi.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"âŒ MÃ¼ÅŸteri gÃ¼ncelleme hatasÄ±: {ex.Message}");
-                ModelState.AddModelError("", "Bir hata oluÅŸtu. LÃ¼tfen tekrar deneyin.");
+                _logger.LogError($"? Müşteri güncelleme hatası: {ex.Message}");
+                ModelState.AddModelError("", "Bir hata oluştu. Lütfen tekrar deneyin.");
                 ViewData["MusteriId"] = id;
                 return View(model);
             }
@@ -268,10 +268,10 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
-            // Visioner sadece kendi mÃ¼ÅŸterisini silebilir (admin hariÃ§)
-            if (!User.IsInRole("admin") && musteri.VisionerID != user.Id)
+            // Vekarer sadece kendi müşterisini silebilir (admin hariç)
+            if (!User.IsInRole("admin") && musteri.VekarerID != user.Id)
             {
-                _logger.LogWarning($"âš ï¸ Yetkisiz eriÅŸim denemesi: User {user.Id} tried to delete customer {id}");
+                _logger.LogWarning($"?? Yetkisiz erişim denemesi: User {user.Id} tried to delete customer {id}");
                 return Forbid();
             }
 
@@ -301,31 +301,31 @@ namespace dortageDB.Controllers
                     return NotFound();
                 }
 
-                // Visioner sadece kendi mÃ¼ÅŸterisini silebilir (admin hariÃ§)
-                if (!User.IsInRole("admin") && musteri.VisionerID != user.Id)
+                // Vekarer sadece kendi müşterisini silebilir (admin hariç)
+                if (!User.IsInRole("admin") && musteri.VekarerID != user.Id)
                 {
-                    _logger.LogWarning($"âš ï¸ Yetkisiz eriÅŸim denemesi: User {user.Id} tried to delete customer {id}");
+                    _logger.LogWarning($"?? Yetkisiz erişim denemesi: User {user.Id} tried to delete customer {id}");
                     return Forbid();
                 }
 
-                // Ä°liÅŸkili kayÄ±tlarÄ± kontrol et
+                // İlişkili kayıtları kontrol et
                 if (musteri.Randevular.Any() || musteri.Satislar.Any())
                 {
-                    TempData["ErrorMessage"] = "Bu mÃ¼ÅŸteriye ait randevu veya satÄ±ÅŸ kaydÄ± olduÄŸu iÃ§in silinemez.";
+                    TempData["ErrorMessage"] = "Bu müşteriye ait randevu veya satış kaydı olduğu için silinemez.";
                     return RedirectToAction(nameof(Index));
                 }
 
                 _context.Musteriler.Remove(musteri);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"âœ… MÃ¼ÅŸteri silindi: {id}");
-                TempData["SuccessMessage"] = "MÃ¼ÅŸteri baÅŸarÄ±yla silindi.";
+                _logger.LogInformation($"? Müşteri silindi: {id}");
+                TempData["SuccessMessage"] = "Müşteri başarıyla silindi.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"âŒ MÃ¼ÅŸteri silme hatasÄ±: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluÅŸtu. LÃ¼tfen tekrar deneyin.";
+                _logger.LogError($"? Müşteri silme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -346,9 +346,9 @@ namespace dortageDB.Controllers
 
             var musteri = await _context.Musteriler
                 .Include(m => m.Randevular)
-                    .ThenInclude(r => r.Visioner)
+                    .ThenInclude(r => r.Vekarer)
                 .Include(m => m.Satislar)
-                    .ThenInclude(s => s.Visioner)
+                    .ThenInclude(s => s.Vekarer)
                 .FirstOrDefaultAsync(m => m.IdMusteri == id);
 
             if (musteri == null)
@@ -356,10 +356,10 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
-            // Visioner sadece kendi mÃ¼ÅŸterisinin detayÄ±nÄ± gÃ¶rebilir (admin hariÃ§)
-            if (!User.IsInRole("admin") && musteri.VisionerID != user.Id)
+            // Vekarer sadece kendi müşterisinin detayını görebilir (admin hariç)
+            if (!User.IsInRole("admin") && musteri.VekarerID != user.Id)
             {
-                _logger.LogWarning($"âš ï¸ Yetkisiz eriÅŸim denemesi: User {user.Id} tried to view customer {id}");
+                _logger.LogWarning($"?? Yetkisiz erişim denemesi: User {user.Id} tried to view customer {id}");
                 return Forbid();
             }
 

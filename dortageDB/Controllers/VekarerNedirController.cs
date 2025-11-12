@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace dortageDB.Controllers;
 
-public class VisionerNedirController : Controller
+public class VekarerNedirController : Controller
 {
     public IActionResult Index()
     {

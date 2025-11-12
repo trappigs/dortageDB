@@ -32,7 +32,7 @@ namespace dortageDB.Controllers
         {
             var stats = new
             {
-                TotalVisioners = await _userManager.GetUsersInRoleAsync("visioner"),
+                TotalVekarers = await _userManager.GetUsersInRoleAsync("Vekarer"),
                 TotalMusteriler = await _context.Musteriler.CountAsync(),
                 TotalRandevular = await _context.Randevular.CountAsync(),
                 PendingRandevular = await _context.Randevular.CountAsync(r => r.RandevuDurum == RandevuDurum.OnayBekliyor),
@@ -180,7 +180,7 @@ namespace dortageDB.Controllers
             var musteriler = await _context.Musteriler
                 .Include(m => m.Randevular)
                 .Include(m => m.Satislar)
-                .Include(m => m.Visioner)
+                .Include(m => m.Vekarer)
                 .OrderByDescending(m => m.IdMusteri)
                 .ToListAsync();
 
@@ -192,7 +192,7 @@ namespace dortageDB.Controllers
         {
             var randevular = await _context.Randevular
                 .Include(r => r.Musteri)
-                .Include(r => r.Visioner)
+                .Include(r => r.Vekarer)
                 .OrderByDescending(r => r.RandevuZaman)
                 .ToListAsync();
 
@@ -204,7 +204,7 @@ namespace dortageDB.Controllers
         {
             var satislar = await _context.Satislar
                 .Include(s => s.Musteri)
-                .Include(s => s.Visioner)
+                .Include(s => s.Vekarer)
                 .OrderByDescending(s => s.SatilmaTarihi)
                 .ToListAsync();
 
@@ -214,14 +214,14 @@ namespace dortageDB.Controllers
                 .ThenBy(m => m.Soyad)
                 .ToListAsync();
 
-            ViewBag.Visionerlar = await _userManager.GetUsersInRoleAsync("visioner");
+            ViewBag.Vekarerlar = await _userManager.GetUsersInRoleAsync("Vekarer");
 
             return View(satislar);
         }
         // POST: Admin/CreateSatis
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSatis(int SatilanMusteriID, int VisionerID,
+        public async Task<IActionResult> CreateSatis(int SatilanMusteriID, int VekarerID,
             DateTime SatilmaTarihi, decimal ToplamSatisFiyati, string Bolge, bool Taksit, decimal OdenecekKomisyon)
         {
             try
@@ -233,20 +233,20 @@ namespace dortageDB.Controllers
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
-                // M��teri ve Visioner kontrol�
+                // M��teri ve Vekarer kontrol�
                 var musteri = await _context.Musteriler.FindAsync(SatilanMusteriID);
-                var visioner = await _userManager.FindByIdAsync(VisionerID.ToString());
+                var Vekarer = await _userManager.FindByIdAsync(VekarerID.ToString());
 
-                if (musteri == null || visioner == null)
+                if (musteri == null || Vekarer == null)
                 {
-                    TempData["ErrorMessage"] = "Ge�ersiz m��teri veya visioner.";
+                    TempData["ErrorMessage"] = "Ge�ersiz m��teri veya Vekarer.";
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
                 var satis = new Satis
                 {
                     SatilanMusteriID = SatilanMusteriID,
-                    VisionerID = VisionerID,
+                    VekarerID = VekarerID,
                     SatilmaTarihi = SatilmaTarihi,
                     ToplamSatisFiyati = ToplamSatisFiyati,
                     Bolge = Bolge.Trim(),
@@ -273,7 +273,7 @@ namespace dortageDB.Controllers
         // POST: Admin/EditSatis
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditSatis(int SatisID, int SatilanMusteriID, int VisionerID,
+        public async Task<IActionResult> EditSatis(int SatisID, int SatilanMusteriID, int VekarerID,
             DateTime SatilmaTarihi, decimal ToplamSatisFiyati, string Bolge, bool Taksit, decimal OdenecekKomisyon)
         {
             try
@@ -292,19 +292,19 @@ namespace dortageDB.Controllers
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
-                // M��teri ve Visioner kontrol�
+                // M��teri ve Vekarer kontrol�
                 var musteri = await _context.Musteriler.FindAsync(SatilanMusteriID);
-                var visioner = await _userManager.FindByIdAsync(VisionerID.ToString());
+                var Vekarer = await _userManager.FindByIdAsync(VekarerID.ToString());
 
-                if (musteri == null || visioner == null)
+                if (musteri == null || Vekarer == null)
                 {
-                    TempData["ErrorMessage"] = "Ge�ersiz m��teri veya visioner.";
+                    TempData["ErrorMessage"] = "Ge�ersiz m��teri veya Vekarer.";
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
                 // Update satis
                 satis.SatilanMusteriID = SatilanMusteriID;
-                satis.VisionerID = VisionerID;
+                satis.VekarerID = VekarerID;
                 satis.SatilmaTarihi = SatilmaTarihi;
                 satis.ToplamSatisFiyati = ToplamSatisFiyati;
                 satis.Bolge = Bolge.Trim();
@@ -358,32 +358,32 @@ namespace dortageDB.Controllers
 
 
 
-        // GET: Admin/AllVisioners
-        public async Task<IActionResult> AllVisioners()
+        // GET: Admin/AllVekarers
+        public async Task<IActionResult> AllVekarers()
         {
-            var visioners = await _userManager.GetUsersInRoleAsync("visioner");
+            var Vekarers = await _userManager.GetUsersInRoleAsync("Vekarer");
 
-            var visionerData = new List<dynamic>();
-            foreach (var visioner in visioners)
+            var VekarerData = new List<dynamic>();
+            foreach (var Vekarer in Vekarers)
             {
-                var randevuCount = await _context.Randevular.CountAsync(r => r.VisionerID == visioner.Id);
-                var satisCount = await _context.Satislar.CountAsync(s => s.VisionerID == visioner.Id);
+                var randevuCount = await _context.Randevular.CountAsync(r => r.VekarerID == Vekarer.Id);
+                var satisCount = await _context.Satislar.CountAsync(s => s.VekarerID == Vekarer.Id);
                 var totalKomisyon = await _context.Satislar
-                    .Where(s => s.VisionerID == visioner.Id)
+                    .Where(s => s.VekarerID == Vekarer.Id)
                     .SumAsync(s => (decimal?)s.OdenecekKomisyon) ?? 0;
 
                 // Calculate total sales (ciro)
                 var totalCiro = await _context.Satislar
-                    .Where(s => s.VisionerID == visioner.Id)
+                    .Where(s => s.VekarerID == Vekarer.Id)
                     .SumAsync(s => (decimal?)s.ToplamSatisFiyati) ?? 0;
 
-                // Get VisionerProfile for ReferralCode and UsedReferralCode
-                var profile = await _context.VisionerProfiles
-                    .FirstOrDefaultAsync(p => p.UserId == visioner.Id);
+                // Get VekarerProfile for ReferralCode and UsedReferralCode
+                var profile = await _context.VekarerProfiles
+                    .FirstOrDefaultAsync(p => p.UserId == Vekarer.Id);
 
-                visionerData.Add(new
+                VekarerData.Add(new
                 {
-                    User = visioner,
+                    User = Vekarer,
                     RandevuCount = randevuCount,
                     SatisCount = satisCount,
                     TotalKomisyon = totalKomisyon,
@@ -393,14 +393,14 @@ namespace dortageDB.Controllers
                 });
             }
 
-            ViewBag.VisionerData = visionerData;
+            ViewBag.VekarerData = VekarerData;
             return View();
         }
 
         // POST: Admin/CreateRandevu
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateRandevu(int MusteriId, int VisionerID,
+        public async Task<IActionResult> CreateRandevu(int MusteriId, int VekarerID,
             DateTime RandevuZaman, string? Aciklama, string RandevuTipi)
         {
             try
@@ -412,20 +412,20 @@ namespace dortageDB.Controllers
                     return RedirectToAction(nameof(AllRandevular));
                 }
 
-                // M��teri ve Visioner kontrol�
+                // M��teri ve Vekarer kontrol�
                 var musteri = await _context.Musteriler.FindAsync(MusteriId);
-                var visioner = await _userManager.FindByIdAsync(VisionerID.ToString());
+                var Vekarer = await _userManager.FindByIdAsync(VekarerID.ToString());
 
-                if (musteri == null || visioner == null)
+                if (musteri == null || Vekarer == null)
                 {
-                    TempData["ErrorMessage"] = "Ge�ersiz m��teri veya visioner.";
+                    TempData["ErrorMessage"] = "Ge�ersiz m��teri veya Vekarer.";
                     return RedirectToAction(nameof(AllRandevular));
                 }
 
                 var randevu = new Randevu
                 {
                     MusteriId = MusteriId,
-                    VisionerID = VisionerID,
+                    VekarerID = VekarerID,
                     RandevuZaman = RandevuZaman,
                     RandevuTipi = RandevuTipi.Trim(),
                     Aciklama = string.IsNullOrWhiteSpace(Aciklama) ? null : Aciklama.Trim(),
@@ -1208,15 +1208,15 @@ namespace dortageDB.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateMusteri(string Ad, string Soyad, string Telefon,
-            bool? Cinsiyet, int VisionerID)
+            bool? Cinsiyet, int VekarerID)
         {
             try
             {
-                // Validate visioner exists
-                var visioner = await _userManager.FindByIdAsync(VisionerID.ToString());
-                if (visioner == null)
+                // Validate Vekarer exists
+                var Vekarer = await _userManager.FindByIdAsync(VekarerID.ToString());
+                if (Vekarer == null)
                 {
-                    TempData["ErrorMessage"] = "Ge�ersiz visioner se�imi.";
+                    TempData["ErrorMessage"] = "Ge�ersiz Vekarer se�imi.";
                     return RedirectToAction(nameof(AllMusteriler));
                 }
 
@@ -1227,7 +1227,7 @@ namespace dortageDB.Controllers
                     Soyad = Soyad.Trim(),
                     Telefon = Telefon.Trim(),
                     Cinsiyet = Cinsiyet,
-                    VisionerID = VisionerID,
+                    VekarerID = VekarerID,
                     EklenmeTarihi = DateTime.Now
                 };
 
@@ -1250,10 +1250,10 @@ namespace dortageDB.Controllers
         // VİSİONER OLU�TURMA
         // ====================================
 
-        // POST: Admin/CreateVisioner
+        // POST: Admin/CreateVekarer
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateVisioner(string Ad, string Soyad, string Email,
+        public async Task<IActionResult> CreateVekarer(string Ad, string Soyad, string Email,
             string PhoneNumber, string Sehir, bool Cinsiyet, string Password, string ConfirmPassword)
         {
             try
@@ -1262,7 +1262,7 @@ namespace dortageDB.Controllers
                 if (Password != ConfirmPassword)
                 {
                     TempData["ErrorMessage"] = "�ifreler e�le�miyor.";
-                    return RedirectToAction(nameof(AllVisioners));
+                    return RedirectToAction(nameof(AllVekarers));
                 }
 
                 // Check if email already exists
@@ -1270,7 +1270,7 @@ namespace dortageDB.Controllers
                 if (existingUser != null)
                 {
                     TempData["ErrorMessage"] = "Bu email adresi zaten kullan�l�yor.";
-                    return RedirectToAction(nameof(AllVisioners));
+                    return RedirectToAction(nameof(AllVekarers));
                 }
 
                 // Create new AppUser
@@ -1294,29 +1294,29 @@ namespace dortageDB.Controllers
                 if (!result.Succeeded)
                 {
                     var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                    TempData["ErrorMessage"] = $"Visioner olu�turulamad�: {errors}";
-                    return RedirectToAction(nameof(AllVisioners));
+                    TempData["ErrorMessage"] = $"Vekarer olu�turulamad�: {errors}";
+                    return RedirectToAction(nameof(AllVekarers));
                 }
 
-                // Add to visioner role
-                await _userManager.AddToRoleAsync(newUser, "visioner");
+                // Add to Vekarer role
+                await _userManager.AddToRoleAsync(newUser, "Vekarer");
 
-                _logger.LogInformation($"? Yeni visioner olu�turuldu: {newUser.Email} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = $"Visioner ba�ar�yla olu�turuldu: {Ad} {Soyad}";
-                return RedirectToAction(nameof(AllVisioners));
+                _logger.LogInformation($"? Yeni Vekarer olu�turuldu: {newUser.Email} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = $"Vekarer ba�ar�yla olu�turuldu: {Ad} {Soyad}";
+                return RedirectToAction(nameof(AllVekarers));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"? Visioner olu�turma hatas�: {ex.Message}");
+                _logger.LogError($"? Vekarer olu�turma hatas�: {ex.Message}");
                 TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
-                return RedirectToAction(nameof(AllVisioners));
+                return RedirectToAction(nameof(AllVekarers));
             }
         }
 
-        // POST: Admin/DeactivateVisioner
+        // POST: Admin/DeactivateVekarer
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeactivateVisioner(int id)
+        public async Task<IActionResult> DeactivateVekarer(int id)
         {
             try
             {
@@ -1324,7 +1324,7 @@ namespace dortageDB.Controllers
                 if (user == null)
                 {
                     TempData["ErrorMessage"] = "Kullan�c� bulunamad�.";
-                    return RedirectToAction(nameof(AllVisioners));
+                    return RedirectToAction(nameof(AllVekarers));
                 }
 
                 // Lock the user account indefinitely
@@ -1335,7 +1335,7 @@ namespace dortageDB.Controllers
 
                 if (result.Succeeded)
                 {
-                    _logger.LogWarning($"?? Visioner hesab� deaktif edildi: {user.Email} (Admin: {User.Identity.Name})");
+                    _logger.LogWarning($"?? Vekarer hesab� deaktif edildi: {user.Email} (Admin: {User.Identity.Name})");
                     TempData["SuccessMessage"] = $"{user.Ad} {user.Soyad} hesab� ba�ar�yla deaktif edildi.";
                 }
                 else
@@ -1344,20 +1344,20 @@ namespace dortageDB.Controllers
                     TempData["ErrorMessage"] = $"Deaktif etme ba�ar�s�z: {errors}";
                 }
 
-                return RedirectToAction(nameof(AllVisioners));
+                return RedirectToAction(nameof(AllVekarers));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"? Visioner deaktif etme hatas�: {ex.Message}");
+                _logger.LogError($"? Vekarer deaktif etme hatas�: {ex.Message}");
                 TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
-                return RedirectToAction(nameof(AllVisioners));
+                return RedirectToAction(nameof(AllVekarers));
             }
         }
 
-        // POST: Admin/ReactivateVisioner
+        // POST: Admin/ReactivateVekarer
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ReactivateVisioner(int id)
+        public async Task<IActionResult> ReactivateVekarer(int id)
         {
             try
             {
@@ -1365,7 +1365,7 @@ namespace dortageDB.Controllers
                 if (user == null)
                 {
                     TempData["ErrorMessage"] = "Kullan�c� bulunamad�.";
-                    return RedirectToAction(nameof(AllVisioners));
+                    return RedirectToAction(nameof(AllVekarers));
                 }
 
                 // Unlock the user account
@@ -1375,7 +1375,7 @@ namespace dortageDB.Controllers
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation($"? Visioner hesab� aktifle�tirildi: {user.Email} (Admin: {User.Identity.Name})");
+                    _logger.LogInformation($"? Vekarer hesab� aktifle�tirildi: {user.Email} (Admin: {User.Identity.Name})");
                     TempData["SuccessMessage"] = $"{user.Ad} {user.Soyad} hesab� ba�ar�yla aktifle�tirildi.";
                 }
                 else
@@ -1384,13 +1384,13 @@ namespace dortageDB.Controllers
                     TempData["ErrorMessage"] = $"Aktifle�tirme ba�ar�s�z: {errors}";
                 }
 
-                return RedirectToAction(nameof(AllVisioners));
+                return RedirectToAction(nameof(AllVekarers));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"? Visioner aktifle�tirme hatas�: {ex.Message}");
+                _logger.LogError($"? Vekarer aktifle�tirme hatas�: {ex.Message}");
                 TempData["ErrorMessage"] = "Bir hata olu�tu. L�tfen tekrar deneyin.";
-                return RedirectToAction(nameof(AllVisioners));
+                return RedirectToAction(nameof(AllVekarers));
             }
         }
     }

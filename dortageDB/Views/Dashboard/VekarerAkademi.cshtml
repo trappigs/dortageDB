@@ -1,9 +1,9 @@
-ï»¿@{
-    ViewData["Title"] = "Visioner Akademi";
-    Layout = "_LayoutVisioner";
+@{
+    ViewData["Title"] = "Vekarer Akademi";
+    Layout = "_LayoutVekarer";
 }
 
-<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Vekarer-main-panel.css" asp-append-version="true" />
 
 <style>
     .akademi-header {
@@ -614,34 +614,34 @@
     }
 </style>
 
-<div class="visioner-main-panel">
+<div class="Vekarer-main-panel">
     <div class="main-content">
         <!-- Akademi Header -->
         <div class="akademi-header">
             <div class="akademi-header-content">
                 <h1 class="akademi-title">
-                    ğŸ“ Visioner Akademi
+                    ?? Vekarer Akademi
                 </h1>
                 <p class="akademi-subtitle">
-                    BaÅŸarÄ±lÄ± bir Visioner olmak iÃ§in ihtiyacÄ±nÄ±z olan tÃ¼m eÄŸitimler burada!
+                    Başarılı bir Vekarer olmak için ihtiyacınız olan tüm eğitimler burada!
                 </p>
                 <div class="akademi-stats">
                     <div class="stat-item">
-                        <div class="stat-icon">ğŸ“š</div>
+                        <div class="stat-icon">??</div>
                         <div class="stat-content">
                             <div class="stat-value">25+</div>
-                            <div class="stat-label">EÄŸitim Videosu</div>
+                            <div class="stat-label">Eğitim Videosu</div>
                         </div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-icon">â±ï¸</div>
+                        <div class="stat-icon">??</div>
                         <div class="stat-content">
                             <div class="stat-value">12 Saat</div>
-                            <div class="stat-label">Toplam Ä°Ã§erik</div>
+                            <div class="stat-label">Toplam İçerik</div>
                         </div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-icon">âœ…</div>
+                        <div class="stat-icon">?</div>
                         <div class="stat-content">
                             <div class="stat-value">0</div>
                             <div class="stat-label">Tamamlanan</div>
@@ -651,7 +651,7 @@
             </div>
         </div>
 
-        <!-- Ã–ne Ã‡Ä±kan EÄŸitim -->
+        <!-- Öne Çıkan Eğitim -->
         @if (ViewBag.OneCikanVideo != null)
         {
             var oneCikan = ViewBag.OneCikanVideo as dortageDB.Entities.EgitimVideo;
@@ -660,11 +660,11 @@
 
             <div class="featured-section">
                 <h2 class="section-title">
-                    â­ Ã–ne Ã‡Ä±kan EÄŸitim
+                    ? Öne Çıkan Eğitim
                 </h2>
                 <div class="featured-course">
                     <div class="featured-thumbnail" style="background-image: url('https://img.youtube.com/vi/@oneCikan.YoutubeVideoID/maxresdefault.jpg');" onclick="openVideoModal('@oneCikan.YoutubeVideoID')">
-                        <div class="play-button">â–¶</div>
+                        <div class="play-button">?</div>
                         <div class="course-duration">
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="10"></circle>
@@ -674,7 +674,7 @@
                         </div>
                     </div>
                     <div class="featured-info">
-                        <span class="featured-tag">ğŸ“Œ Ã–NERÄ°LEN</span>
+                        <span class="featured-tag">?? ÖNERİLEN</span>
                         <h3 class="featured-title">@oneCikan.Baslik</h3>
                         <p class="featured-description">
                             @oneCikan.Aciklama
@@ -698,7 +698,7 @@
                             <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
                             </svg>
-                            Åimdi Ä°zle
+                            Şimdi İzle
                         </button>
                     </div>
                 </div>
@@ -709,29 +709,29 @@
         <div class="filter-section">
             <div class="category-tabs">
                 <button class="category-tab active" data-category="all">
-                    TÃ¼mÃ¼ (@ViewBag.ToplamCount)
+                    Tümü (@ViewBag.ToplamCount)
                 </button>
                 <button class="category-tab" data-category="baslangic">
-                    ğŸš€ BaÅŸlangÄ±Ã§ (@ViewBag.BaslangicCount)
+                    ?? Başlangıç (@ViewBag.BaslangicCount)
                 </button>
                 <button class="category-tab" data-category="satis">
-                    ğŸ’¼ SatÄ±ÅŸ Teknikleri (@ViewBag.SatisCount)
+                    ?? Satış Teknikleri (@ViewBag.SatisCount)
                 </button>
                 <button class="category-tab" data-category="arsa">
-                    ğŸï¸ Arsa Bilgisi (@ViewBag.ArsaCount)
+                    ??? Arsa Bilgisi (@ViewBag.ArsaCount)
                 </button>
                 <button class="category-tab" data-category="musteri">
-                    ğŸ‘¥ MÃ¼ÅŸteri Ä°liÅŸkileri (@ViewBag.MusteriCount)
+                    ?? Müşteri İlişkileri (@ViewBag.MusteriCount)
                 </button>
                 <button class="category-tab" data-category="pazarlama">
-                    ğŸ“± Dijital Pazarlama (@ViewBag.PazarlamaCount)
+                    ?? Dijital Pazarlama (@ViewBag.PazarlamaCount)
                 </button>
                 <button class="category-tab" data-category="basari">
-                    â­ BaÅŸarÄ± Hikayeleri (@ViewBag.BasariCount)
+                    ? Başarı Hikayeleri (@ViewBag.BasariCount)
                 </button>
             </div>
             <div class="search-box">
-                <input type="text" placeholder="EÄŸitim ara..." id="searchInput">
+                <input type="text" placeholder="Eğitim ara..." id="searchInput">
                 <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -739,7 +739,7 @@
             </div>
         </div>
 
-        <!-- EÄŸitim KartlarÄ± -->
+        <!-- Eğitim Kartları -->
         <div class="courses-grid" id="coursesGrid">
             @if (ViewBag.Videolar != null)
             {
@@ -750,7 +750,7 @@
 
                     <div class="course-card" data-category="@video.Kategori">
                         <div class="course-thumbnail" style="background-image: url('https://img.youtube.com/vi/@video.YoutubeVideoID/maxresdefault.jpg');" onclick="openVideoModal('@video.YoutubeVideoID')">
-                            <div class="play-button">â–¶</div>
+                            <div class="play-button">?</div>
                             <div class="course-duration">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -764,7 +764,7 @@
                             }
                             else if (video.Populer)
                             {
-                                <div class="course-badge badge-popular">PopÃ¼ler</div>
+                                <div class="course-badge badge-popular">Popüler</div>
                             }
                         </div>
                         <div class="course-content">
@@ -785,14 +785,14 @@
                                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <polygon points="5 3 19 12 5 21 5 3"></polygon>
                                     </svg>
-                                    Ä°zle
+                                    İzle
                                 </div>
                             </div>
                             <button class="btn-complete" data-video-id="@video.YoutubeVideoID" onclick="toggleComplete('@video.YoutubeVideoID', event)">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                <span class="btn-complete-text">TamamladÄ±m</span>
+                                <span class="btn-complete-text">Tamamladım</span>
                             </button>
                         </div>
                     </div>
@@ -801,9 +801,9 @@
             else
             {
                 <div class="empty-state" style="grid-column: 1 / -1;">
-                    <div class="empty-icon">ğŸ“¹</div>
-                    <h3>HenÃ¼z video eklenmemiÅŸ</h3>
-                    <p>YakÄ±nda eÄŸitim videolarÄ± eklenecektir</p>
+                    <div class="empty-icon">??</div>
+                    <h3>Henüz video eklenmemiş</h3>
+                    <p>Yakında eğitim videoları eklenecektir</p>
                 </div>
             }
         </div>
@@ -813,7 +813,7 @@
 <!-- Video Modal -->
 <div class="video-modal" id="videoModal">
     <div class="video-modal-content">
-        <button class="video-modal-close" onclick="closeVideoModal()">Ã—</button>
+        <button class="video-modal-close" onclick="closeVideoModal()">×</button>
         <iframe class="video-modal-iframe" id="videoIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 </div>
@@ -859,11 +859,11 @@
         tab.addEventListener('click', function() {
             const category = this.getAttribute('data-category');
 
-            // Aktif tab deÄŸiÅŸtir
+            // Aktif tab değiştir
             categoryTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
 
-            // KurslarÄ± filtrele
+            // Kursları filtrele
             courseCards.forEach(card => {
                 const cardCategory = card.getAttribute('data-category');
                 if (category === 'all' || cardCategory === category) {
@@ -892,20 +892,20 @@
         });
     });
 
-    // Tamamlanan videolarÄ± localStorage'dan yÃ¼kle
+    // Tamamlanan videoları localStorage'dan yükle
     function loadCompletedVideos() {
         const completed = JSON.parse(localStorage.getItem('completedVideos') || '[]');
         completed.forEach(videoId => {
             const button = document.querySelector(`[data-video-id="${videoId}"]`);
             if (button) {
                 button.classList.add('completed');
-                button.querySelector('.btn-complete-text').textContent = 'TamamlandÄ±';
+                button.querySelector('.btn-complete-text').textContent = 'Tamamlandı';
             }
         });
         updateCompletedCount();
     }
 
-    // Video tamamlama durumunu deÄŸiÅŸtir
+    // Video tamamlama durumunu değiştir
     function toggleComplete(videoId, event) {
         event.stopPropagation();
         const button = event.currentTarget;
@@ -913,22 +913,22 @@
         const index = completed.indexOf(videoId);
 
         if (index === -1) {
-            // Videoyu tamamlanmÄ±ÅŸ olarak iÅŸaretle
+            // Videoyu tamamlanmış olarak işaretle
             completed.push(videoId);
             button.classList.add('completed');
-            button.querySelector('.btn-complete-text').textContent = 'TamamlandÄ±';
+            button.querySelector('.btn-complete-text').textContent = 'Tamamlandı';
         } else {
-            // TamamlanmÄ±ÅŸ iÅŸaretini kaldÄ±r
+            // Tamamlanmış işaretini kaldır
             completed.splice(index, 1);
             button.classList.remove('completed');
-            button.querySelector('.btn-complete-text').textContent = 'TamamladÄ±m';
+            button.querySelector('.btn-complete-text').textContent = 'Tamamladım';
         }
 
         localStorage.setItem('completedVideos', JSON.stringify(completed));
         updateCompletedCount();
     }
 
-    // Tamamlanan video sayÄ±sÄ±nÄ± gÃ¼ncelle
+    // Tamamlanan video sayısını güncelle
     function updateCompletedCount() {
         const completed = JSON.parse(localStorage.getItem('completedVideos') || '[]');
         const countElement = document.querySelector('.stat-item:nth-child(3) .stat-value');
@@ -937,10 +937,10 @@
         }
     }
 
-    // Sayfa yÃ¼klendiÄŸinde tamamlanan videolarÄ± yÃ¼kle
+    // Sayfa yüklendiğinde tamamlanan videoları yükle
     document.addEventListener('DOMContentLoaded', () => {
         loadCompletedVideos();
     });
 
-    console.log('Visioner Akademi loaded successfully!');
+    console.log('Vekarer Akademi loaded successfully!');
 </script>

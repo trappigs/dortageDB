@@ -416,7 +416,7 @@
                                         <div class="timeline-title">Randevu - @randevu.RandevuTipi</div>
                                         <div class="timeline-date">@randevu.RandevuZaman.ToString("dd MMMM yyyy, HH:mm")</div>
                                         <div class="timeline-details">
-                                            Visioner: @randevu.Visioner.Ad @randevu.Visioner.Soyad
+                                            Vekarer: @randevu.Vekarer.Ad @randevu.Vekarer.Soyad
                                             <br />
                                             Durum: @switch (randevu.RandevuDurum)
                                             {
@@ -453,7 +453,7 @@
                                                 @(satis.Taksit ? "Taksitli" : "Peşin") |
                                                 Komisyon: ₺@satis.OdenecekKomisyon.ToString("N0")
                                                 <br />
-                                                📍 @satis.Bolge | Visioner: @satis.Visioner.Ad @satis.Visioner.Soyad
+                                                📍 @satis.Bolge | Vekarer: @satis.Vekarer.Ad @satis.Vekarer.Soyad
                                             </div>
                                         </div>
                                     </div>

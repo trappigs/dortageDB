@@ -10,10 +10,10 @@ namespace dortageDB.Entities
         public int SatilanMusteriID { get; set; }
         public Musteri Musteri { get; set; } = null!;
 
-        // Visioner İlişkisi
+        // Vekarer İlişkisi
         [Required]
-        public int VisionerID { get; set; }
-        public AppUser Visioner { get; set; } = null!;
+        public int VekarerID { get; set; }
+        public AppUser Vekarer { get; set; } = null!;
 
         // Proje İlişkisi (Opsiyonel)
         public int? ProjeID { get; set; }

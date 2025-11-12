@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace dortageDB.ViewModels
 {
@@ -13,7 +13,7 @@ namespace dortageDB.ViewModels
         public bool Kvkk { get; set; }
         public bool Pazarlama { get; set; }
         [Required, StringLength(255)] public string Sifre { get; set; } = null!;
-        public bool VisionerMi { get; set; } = true;
-        public IList<string> Roller { get; set; } = new List<string>(); // "admin","visioner" vb.
+        public bool VekarerMi { get; set; } = true;
+        public IList<string> Roller { get; set; } = new List<string>(); // "admin","Vekarer" vb.
     }
 }

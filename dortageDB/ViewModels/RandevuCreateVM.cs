@@ -1,15 +1,15 @@
-ï»¿// ViewModels/Randevu/RandevuCreateVM.cs
+// ViewModels/Randevu/RandevuCreateVM.cs
 using System.ComponentModel.DataAnnotations;
 
 namespace dortageDB.ViewModels
 {
     public class RandevuCreateVM
     {
-        // Mevcut mÃ¼ÅŸteri seÃ§imi
+        // Mevcut müþteri seçimi
         public int? MusteriId { get; set; }
 
-        // YENÄ° MÃœÅžTERÄ° BÄ°LGÄ°LERÄ° (opsiyonel)
-        public bool YeniMusteri { get; set; } // Checkbox iÃ§in
+        // YENÝ MÜÞTERÝ BÝLGÝLERÝ (opsiyonel)
+        public bool YeniMusteri { get; set; } // Checkbox için
         [StringLength(100)] public string? YeniMusteriAd { get; set; }
         [StringLength(100)] public string? YeniMusteriSoyad { get; set; }
         [StringLength(15)] public string? YeniMusteriTelefon { get; set; }
@@ -20,6 +20,6 @@ namespace dortageDB.ViewModels
         [StringLength(500)] public string? Aciklama { get; set; }
         [Required] public DateTime RandevuZaman { get; set; }
         [Required, StringLength(50)] public string RandevuTipi { get; set; } = null!;
-        public int? VisionerID { get; set; }
+        public int? VekarerID { get; set; }
     }
 }

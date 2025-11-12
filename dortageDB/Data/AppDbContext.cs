@@ -8,7 +8,7 @@ namespace dortageDB.Data
 {
     public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>
     {
-        public DbSet<VisionerProfile> VisionerProfiles => Set<VisionerProfile>();
+        public DbSet<VekarerProfile> VekarerProfiles => Set<VekarerProfile>();
         public DbSet<Musteri> Musteriler => Set<Musteri>();
         public DbSet<Randevu> Randevular => Set<Randevu>();
         public DbSet<Satis> Satislar => Set<Satis>();
@@ -35,16 +35,16 @@ namespace dortageDB.Data
             });
 
             // ============================================
-            // VİSİONER PROFILE
+            // VEKARER PROFILE
             // ============================================
-            b.Entity<VisionerProfile>(entity =>
+            b.Entity<VekarerProfile>(entity =>
             {
-                entity.ToTable("VisionerProfiles");
+                entity.ToTable("VekarerProfiles");
                 entity.HasKey(tp => tp.UserId);
 
                 entity.HasOne(tp => tp.User)
-                    .WithOne(u => u.VisionerProfile)
-                    .HasForeignKey<VisionerProfile>(tp => tp.UserId)
+                    .WithOne(u => u.VekarerProfile)
+                    .HasForeignKey<VekarerProfile>(tp => tp.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.Property(tp => tp.TotalCommission).HasPrecision(18, 2);
@@ -58,16 +58,16 @@ namespace dortageDB.Data
             {
                 entity.HasKey(m => m.IdMusteri);
 
-                // Visioner İlişkisi
-                entity.HasOne(m => m.Visioner)
+                // Vekarer İlişkisi
+                entity.HasOne(m => m.Vekarer)
                     .WithMany(u => u.Musteriler)
-                    .HasForeignKey(m => m.VisionerID)
+                    .HasForeignKey(m => m.VekarerID)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasIndex(m => m.Telefon).IsUnique();
                 entity.HasIndex(m => m.TcNo).IsUnique();
                 entity.HasIndex(m => m.EklenmeTarihi);
-                entity.HasIndex(m => m.VisionerID);
+                entity.HasIndex(m => m.VekarerID);
 
                 entity.Property(m => m.EklenmeTarihi).HasDefaultValueSql("GETDATE()");
             });
@@ -85,10 +85,10 @@ namespace dortageDB.Data
                     .HasForeignKey(r => r.MusteriId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                // Visioner İlişkisi
-                entity.HasOne(r => r.Visioner)
+                // Vekarer İlişkisi
+                entity.HasOne(r => r.Vekarer)
                     .WithMany(u => u.Randevular)
-                    .HasForeignKey(r => r.VisionerID)
+                    .HasForeignKey(r => r.VekarerID)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 // Proje İlişkisi
@@ -101,7 +101,7 @@ namespace dortageDB.Data
                 entity.Property(r => r.RandevuDurum).HasConversion<string>();
 
                 // İndeksler
-                entity.HasIndex(r => new { VisionerID = r.VisionerID, r.RandevuZaman });
+                entity.HasIndex(r => new { VekarerID = r.VekarerID, r.RandevuZaman });
                 entity.HasIndex(r => new { r.RandevuDurum, r.RandevuZaman });
                 entity.HasIndex(r => r.MusteriId);
 
@@ -126,10 +126,10 @@ namespace dortageDB.Data
                     .HasForeignKey(s => s.SatilanMusteriID)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                // Visioner İlişkisi
-                entity.HasOne(s => s.Visioner)
+                // Vekarer İlişkisi
+                entity.HasOne(s => s.Vekarer)
                     .WithMany(u => u.Satislar)
-                    .HasForeignKey(s => s.VisionerID)
+                    .HasForeignKey(s => s.VekarerID)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 // Proje İlişkisi
@@ -139,7 +139,7 @@ namespace dortageDB.Data
                     .OnDelete(DeleteBehavior.SetNull);
 
                 // İndeksler
-                entity.HasIndex(s => new { VisionerID = s.VisionerID, s.SatilmaTarihi });
+                entity.HasIndex(s => new { VekarerID = s.VekarerID, s.SatilmaTarihi });
                 entity.HasIndex(s => s.SatilanMusteriID);
                 entity.HasIndex(s => s.SatilmaTarihi);
 

@@ -1,4 +1,4 @@
-/* Visioner Nedir Sayfası Stilleri */
+/* vekarer Nedir Sayfası Stilleri */
 
 :root {
     --primary-color: #000a68;
@@ -24,7 +24,7 @@ html, body {
 }
 
 /* Hero Section */
-.visioner-hero {
+.vekarer-hero {
     background: linear-gradient(135deg, var(--primary-color) 0%, #001a8a 100%);
     padding: 100px 0 80px;
     color: var(--white);
@@ -33,7 +33,7 @@ html, body {
     overflow: hidden;
 }
 
-.visioner-hero::before {
+.vekarer-hero::before {
     content: '';
     position: absolute;
     top: 0;
@@ -103,8 +103,8 @@ html, body {
     color: var(--primary-color);
 }
 
-/* Visioner Tanım Section */
-.visioner-tanim-section {
+/* vekarer Tanım Section */
+.vekarer-tanim-section {
     padding: 80px 0;
     background: var(--white);
 }
@@ -658,7 +658,7 @@ html, body {
     }
 
     /* Tüm section'ların padding'ini azalt */
-    .visioner-tanim-section,
+    .vekarer-tanim-section,
     .nasil-calisir-section,
     .avantajlar-section,
     .komisyon-section,
@@ -670,7 +670,7 @@ html, body {
         padding: 60px 0;
     }
 
-    .visioner-hero {
+    .vekarer-hero {
         padding: 100px 0 50px;
     }
 }

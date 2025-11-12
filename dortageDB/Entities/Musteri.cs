@@ -22,12 +22,12 @@ namespace dortageDB.Entities
 
         public DateTime EklenmeTarihi { get; set; } = DateTime.Now;
 
-        // Müşteriyi ekleyen visioner
+        // Müşteriyi ekleyen vekarer
         [Required]
-        public int VisionerID { get; set; }
+        public int VekarerID { get; set; }
 
         // Navigation Properties
-        public AppUser Visioner { get; set; } = null!;
+        public AppUser Vekarer { get; set; } = null!;
         public ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
         public ICollection<Satis> Satislar { get; set; } = new List<Satis>();
     }

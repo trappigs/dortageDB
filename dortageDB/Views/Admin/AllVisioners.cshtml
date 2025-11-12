@@ -1,10 +1,10 @@
-ï»¿@{
-    ViewData["Title"] = "TÃ¼m Visionerlar";
-    Layout = "_LayoutVisioner";
-    var visionerData = ViewBag.VisionerData as List<dynamic>;
+@{
+    ViewData["Title"] = "Tüm Vekarerlar";
+    Layout = "_LayoutVekarer";
+    var VekarerData = ViewBag.VekarerData as List<dynamic>;
 }
 
-<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Vekarer-main-panel.css" asp-append-version="true" />
 
 <style>
     .page-header {
@@ -51,7 +51,7 @@
             background: #e5e7eb;
         }
 
-    .btn-new-visioner {
+    .btn-new-Vekarer {
         background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         color: white;
         padding: 12px 24px;
@@ -66,7 +66,7 @@
         cursor: pointer;
     }
 
-        .btn-new-visioner:hover {
+        .btn-new-Vekarer:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
         }
@@ -99,13 +99,13 @@
         color: #9ca3af;
     }
 
-    .visioners-grid {
+    .Vekarers-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 20px;
     }
 
-    .visioner-card {
+    .Vekarer-card {
         background: white;
         border-radius: 12px;
         padding: 24px;
@@ -114,19 +114,19 @@
         border: 1px solid #e5e7eb;
     }
 
-        .visioner-card:hover {
+        .Vekarer-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
-    .visioner-header {
+    .Vekarer-header {
         display: flex;
         align-items: center;
         gap: 16px;
         margin-bottom: 20px;
     }
 
-    .visioner-avatar {
+    .Vekarer-avatar {
         width: 64px;
         height: 64px;
         border-radius: 50%;
@@ -140,18 +140,18 @@
         flex-shrink: 0;
     }
 
-    .visioner-info {
+    .Vekarer-info {
         flex: 1;
     }
 
-    .visioner-name {
+    .Vekarer-name {
         font-size: 18px;
         font-weight: 700;
         color: #1f2937;
         margin-bottom: 4px;
     }
 
-    .visioner-code {
+    .Vekarer-code {
         font-size: 12px;
         color: #6b7280;
         font-family: 'Courier New', monospace;
@@ -390,7 +390,7 @@
     }
 
     @@media (max-width: 768px) {
-        .visioners-grid
+        .Vekarers-grid
 
     {
         grid-template-columns: 1fr;
@@ -407,22 +407,22 @@
     }
 </style>
 
-<div class="visioner-main-panel">
+<div class="Vekarer-main-panel">
     <div class="main-content">
         <div class="page-header">
             <div>
                 <h1 class="page-title">
-                    TÃ¼m Visionerlar
+                    Tüm Vekarerlar
                     <span class="admin-badge">ADMIN</span>
                 </h1>
-                <p style="color: #6b7280;">Sistemde toplam @(visionerData?.Count ?? 0) visioner</p>
+                <p style="color: #6b7280;">Sistemde toplam @(VekarerData?.Count ?? 0) Vekarer</p>
             </div>
             <div style="display: flex; gap: 12px;">
-                <button type="button" class="btn-new-visioner" onclick="openCreateModal()">
-                    â• Yeni Visioner
+                <button type="button" class="btn-new-Vekarer" onclick="openCreateModal()">
+                    ? Yeni Vekarer
                 </button>
                 <a asp-action="Index" class="btn-back">
-                    â† Dashboard'a DÃ¶n
+                    ‹ Dashboard'a Dön
                 </a>
             </div>
         </div>
@@ -433,14 +433,14 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <path d="m21 21-4.35-4.35"></path>
                 </svg>
-                <input type="text" id="searchInput" placeholder="Visioner ara (ad, email, telefon)...">
+                <input type="text" id="searchInput" placeholder="Vekarer ara (ad, email, telefon)...">
             </div>
         </div>
 
-        @if (visionerData != null && visionerData.Any())
+        @if (VekarerData != null && VekarerData.Any())
         {
-            <div class="visioners-grid" id="visionersGrid">
-                @foreach (var item in visionerData)
+            <div class="Vekarers-grid" id="VekarersGrid">
+                @foreach (var item in VekarerData)
                 {
                     var user = item.User as AppUser;
                     var randevuCount = (int)item.RandevuCount;
@@ -451,7 +451,7 @@
                     var usedReferralCode = item.UsedReferralCode as string;
                     var initials = $"{user.Ad?.Substring(0, 1)}{user.Soyad?.Substring(0, 1)}";
 
-                    <div class="visioner-card" data-search="@user.Ad @user.Soyad @user.Email @user.PhoneNumber @referralCode @usedReferralCode">
+                    <div class="Vekarer-card" data-search="@user.Ad @user.Soyad @user.Email @user.PhoneNumber @referralCode @usedReferralCode">
                         @if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.Now)
                         {
                             <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -459,14 +459,14 @@
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
                                 </svg>
-                                DEAKTÄ°F HESAP
+                                DEAKTİF HESAP
                             </div>
                         }
-                        <div class="visioner-header">
-                            <div class="visioner-avatar">@initials</div>
-                            <div class="visioner-info">
-                                <div class="visioner-name">@user.Ad @user.Soyad</div>
-                                <div class="visioner-code">TRK@(user.Id)</div>
+                        <div class="Vekarer-header">
+                            <div class="Vekarer-avatar">@initials</div>
+                            <div class="Vekarer-info">
+                                <div class="Vekarer-name">@user.Ad @user.Soyad</div>
+                                <div class="Vekarer-code">TRK@(user.Id)</div>
                             </div>
                         </div>
 
@@ -513,36 +513,36 @@
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value">@satisCount</div>
-                                <div class="stat-label">SatÄ±ÅŸ</div>
+                                <div class="stat-label">Satış</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value">@((satisCount > 0 ? (decimal)randevuCount / satisCount * 100 : 0).ToString("F0"))%</div>
-                                <div class="stat-label">BaÅŸarÄ±</div>
+                                <div class="stat-label">Başarı</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-value">â‚º@totalCiro.ToString("N0")</div>
+                                <div class="stat-value">?@totalCiro.ToString("N0")</div>
                                 <div class="stat-label">Ciro</div>
                             </div>
                         </div>
 
                         <div class="commission-badge" style="margin-top: 16px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
-                            â‚º@totalCiro.ToString("N0") Ciro
+                            ?@totalCiro.ToString("N0") Ciro
                         </div>
 
                         <div class="commission-badge" style="margin-top: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                            â‚º@totalKomisyon.ToString("N0") Komisyon
+                            ?@totalKomisyon.ToString("N0") Komisyon
                         </div>
 
                         @if (!user.LockoutEnd.HasValue || user.LockoutEnd.Value <= DateTimeOffset.Now)
                         {
                             <button class="btn-deactivate" onclick="openDeactivateModal(@user.Id, '@user.Ad @user.Soyad')" style="margin-top: 12px; width: 100%; padding: 10px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                                ğŸš« HesabÄ± Deaktif Et
+                                ?? Hesabı Deaktif Et
                             </button>
                         }
                         else
                         {
                             <button class="btn-reactivate" onclick="openReactivateModal(@user.Id, '@user.Ad @user.Soyad')" style="margin-top: 12px; width: 100%; padding: 10px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                                âœ… HesabÄ± AktifleÅŸtir
+                                ? Hesabı Aktifleştir
                             </button>
                         }
                     </div>
@@ -552,22 +552,22 @@
         else
         {
             <div class="empty-state">
-                <div class="empty-icon">ğŸ‘¥</div>
-                <h3 style="color: #1f2937; margin-bottom: 8px;">HenÃ¼z visioner yok</h3>
-                <p style="color: #6b7280;">Sistemde kayÄ±tlÄ± visioner bulunmuyor</p>
+                <div class="empty-icon">??</div>
+                <h3 style="color: #1f2937; margin-bottom: 8px;">Henüz Vekarer yok</h3>
+                <p style="color: #6b7280;">Sistemde kayıtlı Vekarer bulunmuyor</p>
             </div>
         }
     </div>
 </div>
 
-<!-- Create Visioner Modal -->
+<!-- Create Vekarer Modal -->
 <div class="modal-overlay" id="createModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>â• Yeni Visioner Ekle</h3>
-            <button type="button" class="modal-close" onclick="closeCreateModal()">Ã—</button>
+            <h3>? Yeni Vekarer Ekle</h3>
+            <button type="button" class="modal-close" onclick="closeCreateModal()">×</button>
         </div>
-        <form asp-controller="Admin" asp-action="CreateVisioner" method="post" id="createVisionerForm">
+        <form asp-controller="Admin" asp-action="CreateVekarer" method="post" id="createVekarerForm">
             @Html.AntiForgeryToken()
             <div class="modal-body">
                 @if (TempData["SuccessMessage"] != null)
@@ -607,14 +607,14 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Åehir *</label>
-                        <input type="text" name="Sehir" required placeholder="Åehir" maxlength="100">
+                        <label>Şehir *</label>
+                        <input type="text" name="Sehir" required placeholder="Şehir" maxlength="100">
                     </div>
                     <div class="form-group">
                         <label>Cinsiyet *</label>
                         <select name="Cinsiyet" required>
-                            <option value="">SeÃ§in</option>
-                            <option value="false">KadÄ±n</option>
+                            <option value="">Seçin</option>
+                            <option value="false">Kadın</option>
                             <option value="true">Erkek</option>
                         </select>
                     </div>
@@ -622,31 +622,31 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Åifre *</label>
+                        <label>Şifre *</label>
                         <input type="password" name="Password" required placeholder="Minimum 6 karakter" minlength="6">
                     </div>
                     <div class="form-group">
-                        <label>Åifre Tekrar *</label>
-                        <input type="password" name="ConfirmPassword" required placeholder="Åifre tekrar" minlength="6">
+                        <label>Şifre Tekrar *</label>
+                        <input type="password" name="ConfirmPassword" required placeholder="Şifre tekrar" minlength="6">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeCreateModal()">Ä°ptal</button>
+                <button type="button" class="btn-modal btn-cancel" onclick="closeCreateModal()">İptal</button>
                 <button type="submit" class="btn-modal btn-save">Kaydet</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Deactivate Visioner Modal -->
+<!-- Deactivate Vekarer Modal -->
 <div class="modal-overlay" id="deactivateModal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
-            <h3>ğŸš« HesabÄ± Deaktif Et</h3>
-            <button type="button" class="modal-close" onclick="closeDeactivateModal()">Ã—</button>
+            <h3>?? Hesabı Deaktif Et</h3>
+            <button type="button" class="modal-close" onclick="closeDeactivateModal()">×</button>
         </div>
-        <form asp-controller="Admin" asp-action="DeactivateVisioner" method="post" id="deactivateForm">
+        <form asp-controller="Admin" asp-action="DeactivateVekarer" method="post" id="deactivateForm">
             @Html.AntiForgeryToken()
             <input type="hidden" name="id" id="deactivateUserId" />
             <div class="modal-body">
@@ -660,34 +660,34 @@
                         <h4 style="margin: 0; color: #991b1b; font-size: 16px;">Dikkat!</h4>
                     </div>
                     <p style="color: #7f1d1d; margin: 0; font-size: 14px; line-height: 1.5;">
-                        <strong id="deactivateUserName"></strong> kullanÄ±cÄ±sÄ±nÄ±n hesabÄ±nÄ± deaktif etmek Ã¼zeresiniz.
+                        <strong id="deactivateUserName"></strong> kullanıcısının hesabını deaktif etmek üzeresiniz.
                     </p>
                     <p style="color: #7f1d1d; margin: 8px 0 0 0; font-size: 14px; line-height: 1.5;">
-                        Bu kullanÄ±cÄ± sisteme giriÅŸ yapamayacak ve tÃ¼m eriÅŸimleri engellenecektir.
+                        Bu kullanıcı sisteme giriş yapamayacak ve tüm erişimleri engellenecektir.
                     </p>
                 </div>
                 <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                    Bu iÅŸlemi gerÃ§ekleÅŸtirmek istediÄŸinizden emin misiniz?
+                    Bu işlemi gerçekleştirmek istediğinizden emin misiniz?
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeDeactivateModal()">Ä°ptal</button>
+                <button type="button" class="btn-modal btn-cancel" onclick="closeDeactivateModal()">İptal</button>
                 <button type="button" class="btn-modal" onclick="confirmDeactivate()" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white;">
-                    ğŸš« Deaktif Et
+                    ?? Deaktif Et
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Reactivate Visioner Modal -->
+<!-- Reactivate Vekarer Modal -->
 <div class="modal-overlay" id="reactivateModal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
-            <h3>âœ… HesabÄ± AktifleÅŸtir</h3>
-            <button type="button" class="modal-close" onclick="closeReactivateModal()">Ã—</button>
+            <h3>? Hesabı Aktifleştir</h3>
+            <button type="button" class="modal-close" onclick="closeReactivateModal()">×</button>
         </div>
-        <form asp-controller="Admin" asp-action="ReactivateVisioner" method="post" id="reactivateForm">
+        <form asp-controller="Admin" asp-action="ReactivateVekarer" method="post" id="reactivateForm">
             @Html.AntiForgeryToken()
             <input type="hidden" name="id" id="reactivateUserId" />
             <div class="modal-body">
@@ -697,23 +697,23 @@
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                         </svg>
-                        <h4 style="margin: 0; color: #065f46; font-size: 16px;">Hesap AktifleÅŸtirme</h4>
+                        <h4 style="margin: 0; color: #065f46; font-size: 16px;">Hesap Aktifleştirme</h4>
                     </div>
                     <p style="color: #064e3b; margin: 0; font-size: 14px; line-height: 1.5;">
-                        <strong id="reactivateUserName"></strong> kullanÄ±cÄ±sÄ±nÄ±n hesabÄ±nÄ± aktifleÅŸtirmek Ã¼zeresiniz.
+                        <strong id="reactivateUserName"></strong> kullanıcısının hesabını aktifleştirmek üzeresiniz.
                     </p>
                     <p style="color: #064e3b; margin: 8px 0 0 0; font-size: 14px; line-height: 1.5;">
-                        Bu kullanÄ±cÄ± tekrar sisteme giriÅŸ yapabilecek ve tÃ¼m yetkileri geri gelecektir.
+                        Bu kullanıcı tekrar sisteme giriş yapabilecek ve tüm yetkileri geri gelecektir.
                     </p>
                 </div>
                 <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                    Bu iÅŸlemi gerÃ§ekleÅŸtirmek istediÄŸinizden emin misiniz?
+                    Bu işlemi gerçekleştirmek istediğinizden emin misiniz?
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeReactivateModal()">Ä°ptal</button>
+                <button type="button" class="btn-modal btn-cancel" onclick="closeReactivateModal()">İptal</button>
                 <button type="button" class="btn-modal" onclick="confirmReactivate()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
-                    âœ… AktifleÅŸtir
+                    ? Aktifleştir
                 </button>
             </div>
         </form>
@@ -723,8 +723,8 @@
 <script>
     // Create Modal functions
     function openCreateModal() {
-        console.log('â• Create modal aÃ§Ä±lÄ±yor');
-        document.getElementById('createVisionerForm').reset();
+        console.log('? Create modal açılıyor');
+        document.getElementById('createVekarerForm').reset();
         document.getElementById('createModal').classList.add('active');
     }
 
@@ -735,7 +735,7 @@
     // Search functionality
     document.getElementById('searchInput')?.addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase();
-        const cards = document.querySelectorAll('.visioner-card');
+        const cards = document.querySelectorAll('.Vekarer-card');
 
         cards.forEach(card => {
             const searchData = card.getAttribute('data-search').toLowerCase();
@@ -786,14 +786,14 @@
         });
 
         // Form validation - password match
-        const form = document.getElementById('createVisionerForm');
+        const form = document.getElementById('createVekarerForm');
         form?.addEventListener('submit', function(e) {
             const password = form.querySelector('input[name="Password"]').value;
             const confirmPassword = form.querySelector('input[name="ConfirmPassword"]').value;
 
             if (password !== confirmPassword) {
                 e.preventDefault();
-                alert('Åifreler eÅŸleÅŸmiyor!');
+                alert('Şifreler eşleşmiyor!');
                 return false;
             }
         });
@@ -804,7 +804,7 @@
     let deactivateUserName = '';
 
     function openDeactivateModal(userId, userName) {
-        console.log('ğŸš« Deactivate modal aÃ§Ä±lÄ±yor:', userId, userName);
+        console.log('?? Deactivate modal açılıyor:', userId, userName);
         deactivateUserId = userId;
         deactivateUserName = userName;
         document.getElementById('deactivateUserName').textContent = userName;
@@ -820,7 +820,7 @@
 
     function confirmDeactivate() {
         if (deactivateUserId) {
-            console.log('âœ… Deaktif etme onaylandÄ±:', deactivateUserId);
+            console.log('? Deaktif etme onaylandı:', deactivateUserId);
             document.getElementById('deactivateForm').submit();
         }
     }
@@ -830,7 +830,7 @@
     let reactivateUserName = '';
 
     function openReactivateModal(userId, userName) {
-        console.log('âœ… Reactivate modal aÃ§Ä±lÄ±yor:', userId, userName);
+        console.log('? Reactivate modal açılıyor:', userId, userName);
         reactivateUserId = userId;
         reactivateUserName = userName;
         document.getElementById('reactivateUserName').textContent = userName;
@@ -846,7 +846,7 @@
 
     function confirmReactivate() {
         if (reactivateUserId) {
-            console.log('âœ… AktifleÅŸtirme onaylandÄ±:', reactivateUserId);
+            console.log('? Aktifleştirme onaylandı:', reactivateUserId);
             document.getElementById('reactivateForm').submit();
         }
     }

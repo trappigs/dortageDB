@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace dortageDB.Controllers
 {
-    public class VisionerAkademiController : Controller
+    public class VekarerAkademiController : Controller
     {
         public IActionResult Index()
         {

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace dortageDB.Controllers
 {
-    [Authorize(Roles = "visioner,admin")]
+    [Authorize(Roles = "Vekarer,admin")]
     public class RandevuController : Controller
     {
         private readonly AppDbContext _context;
@@ -37,14 +37,14 @@ namespace dortageDB.Controllers
 
             var randevular = await _context.Randevular
                 .Include(r => r.Musteri)
-                .Include(r => r.Visioner)
+                .Include(r => r.Vekarer)
                 .OrderBy(r => r.RandevuZaman)
                 .ToListAsync();
 
             // Sadece kendi randevularýný göster (admin hariç)
             if (!User.IsInRole("admin"))
             {
-                randevular = randevular.Where(r => r.VisionerID == user.Id).ToList();
+                randevular = randevular.Where(r => r.VekarerID == user.Id).ToList();
             }
 
             return View(randevular);
@@ -62,7 +62,7 @@ namespace dortageDB.Controllers
             // Sadece kendi müþterilerini göster (admin hariç)
             var musteriQuery = User.IsInRole("admin")
                 ? _context.Musteriler
-                : _context.Musteriler.Where(m => m.VisionerID == user.Id);
+                : _context.Musteriler.Where(m => m.VekarerID == user.Id);
 
             var musteriler = await musteriQuery
                 .OrderBy(m => m.Ad)
@@ -140,7 +140,7 @@ namespace dortageDB.Controllers
                         Telefon = cleanPhone,
                         Cinsiyet = model.YeniMusteriCinsiyet,
                         TcNo = model.YeniMusteriTcNo?.Trim(),
-                        VisionerID = user!.Id
+                        VekarerID = user!.Id
                     };
 
                     _context.Musteriler.Add(yeniMusteri);
@@ -177,7 +177,7 @@ namespace dortageDB.Controllers
                     Aciklama = model.Aciklama,
                     RandevuZaman = model.RandevuZaman,
                     RandevuTipi = model.RandevuTipi,
-                    VisionerID = user!.Id,
+                    VekarerID = user!.Id,
                     RandevuDurum = RandevuDurum.OnayBekliyor
                 };
 
@@ -196,7 +196,7 @@ namespace dortageDB.Controllers
                     var emailBody = $@"
                         <h2>Yeni Randevu Bilgileri</h2>
                         <p><strong>Randevu ID:</strong> {randevu.RandevuID}</p>
-                        <p><strong>Visioner:</strong> {user.Ad} {user.Soyad} ({user.Email})</p>
+                        <p><strong>Vekarer:</strong> {user.Ad} {user.Soyad} ({user.Email})</p>
                         <p><strong>Müþteri:</strong> {musteri?.Ad} {musteri?.Soyad}</p>
                         <p><strong>Telefon:</strong> {musteri?.Telefon}</p>
                         <p><strong>Tarih/Saat:</strong> {randevu.RandevuZaman:dd.MM.yyyy HH:mm}</p>
@@ -244,7 +244,7 @@ namespace dortageDB.Controllers
 
             // Sadece kendi randevusunu düzenleyebilir (admin hariç)
             var user = await _userManager.GetUserAsync(User);
-            if (!User.IsInRole("admin") && randevu.VisionerID != user.Id)
+            if (!User.IsInRole("admin") && randevu.VekarerID != user.Id)
             {
                 TempData["ErrorMessage"] = "Bu randevuyu düzenleme yetkiniz yok.";
                 return RedirectToAction(nameof(Index));
@@ -256,7 +256,7 @@ namespace dortageDB.Controllers
                 Aciklama = randevu.Aciklama,
                 RandevuZaman = randevu.RandevuZaman,
                 RandevuTipi = randevu.RandevuTipi,
-                VisionerID = randevu.VisionerID
+                VekarerID = randevu.VekarerID
             };
 
             await LoadMusterilerSelectList();
@@ -287,7 +287,7 @@ namespace dortageDB.Controllers
 
                 // Yetki kontrolü
                 var user = await _userManager.GetUserAsync(User);
-                if (!User.IsInRole("admin") && randevu.VisionerID != user.Id)
+                if (!User.IsInRole("admin") && randevu.VekarerID != user.Id)
                 {
                     TempData["ErrorMessage"] = "Bu randevuyu düzenleme yetkiniz yok.";
                     return RedirectToAction(nameof(Index));
@@ -370,7 +370,7 @@ namespace dortageDB.Controllers
 
             var randevu = await _context.Randevular
                 .Include(r => r.Musteri)
-                .Include(r => r.Visioner)
+                .Include(r => r.Vekarer)
                 .FirstOrDefaultAsync(r => r.RandevuID == id);
 
             if (randevu == null)
@@ -380,7 +380,7 @@ namespace dortageDB.Controllers
 
             // Yetki kontrolü
             var user = await _userManager.GetUserAsync(User);
-            if (!User.IsInRole("admin") && randevu.VisionerID != user.Id)
+            if (!User.IsInRole("admin") && randevu.VekarerID != user.Id)
             {
                 TempData["ErrorMessage"] = "Bu randevuyu silme yetkiniz yok.";
                 return RedirectToAction(nameof(Index));
@@ -404,7 +404,7 @@ namespace dortageDB.Controllers
 
                 // Yetki kontrolü
                 var user = await _userManager.GetUserAsync(User);
-                if (!User.IsInRole("admin") && randevu.VisionerID != user.Id)
+                if (!User.IsInRole("admin") && randevu.VekarerID != user.Id)
                 {
                     TempData["ErrorMessage"] = "Bu randevuyu silme yetkiniz yok.";
                     return RedirectToAction(nameof(Index));
@@ -435,7 +435,7 @@ namespace dortageDB.Controllers
 
             var randevu = await _context.Randevular
                 .Include(r => r.Musteri)
-                .Include(r => r.Visioner)
+                .Include(r => r.Vekarer)
                 .FirstOrDefaultAsync(r => r.RandevuID == id);
 
             if (randevu == null)
@@ -453,7 +453,7 @@ namespace dortageDB.Controllers
             // Sadece kendi müþterilerini göster (admin hariç)
             var musteriQuery = User.IsInRole("admin")
                 ? _context.Musteriler
-                : _context.Musteriler.Where(m => m.VisionerID == user!.Id);
+                : _context.Musteriler.Where(m => m.VekarerID == user!.Id);
 
             var musteriler = await musteriQuery
                 .OrderBy(m => m.Ad)

@@ -1,4 +1,4 @@
-ï»¿using dortageDB.Data;
+using dortageDB.Data;
 using dortageDB.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace dortageDB.Controllers
 {
-    [Authorize(Roles = "visioner,admin")]
+    [Authorize(Roles = "Vekarer,admin")]
     public class SatisController : Controller
     {
         private readonly AppDbContext _context;
@@ -24,7 +24,7 @@ namespace dortageDB.Controllers
             _logger = logger;
         }
 
-        // GET: Satis/Index - VisionerÄ±n kendi satÄ±ÅŸlarÄ±nÄ± listele
+        // GET: Satis/Index - Vekarerın kendi satışlarını listele
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -33,15 +33,15 @@ namespace dortageDB.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // Sadece bu visionera ait satÄ±ÅŸlarÄ± getir
+            // Sadece bu Vekarera ait satışları getir
             var satislar = await _context.Satislar
                 .Include(s => s.Musteri)
-                .Include(s => s.Visioner)
-                .Where(s => s.VisionerID == currentUser.Id)
+                .Include(s => s.Vekarer)
+                .Where(s => s.VekarerID == currentUser.Id)
                 .OrderByDescending(s => s.SatilmaTarihi)
                 .ToListAsync();
 
-            // Ä°statistikler
+            // İstatistikler
             var totalSales = satislar.Count;
             var totalRevenue = satislar.Sum(s => s.ToplamSatisFiyati);
             var totalCommission = satislar.Sum(s => s.OdenecekKomisyon);
@@ -49,7 +49,7 @@ namespace dortageDB.Controllers
             var taksitCount = satislar.Count(s => s.Taksit);
             var pesinCount = totalSales - taksitCount;
 
-            // Bu ay satÄ±ÅŸlarÄ±
+            // Bu ay satışları
             var thisMonthStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             var thisMonthSales = satislar.Count(s => s.SatilmaTarihi >= thisMonthStart);
             var thisMonthRevenue = satislar
@@ -68,7 +68,7 @@ namespace dortageDB.Controllers
             return View(satislar);
         }
 
-        // GET: Satis/Details/5 - SatÄ±ÅŸ detaylarÄ±nÄ± gÃ¶rÃ¼ntÃ¼le
+        // GET: Satis/Details/5 - Satış detaylarını görüntüle
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -84,7 +84,7 @@ namespace dortageDB.Controllers
 
             var satis = await _context.Satislar
                 .Include(s => s.Musteri)
-                .Include(s => s.Visioner)
+                .Include(s => s.Vekarer)
                 .FirstOrDefaultAsync(s => s.SatisID == id);
 
             if (satis == null)
@@ -92,10 +92,10 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
-            // Sadece kendi satÄ±ÅŸÄ±nÄ± gÃ¶rebilir (admin hariÃ§)
-            if (!User.IsInRole("admin") && satis.VisionerID != currentUser.Id)
+            // Sadece kendi satışını görebilir (admin hariç)
+            if (!User.IsInRole("admin") && satis.VekarerID != currentUser.Id)
             {
-                _logger.LogWarning($"âš ï¸ Yetkisiz eriÅŸim denemesi: User {currentUser.Id} tried to access sale {id}");
+                _logger.LogWarning($"?? Yetkisiz erişim denemesi: User {currentUser.Id} tried to access sale {id}");
                 return Forbid();
             }
 

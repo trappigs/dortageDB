@@ -22,47 +22,47 @@ namespace dortageDB.Controllers
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userId = int.Parse(userIdString!);
 
-            // Toplam Müþteri Sayýsý (bu visionerýn eklediði müþteriler)
+            // Toplam Müþteri Sayýsý (bu Vekarerýn eklediði müþteriler)
             var totalCustomers = _context.Musteriler
-                .Where(m => m.VisionerID == userId)
+                .Where(m => m.VekarerID == userId)
                 .Count();
 
             // Toplam Satýþ Sayýsý
             var totalSales = _context.Satislar
-                .Where(s => s.VisionerID == userId)
+                .Where(s => s.VekarerID == userId)
                 .Count();
 
             // Toplam Komisyon
             var totalCommission = _context.Satislar
-                .Where(s => s.VisionerID == userId)
+                .Where(s => s.VekarerID == userId)
                 .Sum(s => (decimal?)s.OdenecekKomisyon) ?? 0;
 
             // Bekleyen Randevular
             var pendingAppointments = _context.Randevular
-                .Where(r => r.VisionerID == userId && r.RandevuDurum == RandevuDurum.OnayBekliyor)
+                .Where(r => r.VekarerID == userId && r.RandevuDurum == RandevuDurum.OnayBekliyor)
                 .Count();
 
             // Bu Ay Eklenen Müþteriler
             var thisMonthStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             var customersThisMonth = _context.Musteriler
-                .Where(m => m.VisionerID == userId && m.EklenmeTarihi >= thisMonthStart)
+                .Where(m => m.VekarerID == userId && m.EklenmeTarihi >= thisMonthStart)
                 .Count();
 
             // Bu Ay Yapýlan Satýþlar
             var salesThisMonth = _context.Satislar
-                .Where(s => s.VisionerID == userId && s.SatilmaTarihi >= thisMonthStart)
+                .Where(s => s.VekarerID == userId && s.SatilmaTarihi >= thisMonthStart)
                 .Count();
 
             // Bu Ay Komisyon
             var commissionThisMonth = _context.Satislar
-                .Where(s => s.VisionerID == userId && s.SatilmaTarihi >= thisMonthStart)
+                .Where(s => s.VekarerID == userId && s.SatilmaTarihi >= thisMonthStart)
                 .Sum(s => (decimal?)s.OdenecekKomisyon) ?? 0;
 
             // Bugünkü Randevular
             var today = DateTime.Today;
             var todayAppointments = _context.Randevular
-                .Where(r => r.VisionerID == userId &&
+                .Where(r => r.VekarerID == userId &&
                            r.RandevuDurum == RandevuDurum.OnayBekliyor &&
                            r.RandevuZaman.Date == today)
                 .Count();
@@ -72,19 +72,19 @@ namespace dortageDB.Controllers
             var lastMonthEnd = thisMonthStart.AddDays(-1);
 
             var customersLastMonth = _context.Musteriler
-                .Where(m => m.VisionerID == userId &&
+                .Where(m => m.VekarerID == userId &&
                            m.EklenmeTarihi >= lastMonthStart &&
                            m.EklenmeTarihi <= lastMonthEnd)
                 .Count();
 
             var salesLastMonth = _context.Satislar
-                .Where(s => s.VisionerID == userId &&
+                .Where(s => s.VekarerID == userId &&
                            s.SatilmaTarihi >= lastMonthStart &&
                            s.SatilmaTarihi <= lastMonthEnd)
                 .Count();
 
             var commissionLastMonth = _context.Satislar
-                .Where(s => s.VisionerID == userId &&
+                .Where(s => s.VekarerID == userId &&
                            s.SatilmaTarihi >= lastMonthStart &&
                            s.SatilmaTarihi <= lastMonthEnd)
                 .Sum(s => (decimal?)s.OdenecekKomisyon) ?? 0;
@@ -107,7 +107,7 @@ namespace dortageDB.Controllers
 
             // Son 5 satýþ
             var recentSales = _context.Satislar
-                .Where(s => s.VisionerID == userId)
+                .Where(s => s.VekarerID == userId)
                 .OrderByDescending(s => s.SatilmaTarihi)
                 .Take(3)
                 .Include(s => s.Musteri)
@@ -122,7 +122,7 @@ namespace dortageDB.Controllers
 
             // Son 5 randevu
             var recentAppointments = _context.Randevular
-                .Where(r => r.VisionerID == userId)
+                .Where(r => r.VekarerID == userId)
                 .OrderByDescending(r => r.OlusturulmaTarihi)
                 .Take(3)
                 .Include(r => r.Musteri)
@@ -137,7 +137,7 @@ namespace dortageDB.Controllers
 
             // Son 5 müþteri
             var recentCustomers = _context.Musteriler
-                .Where(m => m.VisionerID == userId)
+                .Where(m => m.VekarerID == userId)
                 .OrderByDescending(m => m.EklenmeTarihi)
                 .Take(3)
                 .Select(m => new
@@ -176,12 +176,12 @@ namespace dortageDB.Controllers
             return View();
         }
 
-        public IActionResult VisionerDashboard()
+        public IActionResult VekarerDashboard()
         {
             return View();
         }
 
-        public IActionResult VisionerAkademi()
+        public IActionResult VekarerAkademi()
         {
             // Aktif videolarý getir
             var videolar = _context.EgitimVideolar

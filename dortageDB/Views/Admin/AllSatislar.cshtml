@@ -553,18 +553,18 @@
                         @foreach (var satis in Model)
                         {
                             var musteriAd = $"{satis.Musteri.Ad} {satis.Musteri.Soyad}";
-                            var visionerAd = $"{satis.Visioner.Ad} {satis.Visioner.Soyad}";
+                            var vekarerAd = $"{satis.Vekarer.Ad} {satis.Vekarer.Soyad}";
                             var musteriTelefon = satis.Musteri.Telefon ?? "";
-                            var visionerTelefon = satis.Visioner.PhoneNumber ?? "";
+                            var vekarerTelefon = satis.Vekarer.PhoneNumber ?? "";
                             var musteriAdTelefon = $"{musteriAd} ({musteriTelefon})";
-                            var visionerAdTelefon = $"{visionerAd} ({visionerTelefon})";
+                            var vekarerAdTelefon = $"{vekarerAd} ({vekarerTelefon})";
                             var tarih = satis.SatilmaTarihi.ToString("dd MMM yyyy");
                             var bolge = satis.Bolge.Replace("\"", "&quot;").Replace("'", "&#39;");
                             var tutar = satis.ToplamSatisFiyati.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             var komisyon = satis.OdenecekKomisyon.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             var taksit = satis.Taksit ? "true" : "false";
 
-                            <tr data-search="@musteriAd @visionerAd @musteriTelefon @visionerTelefon" data-payment="@(satis.Taksit ? "taksit" : "pesin")">
+                            <tr data-search="@musteriAd @vekarerAd @musteriTelefon @vekarerTelefon" data-payment="@(satis.Taksit ? "taksit" : "pesin")">
                                 <td><strong>#@satis.SatisID</strong></td>
                                 <td>
                                     <div style="line-height: 1.4;">
@@ -574,8 +574,8 @@
                                 </td>
                                 <td>
                                     <div style="line-height: 1.4;">
-                                        <strong>@visionerAd</strong><br />
-                                        <span style="font-size: 12px; color: #6b7280;">(@visionerTelefon)</span>
+                                        <strong>@vekarerAd</strong><br />
+                                        <span style="font-size: 12px; color: #6b7280;">(@vekarerTelefon)</span>
                                     </div>
                                 </td>
                                 <td>@tarih</td>
@@ -594,9 +594,9 @@
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="btn-action btn-view" 
+                                        <button class="btn-action btn-view"
                                                 data-musteri="@musteriAdTelefon"
-                                                data-visioner="@visionerAdTelefon"
+                                                data-vekarer="@vekarerAdTelefon"
                                                 data-tarih="@tarih"
                                                 data-bolge="@satis.Bolge"
                                                 data-tutar="@tutar"
@@ -605,10 +605,10 @@
                                                 onclick="openViewModalData(this)">
                                             👁️ Görüntüle
                                         </button>
-                                        <button class="btn-action btn-edit" 
+                                        <button class="btn-action btn-edit"
                                                 data-id="@satis.SatisID"
                                                 data-musteri-id="@satis.SatilanMusteriID"
-                                                data-visioner-id="@satis.VisionerID"
+                                                data-vekarer-id="@satis.VekarerID"
                                                 data-tarih="@satis.SatilmaTarihi.ToString("yyyy-MM-dd")"
                                                 data-tutar="@tutar"
                                                 data-bolge="@satis.Bolge"
