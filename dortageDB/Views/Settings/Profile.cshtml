@@ -3,13 +3,13 @@
 
 @{
     ViewData["Title"] = "Profil Ayarları";
-    Layout = "_LayoutTopraktar";
+    Layout = "_LayoutVisioner";
 }
 
-<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/user-settings.css" asp-append-version="true" />
 
-<div class="topraktar-main-panel">
+<div class="visioner-main-panel">
     <div class="main-content">
         <div class="container-fluid px-4">
             <div class="breadcrumb">
@@ -57,9 +57,9 @@
                     </button>
                 </div>
                 <div class="settings-user-name">@Model.Ad @Model.Soyad</div>
-                @if (User.IsInRole("topraktar"))
+                @if (User.IsInRole("visioner"))
                 {
-                    <span class="user-role">Topraktar</span>
+                    <span class="user-role">Visioner</span>
                 }
                 @if (User.IsInRole("admin"))
                 {

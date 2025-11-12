@@ -8,7 +8,7 @@ namespace dortageDB.Data
 {
     public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>
     {
-        public DbSet<TopraktarProfile> TopraktarProfiles => Set<TopraktarProfile>();
+        public DbSet<VisionerProfile> VisionerProfiles => Set<VisionerProfile>();
         public DbSet<Musteri> Musteriler => Set<Musteri>();
         public DbSet<Randevu> Randevular => Set<Randevu>();
         public DbSet<Satis> Satislar => Set<Satis>();
@@ -35,15 +35,16 @@ namespace dortageDB.Data
             });
 
             // ============================================
-            // TOPRAKTAR PROFILE
+            // VİSİONER PROFILE
             // ============================================
-            b.Entity<TopraktarProfile>(entity =>
+            b.Entity<VisionerProfile>(entity =>
             {
+                entity.ToTable("VisionerProfiles");
                 entity.HasKey(tp => tp.UserId);
 
                 entity.HasOne(tp => tp.User)
-                    .WithOne(u => u.TopraktarProfile)
-                    .HasForeignKey<TopraktarProfile>(tp => tp.UserId)
+                    .WithOne(u => u.VisionerProfile)
+                    .HasForeignKey<VisionerProfile>(tp => tp.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.Property(tp => tp.TotalCommission).HasPrecision(18, 2);
@@ -57,16 +58,16 @@ namespace dortageDB.Data
             {
                 entity.HasKey(m => m.IdMusteri);
 
-                // Topraktar İlişkisi
-                entity.HasOne(m => m.Topraktar)
+                // Visioner İlişkisi
+                entity.HasOne(m => m.Visioner)
                     .WithMany(u => u.Musteriler)
-                    .HasForeignKey(m => m.TopraktarID)
+                    .HasForeignKey(m => m.VisionerID)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasIndex(m => m.Telefon).IsUnique();
                 entity.HasIndex(m => m.TcNo).IsUnique();
                 entity.HasIndex(m => m.EklenmeTarihi);
-                entity.HasIndex(m => m.TopraktarID);
+                entity.HasIndex(m => m.VisionerID);
 
                 entity.Property(m => m.EklenmeTarihi).HasDefaultValueSql("GETDATE()");
             });
@@ -84,10 +85,10 @@ namespace dortageDB.Data
                     .HasForeignKey(r => r.MusteriId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                // Topraktar İlişkisi
-                entity.HasOne(r => r.Topraktar)
+                // Visioner İlişkisi
+                entity.HasOne(r => r.Visioner)
                     .WithMany(u => u.Randevular)
-                    .HasForeignKey(r => r.TopraktarID)
+                    .HasForeignKey(r => r.VisionerID)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 // Proje İlişkisi
@@ -100,7 +101,7 @@ namespace dortageDB.Data
                 entity.Property(r => r.RandevuDurum).HasConversion<string>();
 
                 // İndeksler
-                entity.HasIndex(r => new { r.TopraktarID, r.RandevuZaman });
+                entity.HasIndex(r => new { VisionerID = r.VisionerID, r.RandevuZaman });
                 entity.HasIndex(r => new { r.RandevuDurum, r.RandevuZaman });
                 entity.HasIndex(r => r.MusteriId);
 
@@ -125,10 +126,10 @@ namespace dortageDB.Data
                     .HasForeignKey(s => s.SatilanMusteriID)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                // Topraktar İlişkisi
-                entity.HasOne(s => s.Topraktar)
+                // Visioner İlişkisi
+                entity.HasOne(s => s.Visioner)
                     .WithMany(u => u.Satislar)
-                    .HasForeignKey(s => s.TopraktarID)
+                    .HasForeignKey(s => s.VisionerID)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 // Proje İlişkisi
@@ -138,7 +139,7 @@ namespace dortageDB.Data
                     .OnDelete(DeleteBehavior.SetNull);
 
                 // İndeksler
-                entity.HasIndex(s => new { s.TopraktarID, s.SatilmaTarihi });
+                entity.HasIndex(s => new { VisionerID = s.VisionerID, s.SatilmaTarihi });
                 entity.HasIndex(s => s.SatilanMusteriID);
                 entity.HasIndex(s => s.SatilmaTarihi);
 

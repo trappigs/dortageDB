@@ -199,34 +199,35 @@ namespace dortageDB.Migrations
                     Sehir = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Cinsiyet = table.Column<bool>(type: "bit", nullable: false),
                     EklenmeTarihi = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    TopraktarID = table.Column<int>(type: "int", nullable: false)
+                    VisionerID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Musteriler", x => x.IdMusteri);
                     table.ForeignKey(
-                        name: "FK_Musteriler_AspNetUsers_TopraktarID",
-                        column: x => x.TopraktarID,
+                        name: "FK_Musteriler_AspNetUsers_VisionerID",
+                        column: x => x.VisionerID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TopraktarProfiles",
+                name: "VisionerProfiles",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
                     IBAN = table.Column<string>(type: "nvarchar(34)", maxLength: 34, nullable: true),
                     ReferralCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UsedReferralCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     TotalCommission = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     TotalSales = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TopraktarProfiles", x => x.UserId);
+                    table.PrimaryKey("PK_VisionerProfiles", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_TopraktarProfiles_AspNetUsers_UserId",
+                        name: "FK_VisionerProfiles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -240,7 +241,7 @@ namespace dortageDB.Migrations
                     RandevuID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MusteriId = table.Column<int>(type: "int", nullable: false),
-                    TopraktarID = table.Column<int>(type: "int", nullable: false),
+                    VisionerID = table.Column<int>(type: "int", nullable: false),
                     Bolge = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Aciklama = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     RandevuZaman = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -252,8 +253,8 @@ namespace dortageDB.Migrations
                 {
                     table.PrimaryKey("PK_Randevular", x => x.RandevuID);
                     table.ForeignKey(
-                        name: "FK_Randevular_AspNetUsers_TopraktarID",
-                        column: x => x.TopraktarID,
+                        name: "FK_Randevular_AspNetUsers_VisionerID",
+                        column: x => x.VisionerID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -272,7 +273,7 @@ namespace dortageDB.Migrations
                     SatisID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SatilanMusteriID = table.Column<int>(type: "int", nullable: false),
-                    TopraktarID = table.Column<int>(type: "int", nullable: false),
+                    VisionerID = table.Column<int>(type: "int", nullable: false),
                     SatilmaTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ToplamSatisFiyati = table.Column<decimal>(type: "decimal(14,2)", precision: 14, scale: 2, nullable: false),
                     Bolge = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
@@ -284,8 +285,8 @@ namespace dortageDB.Migrations
                 {
                     table.PrimaryKey("PK_Satislar", x => x.SatisID);
                     table.ForeignKey(
-                        name: "FK_Satislar_AspNetUsers_TopraktarID",
-                        column: x => x.TopraktarID,
+                        name: "FK_Satislar_AspNetUsers_VisionerID",
+                        column: x => x.VisionerID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -388,9 +389,9 @@ namespace dortageDB.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Musteriler_TopraktarID",
+                name: "IX_Musteriler_VisionerID",
                 table: "Musteriler",
-                column: "TopraktarID");
+                column: "VisionerID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Randevular_MusteriId",
@@ -403,9 +404,9 @@ namespace dortageDB.Migrations
                 columns: new[] { "RandevuDurum", "RandevuZaman" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Randevular_TopraktarID_RandevuZaman",
+                name: "IX_Randevular_VisionerID_RandevuZaman",
                 table: "Randevular",
-                columns: new[] { "TopraktarID", "RandevuZaman" });
+                columns: new[] { "VisionerID", "RandevuZaman" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Referrals_Code",
@@ -434,13 +435,13 @@ namespace dortageDB.Migrations
                 column: "SatilmaTarihi");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Satislar_TopraktarID_SatilmaTarihi",
+                name: "IX_Satislar_VisionerID_SatilmaTarihi",
                 table: "Satislar",
-                columns: new[] { "TopraktarID", "SatilmaTarihi" });
+                columns: new[] { "VisionerID", "SatilmaTarihi" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TopraktarProfiles_ReferralCode",
-                table: "TopraktarProfiles",
+                name: "IX_VisionerProfiles_ReferralCode",
+                table: "VisionerProfiles",
                 column: "ReferralCode",
                 unique: true,
                 filter: "[ReferralCode] IS NOT NULL");
@@ -474,7 +475,7 @@ namespace dortageDB.Migrations
                 name: "Satislar");
 
             migrationBuilder.DropTable(
-                name: "TopraktarProfiles");
+                name: "VisionerProfiles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

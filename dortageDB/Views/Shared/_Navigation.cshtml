@@ -11,13 +11,13 @@
                 <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" && ViewContext.RouteData.Values["controller"]?.ToString() == "" ? "active" : "")">Anasayfa</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="TopraktarNedir" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Topraktar Nedir?</a>
+                <a asp-controller="VisionerNedir" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Visioner Nedir?</a>
             </li>
             <li class="nav-item">
                 <a asp-controller="Proje" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Proje" ? "active" : "")">Projeler</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="TopraktarAkademi" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "TopraktarAkademi" ? "active" : "")">Topraktar Akademi</a>
+                <a asp-controller="VisionerAkademi" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "VisionerAkademi" ? "active" : "")">Visioner Akademi</a>
             </li>
             <li class="nav-item">
                 <a asp-controller="Hakkimizda" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Hakkimizda" ? "active" : "")">Hakkımızda</a>
@@ -66,13 +66,13 @@
                 <a asp-controller="" asp-action="" class="mobile-nav-link">Anasayfa</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="" asp-action="" class="mobile-nav-link">Topraktar Nedir?</a>
+                <a asp-controller="" asp-action="" class="mobile-nav-link">Visioner Nedir?</a>
             </li>
             <li class="mobile-nav-item">
                 <a asp-controller="Proje" asp-action="Index" class="mobile-nav-link">Projeler</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="TopraktarAkademi" asp-action="Index" class="mobile-nav-link">Topraktar Akademi</a>
+                <a asp-controller="VisionerAkademi" asp-action="Index" class="mobile-nav-link">Visioner Akademi</a>
             </li>
             <li class="mobile-nav-item">
                 <a asp-controller="Hakkimizda" asp-action="Index" class="mobile-nav-link">Hakkımızda</a>

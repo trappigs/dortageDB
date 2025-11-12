@@ -12,8 +12,8 @@ using dortageDB.Data;
 namespace dortageDB.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251023130205_AddEgitimVideoEntity")]
-    partial class AddEgitimVideoEntity
+    [Migration("20251027133558_RenameTopraktarProfilesToVisionerProfiles")]
+    partial class RenameTopraktarProfilesToVisionerProfiles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -353,22 +353,13 @@ namespace dortageDB.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<bool>("Cinsiyet")
+                    b.Property<bool?>("Cinsiyet")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("EklenmeTarihi")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<string>("Eposta")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Sehir")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Soyad")
                         .IsRequired()
@@ -390,8 +381,6 @@ namespace dortageDB.Migrations
                     b.HasKey("IdMusteri");
 
                     b.HasIndex("EklenmeTarihi");
-
-                    b.HasIndex("Eposta");
 
                     b.HasIndex("TcNo")
                         .IsUnique()
@@ -443,6 +432,9 @@ namespace dortageDB.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<string>("KisaAciklama")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Konum")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -489,6 +481,9 @@ namespace dortageDB.Migrations
                     b.Property<string>("SosyalTesisler")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SunumDosyaUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("TakasImkani")
                         .HasColumnType("bit");
 
@@ -497,6 +492,9 @@ namespace dortageDB.Migrations
 
                     b.Property<int>("ToplamParsel")
                         .HasColumnType("int");
+
+                    b.Property<string>("Tour360Url")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UlasimBilgileri")
                         .HasColumnType("nvarchar(max)");
@@ -536,11 +534,6 @@ namespace dortageDB.Migrations
                     b.Property<string>("Aciklama")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Bolge")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("MusteriId")
                         .HasColumnType("int");
@@ -703,13 +696,17 @@ namespace dortageDB.Migrations
                     b.Property<int>("TotalSales")
                         .HasColumnType("int");
 
+                    b.Property<string>("UsedReferralCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("UserId");
 
                     b.HasIndex("ReferralCode")
                         .IsUnique()
                         .HasFilter("[ReferralCode] IS NOT NULL");
 
-                    b.ToTable("VisionerProfiles");
+                    b.ToTable("VisionerProfiles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

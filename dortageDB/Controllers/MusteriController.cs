@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace dortageDB.Controllers
 {
-    [Authorize(Roles = "topraktar,admin")]
+    [Authorize(Roles = "visioner,admin")]
     public class MusteriController : Controller
     {
         private readonly AppDbContext _context;
@@ -37,12 +37,12 @@ namespace dortageDB.Controllers
             // Admin tüm müşterileri görebilir, diğerleri sadece kendi müşterilerini
             var musteriler = User.IsInRole("admin")
                 ? await _context.Musteriler
-                    .Include(m => m.Topraktar)
+                    .Include(m => m.Visioner)
                     .OrderByDescending(m => m.IdMusteri)
                     .ToListAsync()
                 : await _context.Musteriler
-                    .Include(m => m.Topraktar)
-                    .Where(m => m.TopraktarID == user.Id)
+                    .Include(m => m.Visioner)
+                    .Where(m => m.VisionerID == user.Id)
                     .OrderByDescending(m => m.IdMusteri)
                     .ToListAsync();
 
@@ -105,7 +105,7 @@ namespace dortageDB.Controllers
                     Telefon = cleanPhone,
                     Cinsiyet = model.Cinsiyet,
                     TcNo = model.TcNo,
-                    TopraktarID = currentUser!.Id
+                    VisionerID = currentUser!.Id
                 };
 
                 _context.Musteriler.Add(musteri);
@@ -143,8 +143,8 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
-            // Topraktar sadece kendi müşterisini düzenleyebilir (admin hariç)
-            if (!User.IsInRole("admin") && musteri.TopraktarID != user.Id)
+            // Visioner sadece kendi müşterisini düzenleyebilir (admin hariç)
+            if (!User.IsInRole("admin") && musteri.VisionerID != user.Id)
             {
                 _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {user.Id} tried to edit customer {id}");
                 return Forbid();
@@ -188,8 +188,8 @@ namespace dortageDB.Controllers
                     return NotFound();
                 }
 
-                // Topraktar sadece kendi müşterisini düzenleyebilir (admin hariç)
-                if (!User.IsInRole("admin") && musteri.TopraktarID != user.Id)
+                // Visioner sadece kendi müşterisini düzenleyebilir (admin hariç)
+                if (!User.IsInRole("admin") && musteri.VisionerID != user.Id)
                 {
                     _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {user.Id} tried to edit customer {id}");
                     return Forbid();
@@ -268,8 +268,8 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
-            // Topraktar sadece kendi müşterisini silebilir (admin hariç)
-            if (!User.IsInRole("admin") && musteri.TopraktarID != user.Id)
+            // Visioner sadece kendi müşterisini silebilir (admin hariç)
+            if (!User.IsInRole("admin") && musteri.VisionerID != user.Id)
             {
                 _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {user.Id} tried to delete customer {id}");
                 return Forbid();
@@ -301,8 +301,8 @@ namespace dortageDB.Controllers
                     return NotFound();
                 }
 
-                // Topraktar sadece kendi müşterisini silebilir (admin hariç)
-                if (!User.IsInRole("admin") && musteri.TopraktarID != user.Id)
+                // Visioner sadece kendi müşterisini silebilir (admin hariç)
+                if (!User.IsInRole("admin") && musteri.VisionerID != user.Id)
                 {
                     _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {user.Id} tried to delete customer {id}");
                     return Forbid();
@@ -346,9 +346,9 @@ namespace dortageDB.Controllers
 
             var musteri = await _context.Musteriler
                 .Include(m => m.Randevular)
-                    .ThenInclude(r => r.Topraktar)
+                    .ThenInclude(r => r.Visioner)
                 .Include(m => m.Satislar)
-                    .ThenInclude(s => s.Topraktar)
+                    .ThenInclude(s => s.Visioner)
                 .FirstOrDefaultAsync(m => m.IdMusteri == id);
 
             if (musteri == null)
@@ -356,8 +356,8 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
-            // Topraktar sadece kendi müşterisinin detayını görebilir (admin hariç)
-            if (!User.IsInRole("admin") && musteri.TopraktarID != user.Id)
+            // Visioner sadece kendi müşterisinin detayını görebilir (admin hariç)
+            if (!User.IsInRole("admin") && musteri.VisionerID != user.Id)
             {
                 _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {user.Id} tried to view customer {id}");
                 return Forbid();

@@ -2,11 +2,11 @@
 
 @{
     ViewData["Title"] = ViewData["MusteriId"] != null ? "Müşteri Düzenle" : "Yeni Müşteri Ekle";
-    Layout = "_LayoutTopraktar";
+    Layout = "_LayoutVisioner";
     var isEdit = ViewData["MusteriId"] != null;
 }
 
-<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
 
 <style>
     .page-container {
@@ -303,7 +303,7 @@
     }
 </style>
 
-<div class="topraktar-main-panel">
+<div class="visioner-main-panel">
     <div class="main-content">
         <div class="page-container">
             <!-- Breadcrumb -->

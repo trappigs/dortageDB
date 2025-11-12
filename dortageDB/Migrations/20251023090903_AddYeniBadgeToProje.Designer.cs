@@ -314,7 +314,7 @@ namespace dortageDB.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<int>("TopraktarID")
+                    b.Property<int>("VisionerID")
                         .HasColumnType("int");
 
                     b.HasKey("IdMusteri");
@@ -330,7 +330,7 @@ namespace dortageDB.Migrations
                     b.HasIndex("Telefon")
                         .IsUnique();
 
-                    b.HasIndex("TopraktarID");
+                    b.HasIndex("VisionerID");
 
                     b.ToTable("Musteriler");
                 });
@@ -477,7 +477,7 @@ namespace dortageDB.Migrations
                     b.Property<DateTime>("RandevuZaman")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TopraktarID")
+                    b.Property<int>("VisionerID")
                         .HasColumnType("int");
 
                     b.HasKey("RandevuID");
@@ -488,7 +488,7 @@ namespace dortageDB.Migrations
 
                     b.HasIndex("RandevuDurum", "RandevuZaman");
 
-                    b.HasIndex("TopraktarID", "RandevuZaman");
+                    b.HasIndex("VisionerID", "RandevuZaman");
 
                     b.ToTable("Randevular");
                 });
@@ -579,7 +579,7 @@ namespace dortageDB.Migrations
                         .HasPrecision(14, 2)
                         .HasColumnType("decimal(14,2)");
 
-                    b.Property<int>("TopraktarID")
+                    b.Property<int>("VisionerID")
                         .HasColumnType("int");
 
                     b.HasKey("SatisID");
@@ -590,12 +590,12 @@ namespace dortageDB.Migrations
 
                     b.HasIndex("SatilmaTarihi");
 
-                    b.HasIndex("TopraktarID", "SatilmaTarihi");
+                    b.HasIndex("VisionerID", "SatilmaTarihi");
 
                     b.ToTable("Satislar");
                 });
 
-            modelBuilder.Entity("dortageDB.Entities.TopraktarProfile", b =>
+            modelBuilder.Entity("dortageDB.Entities.VisionerProfile", b =>
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -621,7 +621,7 @@ namespace dortageDB.Migrations
                         .IsUnique()
                         .HasFilter("[ReferralCode] IS NOT NULL");
 
-                    b.ToTable("TopraktarProfiles");
+                    b.ToTable("VisionerProfiles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -677,13 +677,13 @@ namespace dortageDB.Migrations
 
             modelBuilder.Entity("dortageDB.Entities.Musteri", b =>
                 {
-                    b.HasOne("dortageDB.Entities.AppUser", "Topraktar")
+                    b.HasOne("dortageDB.Entities.AppUser", "Visioner")
                         .WithMany("Musteriler")
-                        .HasForeignKey("TopraktarID")
+                        .HasForeignKey("VisionerID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Topraktar");
+                    b.Navigation("Visioner");
                 });
 
             modelBuilder.Entity("dortageDB.Entities.Randevu", b =>
@@ -699,9 +699,9 @@ namespace dortageDB.Migrations
                         .HasForeignKey("ProjeID")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("dortageDB.Entities.AppUser", "Topraktar")
+                    b.HasOne("dortageDB.Entities.AppUser", "Visioner")
                         .WithMany("Randevular")
-                        .HasForeignKey("TopraktarID")
+                        .HasForeignKey("VisionerID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -709,7 +709,7 @@ namespace dortageDB.Migrations
 
                     b.Navigation("Proje");
 
-                    b.Navigation("Topraktar");
+                    b.Navigation("Visioner");
                 });
 
             modelBuilder.Entity("dortageDB.Entities.Satis", b =>
@@ -725,9 +725,9 @@ namespace dortageDB.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("dortageDB.Entities.AppUser", "Topraktar")
+                    b.HasOne("dortageDB.Entities.AppUser", "Visioner")
                         .WithMany("Satislar")
-                        .HasForeignKey("TopraktarID")
+                        .HasForeignKey("VisionerID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -735,14 +735,14 @@ namespace dortageDB.Migrations
 
                     b.Navigation("Proje");
 
-                    b.Navigation("Topraktar");
+                    b.Navigation("Visioner");
                 });
 
-            modelBuilder.Entity("dortageDB.Entities.TopraktarProfile", b =>
+            modelBuilder.Entity("dortageDB.Entities.VisionerProfile", b =>
                 {
                     b.HasOne("dortageDB.Entities.AppUser", "User")
-                        .WithOne("TopraktarProfile")
-                        .HasForeignKey("dortageDB.Entities.TopraktarProfile", "UserId")
+                        .WithOne("VisionerProfile")
+                        .HasForeignKey("dortageDB.Entities.VisionerProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -757,7 +757,7 @@ namespace dortageDB.Migrations
 
                     b.Navigation("Satislar");
 
-                    b.Navigation("TopraktarProfile");
+                    b.Navigation("VisionerProfile");
                 });
 
             modelBuilder.Entity("dortageDB.Entities.Musteri", b =>

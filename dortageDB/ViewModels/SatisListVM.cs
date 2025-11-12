@@ -4,7 +4,7 @@
     {
         public int SatisID { get; set; }
         public string MusteriAdSoyad { get; set; } = null!;
-        public string TopraktarAdSoyad { get; set; } = null!;
+        public string VisionerAdSoyad { get; set; } = null!;
         public DateTime SatilmaTarihi { get; set; }
         public decimal ToplamSatisFiyati { get; set; }
         public bool Taksit { get; set; }

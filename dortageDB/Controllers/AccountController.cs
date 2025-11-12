@@ -160,18 +160,18 @@ namespace dortageDB.Controllers
 
                 Console.WriteLine("✅ Kullanıcı başarıyla oluşturuldu!");
 
-                // Topraktar profili oluştur
-                if (model.TopraktarMi)
+                // Visioner profili oluştur
+                if (model.VisionerMi)
                 {
-                    Console.WriteLine("📋 Topraktar profili oluşturuluyor...");
-                    var topraktarProfile = new TopraktarProfile
+                    Console.WriteLine("📋 Visioner profili oluşturuluyor...");
+                    var visionerProfile = new VisionerProfile
                     {
                         UserId = user.Id,
                         UsedReferralCode = model.Code // Kayıt olurken kullandığı referans kodu
                     };
-                    _context.TopraktarProfiles.Add(topraktarProfile);
+                    _context.VisionerProfiles.Add(visionerProfile);
                     await _context.SaveChangesAsync();
-                    Console.WriteLine("✅ Topraktar profili oluşturuldu!");
+                    Console.WriteLine("✅ Visioner profili oluşturuldu!");
                 }
 
                 // Roller ata
@@ -189,17 +189,17 @@ namespace dortageDB.Controllers
                         Console.WriteLine($"✅ Rol atandı: {roleName}");
                     }
                 }
-                else if (model.TopraktarMi)
+                else if (model.VisionerMi)
                 {
-                    Console.WriteLine("👤 Topraktar rolü atanıyor...");
-                    const string topraktarRole = "topraktar";
-                    if (!await _roleManager.RoleExistsAsync(topraktarRole))
+                    Console.WriteLine("👤 Visioner rolü atanıyor...");
+                    const string visionerRole = "visioner";
+                    if (!await _roleManager.RoleExistsAsync(visionerRole))
                     {
-                        Console.WriteLine("📝 Topraktar rolü oluşturuluyor...");
-                        await _roleManager.CreateAsync(new AppRole { Name = topraktarRole });
+                        Console.WriteLine("📝 Visioner rolü oluşturuluyor...");
+                        await _roleManager.CreateAsync(new AppRole { Name = visionerRole });
                     }
-                    await _userManager.AddToRoleAsync(user, topraktarRole);
-                    Console.WriteLine("✅ Topraktar rolü atandı!");
+                    await _userManager.AddToRoleAsync(user, visionerRole);
+                    Console.WriteLine("✅ Visioner rolü atandı!");
                 }
 
                 Console.WriteLine("🎉 Kayıt işlemi tamamlandı! Login sayfasına yönlendiriliyor...");

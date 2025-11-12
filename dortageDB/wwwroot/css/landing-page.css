@@ -444,8 +444,16 @@ body {
     background: var(--white);
 }
 
+.features-section .row {
+    justify-content: center;
+}
+
+.features-section .col-lg-6 {
+    max-width: 600px;
+}
+
 .features-content {
-    padding-right: 40px;
+    padding-right: 0;
 }
 
 .section-description {

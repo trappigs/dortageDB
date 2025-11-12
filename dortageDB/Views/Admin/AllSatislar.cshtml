@@ -2,10 +2,10 @@
 
 @{
     ViewData["Title"] = "Tüm Satışlar";
-    Layout = "_LayoutTopraktar";
+    Layout = "_LayoutVisioner";
 }
 
-<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
 
 <style>
     .page-header {
@@ -467,7 +467,7 @@
     }
 </style>
 
-<div class="topraktar-main-panel">
+<div class="visioner-main-panel">
     <div class="main-content">
         <div class="page-header">
             <div>
@@ -520,7 +520,7 @@
         <div class="filters-bar">
             <div class="filter-group">
                 <label>Ara</label>
-                <input type="text" id="searchInput" placeholder="Müşteri veya topraktar ara...">
+                <input type="text" id="searchInput" placeholder="Müşteri veya visioner ara...">
             </div>
             <div class="filter-group">
                 <label>Ödeme Tipi</label>
@@ -540,7 +540,7 @@
                         <tr>
                             <th onclick="sortTable(0)">Satış ID</th>
                             <th onclick="sortTable(1)">Müşteri</th>
-                            <th onclick="sortTable(2)">Topraktar</th>
+                            <th onclick="sortTable(2)">Visioner</th>
                             <th onclick="sortTable(3)">Tarih</th>
                             <th onclick="sortTable(4)">Bölge</th>
                             <th onclick="sortTable(5)">Tutar</th>
@@ -553,18 +553,18 @@
                         @foreach (var satis in Model)
                         {
                             var musteriAd = $"{satis.Musteri.Ad} {satis.Musteri.Soyad}";
-                            var topraktarAd = $"{satis.Topraktar.Ad} {satis.Topraktar.Soyad}";
+                            var visionerAd = $"{satis.Visioner.Ad} {satis.Visioner.Soyad}";
                             var musteriTelefon = satis.Musteri.Telefon ?? "";
-                            var topraktarTelefon = satis.Topraktar.PhoneNumber ?? "";
+                            var visionerTelefon = satis.Visioner.PhoneNumber ?? "";
                             var musteriAdTelefon = $"{musteriAd} ({musteriTelefon})";
-                            var topraktarAdTelefon = $"{topraktarAd} ({topraktarTelefon})";
+                            var visionerAdTelefon = $"{visionerAd} ({visionerTelefon})";
                             var tarih = satis.SatilmaTarihi.ToString("dd MMM yyyy");
                             var bolge = satis.Bolge.Replace("\"", "&quot;").Replace("'", "&#39;");
                             var tutar = satis.ToplamSatisFiyati.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             var komisyon = satis.OdenecekKomisyon.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             var taksit = satis.Taksit ? "true" : "false";
 
-                            <tr data-search="@musteriAd @topraktarAd @musteriTelefon @topraktarTelefon" data-payment="@(satis.Taksit ? "taksit" : "pesin")">
+                            <tr data-search="@musteriAd @visionerAd @musteriTelefon @visionerTelefon" data-payment="@(satis.Taksit ? "taksit" : "pesin")">
                                 <td><strong>#@satis.SatisID</strong></td>
                                 <td>
                                     <div style="line-height: 1.4;">
@@ -574,8 +574,8 @@
                                 </td>
                                 <td>
                                     <div style="line-height: 1.4;">
-                                        <strong>@topraktarAd</strong><br />
-                                        <span style="font-size: 12px; color: #6b7280;">(@topraktarTelefon)</span>
+                                        <strong>@visionerAd</strong><br />
+                                        <span style="font-size: 12px; color: #6b7280;">(@visionerTelefon)</span>
                                     </div>
                                 </td>
                                 <td>@tarih</td>
@@ -596,7 +596,7 @@
                                     <div class="action-buttons">
                                         <button class="btn-action btn-view" 
                                                 data-musteri="@musteriAdTelefon"
-                                                data-topraktar="@topraktarAdTelefon"
+                                                data-visioner="@visionerAdTelefon"
                                                 data-tarih="@tarih"
                                                 data-bolge="@satis.Bolge"
                                                 data-tutar="@tutar"
@@ -608,7 +608,7 @@
                                         <button class="btn-action btn-edit" 
                                                 data-id="@satis.SatisID"
                                                 data-musteri-id="@satis.SatilanMusteriID"
-                                                data-topraktar-id="@satis.TopraktarID"
+                                                data-visioner-id="@satis.VisionerID"
                                                 data-tarih="@satis.SatilmaTarihi.ToString("yyyy-MM-dd")"
                                                 data-tutar="@tutar"
                                                 data-bolge="@satis.Bolge"
@@ -666,14 +666,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Topraktar *</label>
-                        <select name="TopraktarID" required>
-                            <option value="">Topraktar Seçin</option>
-                            @if (ViewBag.Topraktarlar != null)
+                        <label>Visioner *</label>
+                        <select name="VisionerID" required>
+                            <option value="">Visioner Seçin</option>
+                            @if (ViewBag.Visionerlar != null)
                             {
-                                @foreach (var topraktar in ViewBag.Topraktarlar as IEnumerable<AppUser>)
+                                @foreach (var visioner in ViewBag.Visionerlar as IEnumerable<AppUser>)
                                 {
-                                    <option value="@topraktar.Id">@topraktar.Ad @topraktar.Soyad (@topraktar.PhoneNumber)</option>
+                                    <option value="@visioner.Id">@visioner.Ad @visioner.Soyad (@visioner.PhoneNumber)</option>
                                 }
                             }
                         </select>
@@ -727,8 +727,8 @@
                 <span class="detail-value" id="viewMusteri"></span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Topraktar:</span>
-                <span class="detail-value" id="viewTopraktar"></span>
+                <span class="detail-label">Visioner:</span>
+                <span class="detail-value" id="viewVisioner"></span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Satış Tarihi:</span>
@@ -783,14 +783,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Topraktar *</label>
-                        <select name="TopraktarID" id="editTopraktarId" required>
-                            <option value="">Topraktar Seçin</option>
-                            @if (ViewBag.Topraktarlar != null)
+                        <label>Visioner *</label>
+                        <select name="VisionerID" id="editVisionerId" required>
+                            <option value="">Visioner Seçin</option>
+                            @if (ViewBag.Visionerlar != null)
                             {
-                                @foreach (var topraktar in ViewBag.Topraktarlar as IEnumerable<AppUser>)
+                                @foreach (var visioner in ViewBag.Visionerlar as IEnumerable<AppUser>)
                                 {
-                                    <option value="@topraktar.Id">@topraktar.Ad @topraktar.Soyad (@topraktar.PhoneNumber)</option>
+                                    <option value="@visioner.Id">@visioner.Ad @visioner.Soyad (@visioner.PhoneNumber)</option>
                                 }
                             }
                         </select>
@@ -870,7 +870,7 @@
     // View Modal - DATA ATTRIBUTE İLE
     function openViewModalData(button) {
         const musteri = button.getAttribute('data-musteri');
-        const topraktar = button.getAttribute('data-topraktar');
+        const visioner = button.getAttribute('data-visioner');
         const tarih = button.getAttribute('data-tarih');
         const bolge = button.getAttribute('data-bolge');
         const tutar = parseFloat(button.getAttribute('data-tutar'));
@@ -879,7 +879,7 @@
 
         console.log('👁️ View modal açılıyor');
         console.log('Musteri:', musteri);
-        console.log('Topraktar:', topraktar);
+        console.log('Visioner:', visioner);
         console.log('Tarih:', tarih);
         console.log('Bolge:', bolge);
         console.log('Tutar:', tutar);
@@ -887,7 +887,7 @@
         console.log('Taksit:', taksit);
 
         document.getElementById('viewMusteri').textContent = musteri;
-        document.getElementById('viewTopraktar').textContent = topraktar;
+        document.getElementById('viewVisioner').textContent = visioner;
         document.getElementById('viewTarih').textContent = tarih;
         document.getElementById('viewBolge').textContent = bolge;
         document.getElementById('viewTutar').textContent = '₺' + tutar.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -905,7 +905,7 @@
     function openEditModalData(button) {
         const id = button.getAttribute('data-id');
         const musteriId = button.getAttribute('data-musteri-id');
-        const topraktarId = button.getAttribute('data-topraktar-id');
+        const visionerId = button.getAttribute('data-visioner-id');
         const tarih = button.getAttribute('data-tarih');
         const tutar = button.getAttribute('data-tutar');
         const bolge = button.getAttribute('data-bolge');
@@ -916,7 +916,7 @@
 
         document.getElementById('editSatisId').value = id;
         document.getElementById('editMusteriId').value = musteriId;
-        document.getElementById('editTopraktarId').value = topraktarId;
+        document.getElementById('editVisionerId').value = visionerId;
         document.getElementById('editTarih').value = tarih;
         document.getElementById('editTutar').value = tutar;
         document.getElementById('editBolge').value = bolge;
@@ -1013,7 +1013,7 @@
 
 **Satışlar Tablosunda (tbody kısmı):**
 - Müşteri sütununda: İsim **bold** olarak üstte, telefon numarası küçük gri renkle altta gösteriliyor
-- Topraktar sütununda: İsim **bold** olarak üstte, telefon numarası küçük gri renkle altta gösteriliyor
+- Visioner sütununda: İsim **bold** olarak üstte, telefon numarası küçük gri renkle altta gösteriliyor
 - `data-search` attribute'üne telefon numaraları da eklendi (arama yaparken telefon numarasına göre de arama yapılabilsin)
 
 **Görünüm:**

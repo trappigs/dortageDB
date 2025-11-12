@@ -18,11 +18,11 @@ static async Task CreateAdminUser(IServiceProvider serviceProvider)
         Console.WriteLine("✅ Admin rolü oluşturuldu");
     }
 
-    // Topraktar rolü yoksa oluştur
-    if (!await roleManager.RoleExistsAsync("topraktar"))
+    // Visioner rolü yoksa oluştur
+    if (!await roleManager.RoleExistsAsync("visioner"))
     {
-        await roleManager.CreateAsync(new AppRole { Name = "topraktar" });
-        Console.WriteLine("✅ Topraktar rolü oluşturuldu");
+        await roleManager.CreateAsync(new AppRole { Name = "visioner" });
+        Console.WriteLine("✅ Visioner rolü oluşturuldu");
     }
 
     // Admin kullanıcısı yoksa oluştur

@@ -26,7 +26,10 @@
       "Read(//c/Users/mami/Desktop/btlast/Views/**)",
       "WebFetch(domain:bereketlitopraklar.com.tr)",
       "Bash(Select-String -Pattern \"error|warning\" -Context 2)",
-      "Bash(powershell -ExecutionPolicy Bypass -File:*)"
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)",
+      "Bash(find:*)",
+      "Bash(__NEW_LINE__ echo \"✓ Yorum satırları ve string literals güncellendi\")",
+      "Bash(dotnet ef dbcontext:*)"
     ],
     "deny": [],
     "ask": []

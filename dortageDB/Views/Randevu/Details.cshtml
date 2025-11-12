@@ -2,11 +2,11 @@
 
 @{
     ViewData["Title"] = "Randevu Detayları";
-    Layout = "_LayoutTopraktar";
+    Layout = "_LayoutVisioner";
     var isAdmin = User.IsInRole("admin");
 }
 
-<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
 
 <style>
     .details-container {
@@ -214,7 +214,7 @@
     }
 </style>
 
-<div class="topraktar-main-panel">
+<div class="visioner-main-panel">
     <div class="main-content">
         <div class="details-container">
             <div class="details-header">
@@ -352,19 +352,19 @@
                             <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         </svg>
-                        Topraktar Bilgileri
+                        Visioner Bilgileri
                     </h2>
                     <div class="info-row">
                         <span class="info-label">Ad Soyad:</span>
-                        <span class="info-value">@Model.Topraktar.Ad @Model.Topraktar.Soyad</span>
+                        <span class="info-value">@Model.Visioner.Ad @Model.Visioner.Soyad</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">E-posta:</span>
-                        <span class="info-value">@Model.Topraktar.Email</span>
+                        <span class="info-value">@Model.Visioner.Email</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Telefon:</span>
-                        <span class="info-value">@Model.Topraktar.PhoneNumber</span>
+                        <span class="info-value">@Model.Visioner.PhoneNumber</span>
                     </div>
                 </div>
 

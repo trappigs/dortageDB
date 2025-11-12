@@ -5,14 +5,14 @@
     padding: 100px 20px 20px;
 }
 
-/* Topraktar Layout Uyumu */
-.topraktar-main-panel .breadcrumb {
+/* Visioner Layout Uyumu */
+.visioner-main-panel .breadcrumb {
     margin-bottom: 20px;
     padding-bottom: 10px;
     border-bottom: 1px solid #e5e7eb;
 }
 
-.topraktar-main-panel h1 {
+.visioner-main-panel h1 {
     margin-top: 0;
 }
 
@@ -436,7 +436,7 @@ input, select, textarea {
         padding: 140px 12px 12px;
     }
 
-    .topraktar-main-panel .main-content {
+    .visioner-main-panel .main-content {
         padding: 12px;
     }
 

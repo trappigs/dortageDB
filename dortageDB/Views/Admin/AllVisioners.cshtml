@@ -1,10 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Tüm Topraktarlar";
-    Layout = "_LayoutTopraktar";
-    var topraktarData = ViewBag.TopraktarData as List<dynamic>;
+    ViewData["Title"] = "Tüm Visionerlar";
+    Layout = "_LayoutVisioner";
+    var visionerData = ViewBag.VisionerData as List<dynamic>;
 }
 
-<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
 
 <style>
     .page-header {
@@ -51,7 +51,7 @@
             background: #e5e7eb;
         }
 
-    .btn-new-topraktar {
+    .btn-new-visioner {
         background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         color: white;
         padding: 12px 24px;
@@ -66,7 +66,7 @@
         cursor: pointer;
     }
 
-        .btn-new-topraktar:hover {
+        .btn-new-visioner:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
         }
@@ -99,13 +99,13 @@
         color: #9ca3af;
     }
 
-    .topraktars-grid {
+    .visioners-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 20px;
     }
 
-    .topraktar-card {
+    .visioner-card {
         background: white;
         border-radius: 12px;
         padding: 24px;
@@ -114,19 +114,19 @@
         border: 1px solid #e5e7eb;
     }
 
-        .topraktar-card:hover {
+        .visioner-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
-    .topraktar-header {
+    .visioner-header {
         display: flex;
         align-items: center;
         gap: 16px;
         margin-bottom: 20px;
     }
 
-    .topraktar-avatar {
+    .visioner-avatar {
         width: 64px;
         height: 64px;
         border-radius: 50%;
@@ -140,18 +140,18 @@
         flex-shrink: 0;
     }
 
-    .topraktar-info {
+    .visioner-info {
         flex: 1;
     }
 
-    .topraktar-name {
+    .visioner-name {
         font-size: 18px;
         font-weight: 700;
         color: #1f2937;
         margin-bottom: 4px;
     }
 
-    .topraktar-code {
+    .visioner-code {
         font-size: 12px;
         color: #6b7280;
         font-family: 'Courier New', monospace;
@@ -390,7 +390,7 @@
     }
 
     @@media (max-width: 768px) {
-        .topraktars-grid
+        .visioners-grid
 
     {
         grid-template-columns: 1fr;
@@ -407,19 +407,19 @@
     }
 </style>
 
-<div class="topraktar-main-panel">
+<div class="visioner-main-panel">
     <div class="main-content">
         <div class="page-header">
             <div>
                 <h1 class="page-title">
-                    Tüm Topraktarlar
+                    Tüm Visionerlar
                     <span class="admin-badge">ADMIN</span>
                 </h1>
-                <p style="color: #6b7280;">Sistemde toplam @(topraktarData?.Count ?? 0) topraktar</p>
+                <p style="color: #6b7280;">Sistemde toplam @(visionerData?.Count ?? 0) visioner</p>
             </div>
             <div style="display: flex; gap: 12px;">
-                <button type="button" class="btn-new-topraktar" onclick="openCreateModal()">
-                    ➕ Yeni Topraktar
+                <button type="button" class="btn-new-visioner" onclick="openCreateModal()">
+                    ➕ Yeni Visioner
                 </button>
                 <a asp-action="Index" class="btn-back">
                     ← Dashboard'a Dön
@@ -433,14 +433,14 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <path d="m21 21-4.35-4.35"></path>
                 </svg>
-                <input type="text" id="searchInput" placeholder="Topraktar ara (ad, email, telefon)...">
+                <input type="text" id="searchInput" placeholder="Visioner ara (ad, email, telefon)...">
             </div>
         </div>
 
-        @if (topraktarData != null && topraktarData.Any())
+        @if (visionerData != null && visionerData.Any())
         {
-            <div class="topraktars-grid" id="topraktarsGrid">
-                @foreach (var item in topraktarData)
+            <div class="visioners-grid" id="visionersGrid">
+                @foreach (var item in visionerData)
                 {
                     var user = item.User as AppUser;
                     var randevuCount = (int)item.RandevuCount;
@@ -451,7 +451,7 @@
                     var usedReferralCode = item.UsedReferralCode as string;
                     var initials = $"{user.Ad?.Substring(0, 1)}{user.Soyad?.Substring(0, 1)}";
 
-                    <div class="topraktar-card" data-search="@user.Ad @user.Soyad @user.Email @user.PhoneNumber @referralCode @usedReferralCode">
+                    <div class="visioner-card" data-search="@user.Ad @user.Soyad @user.Email @user.PhoneNumber @referralCode @usedReferralCode">
                         @if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.Now)
                         {
                             <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -462,11 +462,11 @@
                                 DEAKTİF HESAP
                             </div>
                         }
-                        <div class="topraktar-header">
-                            <div class="topraktar-avatar">@initials</div>
-                            <div class="topraktar-info">
-                                <div class="topraktar-name">@user.Ad @user.Soyad</div>
-                                <div class="topraktar-code">TRK@(user.Id)</div>
+                        <div class="visioner-header">
+                            <div class="visioner-avatar">@initials</div>
+                            <div class="visioner-info">
+                                <div class="visioner-name">@user.Ad @user.Soyad</div>
+                                <div class="visioner-code">TRK@(user.Id)</div>
                             </div>
                         </div>
 
@@ -553,21 +553,21 @@
         {
             <div class="empty-state">
                 <div class="empty-icon">👥</div>
-                <h3 style="color: #1f2937; margin-bottom: 8px;">Henüz topraktar yok</h3>
-                <p style="color: #6b7280;">Sistemde kayıtlı topraktar bulunmuyor</p>
+                <h3 style="color: #1f2937; margin-bottom: 8px;">Henüz visioner yok</h3>
+                <p style="color: #6b7280;">Sistemde kayıtlı visioner bulunmuyor</p>
             </div>
         }
     </div>
 </div>
 
-<!-- Create Topraktar Modal -->
+<!-- Create Visioner Modal -->
 <div class="modal-overlay" id="createModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>➕ Yeni Topraktar Ekle</h3>
+            <h3>➕ Yeni Visioner Ekle</h3>
             <button type="button" class="modal-close" onclick="closeCreateModal()">×</button>
         </div>
-        <form asp-controller="Admin" asp-action="CreateTopraktar" method="post" id="createTopraktarForm">
+        <form asp-controller="Admin" asp-action="CreateVisioner" method="post" id="createVisionerForm">
             @Html.AntiForgeryToken()
             <div class="modal-body">
                 @if (TempData["SuccessMessage"] != null)
@@ -639,14 +639,14 @@
     </div>
 </div>
 
-<!-- Deactivate Topraktar Modal -->
+<!-- Deactivate Visioner Modal -->
 <div class="modal-overlay" id="deactivateModal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
             <h3>🚫 Hesabı Deaktif Et</h3>
             <button type="button" class="modal-close" onclick="closeDeactivateModal()">×</button>
         </div>
-        <form asp-controller="Admin" asp-action="DeactivateTopraktar" method="post" id="deactivateForm">
+        <form asp-controller="Admin" asp-action="DeactivateVisioner" method="post" id="deactivateForm">
             @Html.AntiForgeryToken()
             <input type="hidden" name="id" id="deactivateUserId" />
             <div class="modal-body">
@@ -680,14 +680,14 @@
     </div>
 </div>
 
-<!-- Reactivate Topraktar Modal -->
+<!-- Reactivate Visioner Modal -->
 <div class="modal-overlay" id="reactivateModal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
             <h3>✅ Hesabı Aktifleştir</h3>
             <button type="button" class="modal-close" onclick="closeReactivateModal()">×</button>
         </div>
-        <form asp-controller="Admin" asp-action="ReactivateTopraktar" method="post" id="reactivateForm">
+        <form asp-controller="Admin" asp-action="ReactivateVisioner" method="post" id="reactivateForm">
             @Html.AntiForgeryToken()
             <input type="hidden" name="id" id="reactivateUserId" />
             <div class="modal-body">
@@ -724,7 +724,7 @@
     // Create Modal functions
     function openCreateModal() {
         console.log('➕ Create modal açılıyor');
-        document.getElementById('createTopraktarForm').reset();
+        document.getElementById('createVisionerForm').reset();
         document.getElementById('createModal').classList.add('active');
     }
 
@@ -735,7 +735,7 @@
     // Search functionality
     document.getElementById('searchInput')?.addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase();
-        const cards = document.querySelectorAll('.topraktar-card');
+        const cards = document.querySelectorAll('.visioner-card');
 
         cards.forEach(card => {
             const searchData = card.getAttribute('data-search').toLowerCase();
@@ -786,7 +786,7 @@
         });
 
         // Form validation - password match
-        const form = document.getElementById('createTopraktarForm');
+        const form = document.getElementById('createVisionerForm');
         form?.addEventListener('submit', function(e) {
             const password = form.querySelector('input[name="Password"]').value;
             const confirmPassword = form.querySelector('input[name="ConfirmPassword"]').value;

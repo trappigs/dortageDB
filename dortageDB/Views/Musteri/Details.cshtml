@@ -2,11 +2,11 @@
 
 @{
     ViewData["Title"] = "Müşteri Detayları";
-    Layout = "_LayoutTopraktar";
+    Layout = "_LayoutVisioner";
     var isAdmin = User.IsInRole("admin");
 }
 
-<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
 
 <style>
     .details-container {
@@ -303,7 +303,7 @@
     }
 </style>
 
-<div class="topraktar-main-panel">
+<div class="visioner-main-panel">
     <div class="main-content">
         <div class="details-container">
             <div class="details-header">
@@ -416,7 +416,7 @@
                                         <div class="timeline-title">Randevu - @randevu.RandevuTipi</div>
                                         <div class="timeline-date">@randevu.RandevuZaman.ToString("dd MMMM yyyy, HH:mm")</div>
                                         <div class="timeline-details">
-                                            Topraktar: @randevu.Topraktar.Ad @randevu.Topraktar.Soyad
+                                            Visioner: @randevu.Visioner.Ad @randevu.Visioner.Soyad
                                             <br />
                                             Durum: @switch (randevu.RandevuDurum)
                                             {
@@ -453,7 +453,7 @@
                                                 @(satis.Taksit ? "Taksitli" : "Peşin") |
                                                 Komisyon: ₺@satis.OdenecekKomisyon.ToString("N0")
                                                 <br />
-                                                📍 @satis.Bolge | Topraktar: @satis.Topraktar.Ad @satis.Topraktar.Soyad
+                                                📍 @satis.Bolge | Visioner: @satis.Visioner.Ad @satis.Visioner.Soyad
                                             </div>
                                         </div>
                                     </div>

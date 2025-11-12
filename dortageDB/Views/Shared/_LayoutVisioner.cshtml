@@ -8,11 +8,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Topraktar Dashboard</title>
+    <title>@ViewData["Title"] - Visioner Dashboard</title>
     <link rel="icon" type="image/png" href="~/images/favicon-logo.png" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
 
     <style>
         /* Alert Styles */
@@ -263,7 +263,7 @@
         }
     </style>
 </head>
-<body class="topraktar-main-panel">
+<body class="visioner-main-panel">
     <!-- Page Loading Overlay -->
     <div class="page-loading" id="pageLoading">
         <div class="loading-spinner"></div>
@@ -282,7 +282,7 @@
             </button>
             <a asp-controller="Home" asp-action="Index" class="top-navbar-logo">
                 <img src="~/images/logo.svg" alt="Dortage Logo" />
-                <span>TOPRAKTAR</span>
+                <span>VİSİONER</span>
             </a>
         </div>
         <div class="top-navbar-right">
@@ -331,14 +331,14 @@
             var initials = user != null ? $"{user.Ad?.Substring(0, 1)}{user.Soyad?.Substring(0, 1)}" : "??";
             var fullName = user != null ? $"{user.Ad} {user.Soyad}" : "Kullanıcı";
             var isAdmin = User.IsInRole("admin");
-            var isTopraktar = User.IsInRole("topraktar");
+            var isVisioner = User.IsInRole("visioner");
         }
         <div class="user-profile">
             <div class="user-avatar">@initials</div>
             <div class="user-name">@fullName</div>
-            @if (isTopraktar)
+            @if (isVisioner)
             {
-                <span class="user-role">Topraktar</span>
+                <span class="user-role">Visioner</span>
             }
             @if (isAdmin)
             {
@@ -359,17 +359,17 @@
 
             if (context != null && currentUserId.HasValue)
             {
-                // Sadece bu topraktara ait veriler
-                totalSalesCount = context.Satislar.Count(s => s.TopraktarID == currentUserId.Value);
+                // Sadece bu visionera ait veriler
+                totalSalesCount = context.Satislar.Count(s => s.VisionerID == currentUserId.Value);
                 totalCommission = context.Satislar
-                .Where(s => s.TopraktarID == currentUserId.Value)
+                .Where(s => s.VisionerID == currentUserId.Value)
                 .Sum(s => (decimal?)s.OdenecekKomisyon) ?? 0;
 
-                // Bu topraktara ait müşteri sayısı
-                totalMusteriler = context.Musteriler.Count(m => m.TopraktarID == currentUserId.Value);
+                // Bu visionera ait müşteri sayısı
+                totalMusteriler = context.Musteriler.Count(m => m.VisionerID == currentUserId.Value);
 
                 pendingRandevular = context.Randevular
-                .Count(r => r.TopraktarID == currentUserId.Value && r.RandevuDurum == dortageDB.Entities.RandevuDurum.OnayBekliyor);
+                .Count(r => r.VisionerID == currentUserId.Value && r.RandevuDurum == dortageDB.Entities.RandevuDurum.OnayBekliyor);
             }
         }
 
@@ -437,15 +437,15 @@
             </li>
 
             <li class="nav-item">
-                <a asp-controller="Dashboard" asp-action="TopraktarAkademi"
-                   class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "TopraktarAkademi" ? "active" : "")">
+                <a asp-controller="Dashboard" asp-action="VisionerAkademi"
+                   class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "VisionerAkademi" ? "active" : "")">
                     <svg class="nav-icon" viewBox="0 0 24 24">
                         <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
                         <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
                     </svg>
-                    <span class="nav-text">Topraktar Akademisi</span>
+                    <span class="nav-text">Visioner Akademisi</span>
                     <span class="nav-badge badge-blue">%60</span>
-                    <span class="tooltip">Topraktar Akademisi</span>
+                    <span class="tooltip">Visioner Akademisi</span>
                 </a>
             </li>
 

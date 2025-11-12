@@ -2,7 +2,7 @@
 
 namespace dortageDB.Entities
 {
-    public class TopraktarProfile
+    public class VisionerProfile
     {
         [Key] public int UserId { get; set; }
         public AppUser User { get; set; } = null!;

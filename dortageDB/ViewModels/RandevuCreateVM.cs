@@ -20,6 +20,6 @@ namespace dortageDB.ViewModels
         [StringLength(500)] public string? Aciklama { get; set; }
         [Required] public DateTime RandevuZaman { get; set; }
         [Required, StringLength(50)] public string RandevuTipi { get; set; } = null!;
-        public int? TopraktarID { get; set; }
+        public int? VisionerID { get; set; }
     }
 }

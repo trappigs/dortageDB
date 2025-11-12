@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace dortageDB.Controllers
 {
-    [Authorize(Roles = "topraktar,admin")]
+    [Authorize(Roles = "visioner,admin")]
     public class SatisController : Controller
     {
         private readonly AppDbContext _context;
@@ -24,7 +24,7 @@ namespace dortageDB.Controllers
             _logger = logger;
         }
 
-        // GET: Satis/Index - Topraktarın kendi satışlarını listele
+        // GET: Satis/Index - Visionerın kendi satışlarını listele
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -33,11 +33,11 @@ namespace dortageDB.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // Sadece bu topraktara ait satışları getir
+            // Sadece bu visionera ait satışları getir
             var satislar = await _context.Satislar
                 .Include(s => s.Musteri)
-                .Include(s => s.Topraktar)
-                .Where(s => s.TopraktarID == currentUser.Id)
+                .Include(s => s.Visioner)
+                .Where(s => s.VisionerID == currentUser.Id)
                 .OrderByDescending(s => s.SatilmaTarihi)
                 .ToListAsync();
 
@@ -84,7 +84,7 @@ namespace dortageDB.Controllers
 
             var satis = await _context.Satislar
                 .Include(s => s.Musteri)
-                .Include(s => s.Topraktar)
+                .Include(s => s.Visioner)
                 .FirstOrDefaultAsync(s => s.SatisID == id);
 
             if (satis == null)
@@ -93,7 +93,7 @@ namespace dortageDB.Controllers
             }
 
             // Sadece kendi satışını görebilir (admin hariç)
-            if (!User.IsInRole("admin") && satis.TopraktarID != currentUser.Id)
+            if (!User.IsInRole("admin") && satis.VisionerID != currentUser.Id)
             {
                 _logger.LogWarning($"⚠️ Yetkisiz erişim denemesi: User {currentUser.Id} tried to access sale {id}");
                 return Forbid();

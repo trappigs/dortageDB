@@ -2,11 +2,11 @@
 
 @{
     ViewData["Title"] = "Randevu Sil";
-    Layout = "_LayoutTopraktar";
+    Layout = "_LayoutVisioner";
 
 }
 
-<link rel="stylesheet" href="~/css/topraktar-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
 
 <style>
     .delete-container {
@@ -188,7 +188,7 @@
     }
 </style>
 
-<div class="topraktar-main-panel">
+<div class="visioner-main-panel">
     <div class="main-content">
         <div class="delete-container">
             <div class="delete-header">
@@ -236,8 +236,8 @@
                     </span>
                 </div>
                 <div class="detail-row">
-                    <span class="detail-label">Topraktar:</span>
-                    <span class="detail-value">@Model.Topraktar.Ad @Model.Topraktar.Soyad</span>
+                    <span class="detail-label">Visioner:</span>
+                    <span class="detail-value">@Model.Visioner.Ad @Model.Visioner.Soyad</span>
                 </div>
             </div>
 

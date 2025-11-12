@@ -23,10 +23,10 @@ namespace dortageDB.Entities
         public int MusteriId { get; set; }
         public Musteri Musteri { get; set; } = null!;
 
-        // Topraktar İlişkisi
+        // Visioner İlişkisi
         [Required]
-        public int TopraktarID { get; set; }
-        public AppUser Topraktar { get; set; } = null!;
+        public int VisionerID { get; set; }
+        public AppUser Visioner { get; set; } = null!;
 
         // Proje İlişkisi (Opsiyonel)
         public int? ProjeID { get; set; }

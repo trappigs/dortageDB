@@ -17,10 +17,10 @@ namespace dortageDB.ViewModels
         [Required, DataType(DataType.Password)] public string Password { get; set; } = null!;
         [Required, DataType(DataType.Password), Compare(nameof(Password))] public string ConfirmPassword { get; set; } = null!;
 
-        public bool TopraktarMi { get; set; } = true;
+        public bool VisionerMi { get; set; } = true;
         // RegisterVM.cs
         [StringLength(32)]
         public string? Code { get; set; }
-        public IList<string> Roller { get; set; } = new List<string>(); // örn: "admin","topraktar"
+        public IList<string> Roller { get; set; } = new List<string>(); // örn: "admin","visioner"
     }
 }
