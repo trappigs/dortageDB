@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" href="~/images/favicon-logo.png" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Vekarer-main-panel.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
 
     <style>
         /* Alert Styles */
@@ -273,7 +273,7 @@
     <nav class="top-navbar">
         <div class="top-navbar-left">
             <!-- Mobile Menu Button -->
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menüyü aç">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menï¿½yï¿½ aï¿½">
                 <svg viewBox="0 0 24 24">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -311,7 +311,7 @@
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar" role="navigation" aria-label="Ana navigasyon">
         <!-- Collapse Button (Desktop Only) -->
-        <button class="collapse-btn" id="collapseBtn" aria-label="Kenar çubuðunu daralt">
+        <button class="collapse-btn" id="collapseBtn" aria-label="Kenar ï¿½ubuï¿½unu daralt">
             <svg class="collapse-icon" viewBox="0 0 24 24">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -329,7 +329,7 @@
         @{
             var user = await UserManager.GetUserAsync(User);
             var initials = user != null ? $"{user.Ad?.Substring(0, 1)}{user.Soyad?.Substring(0, 1)}" : "??";
-            var fullName = user != null ? $"{user.Ad} {user.Soyad}" : "Kullanýcý";
+            var fullName = user != null ? $"{user.Ad} {user.Soyad}" : "Kullanï¿½cï¿½";
             var isAdmin = User.IsInRole("admin");
             var isVekarer = User.IsInRole("Vekarer");
         }
@@ -365,7 +365,7 @@
                 .Where(s => s.VekarerID == currentUserId.Value)
                 .Sum(s => (decimal?)s.OdenecekKomisyon) ?? 0;
 
-                // Bu Vekarera ait müþteri sayýsý
+                // Bu Vekarera ait mï¿½ï¿½teri sayï¿½sï¿½
                 totalMusteriler = context.Musteriler.Count(m => m.VekarerID == currentUserId.Value);
 
                 pendingRandevular = context.Randevular
@@ -397,12 +397,12 @@
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
-                    <span class="nav-text">Müþterilerim</span>
+                    <span class="nav-text">Mï¿½ï¿½terilerim</span>
                     @if (totalMusteriler > 0)
                     {
                         <span class="nav-badge badge-blue">@totalMusteriler</span>
                     }
-                    <span class="tooltip">Müþterilerim</span>
+                    <span class="tooltip">Mï¿½ï¿½terilerim</span>
                 </a>
             </li>
 
@@ -415,12 +415,12 @@
                         <line x1="8" y1="2" x2="8" y2="6"></line>
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
-                    <span class="nav-text">Randevularým</span>
+                    <span class="nav-text">Randevularï¿½m</span>
                     @if (pendingRandevular > 0)
                     {
                         <span class="nav-badge badge-orange pulse">@pendingRandevular</span>
                     }
-                    <span class="tooltip">Randevularým</span>
+                    <span class="tooltip">Randevularï¿½m</span>
                 </a>
             </li>
 
@@ -431,8 +431,8 @@
                         <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
                         <polyline points="16 7 22 7 22 13"></polyline>
                     </svg>
-                    <span class="nav-text">Satýþlarým</span>
-                    <span class="tooltip">Satýþlarým</span>
+                    <span class="nav-text">Satï¿½ï¿½larï¿½m</span>
+                    <span class="tooltip">Satï¿½ï¿½larï¿½m</span>
                 </a>
             </li>
 
@@ -484,8 +484,8 @@
                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                     </svg>
-                    <span class="nav-text">Yardým & Destek</span>
-                    <span class="tooltip">Yardým & Destek</span>
+                    <span class="nav-text">Yardï¿½m & Destek</span>
+                    <span class="tooltip">Yardï¿½m & Destek</span>
                 </a>
             </li>
 
@@ -497,8 +497,8 @@
                             <polyline points="16 17 21 12 16 7"></polyline>
                             <line x1="21" y1="12" x2="9" y2="12"></line>
                         </svg>
-                        <span class="nav-text">Çýkýþ Yap</span>
-                        <span class="tooltip">Çýkýþ Yap</span>
+                        <span class="nav-text">ï¿½ï¿½kï¿½ï¿½ Yap</span>
+                        <span class="tooltip">ï¿½ï¿½kï¿½ï¿½ Yap</span>
                     </button>
                 </form>
             </li>
