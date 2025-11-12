@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Tüm Randevular";
-    Layout = "_LayoutVisioner";
+    Layout = "_LayoutVekarer";
 }
 
 <link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
@@ -583,7 +583,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Vekarer *</label>
-                        <select name="VisionerID" id="createVisioner" required>
+                        <select name="VekarerID" id="createVekarer" required>
                             <option value="">Vekarer Seçin</option>
                             @{
                                 var userManager = ViewContext.HttpContext.RequestServices
@@ -790,7 +790,7 @@
 
         // Reset form
         document.getElementById('createRandevuForm').reset();
-        document.getElementById('createVisioner').disabled = false;
+        document.getElementById('createVekarer').disabled = false;
         document.getElementById('createMusteri').disabled = false;
 
         // Reset musteri options to show all
@@ -977,9 +977,9 @@
         });
 
         // CREATE MODAL - Vekarer selection filters musteriler
-        const visionerSelect = document.getElementById('createVisioner');
+        const vekarerSelect = document.getElementById('createVekarer');
 
-        visionerSelect?.addEventListener('change', function() {
+        vekarerSelect?.addEventListener('change', function() {
             const selectedVisionerId = this.value;
 
             // Clear musteri selection

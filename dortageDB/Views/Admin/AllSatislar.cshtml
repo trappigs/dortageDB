@@ -667,11 +667,11 @@
                     </div>
                     <div class="form-group">
                         <label>Vekarer *</label>
-                        <select name="VisionerID" required>
+                        <select name="VekarerID" required>
                             <option value="">Vekarer Seçin</option>
-                            @if (ViewBag.Visionerlar != null)
+                            @if (ViewBag.Vekarerlar != null)
                             {
-                                @foreach (var vekarer in ViewBag.Visionerlar as IEnumerable<AppUser>)
+                                @foreach (var vekarer in ViewBag.Vekarerlar as IEnumerable<AppUser>)
                                 {
                                     <option value="@vekarer.Id">@vekarer.Ad @vekarer.Soyad (@vekarer.PhoneNumber)</option>
                                 }
@@ -784,11 +784,11 @@
                     </div>
                     <div class="form-group">
                         <label>Vekarer *</label>
-                        <select name="VisionerID" id="editVisionerId" required>
+                        <select name="VekarerID" id="editVekarerId" required>
                             <option value="">Vekarer Seçin</option>
-                            @if (ViewBag.Visionerlar != null)
+                            @if (ViewBag.Vekarerlar != null)
                             {
-                                @foreach (var vekarer in ViewBag.Visionerlar as IEnumerable<AppUser>)
+                                @foreach (var vekarer in ViewBag.Vekarerlar as IEnumerable<AppUser>)
                                 {
                                     <option value="@vekarer.Id">@vekarer.Ad @vekarer.Soyad (@vekarer.PhoneNumber)</option>
                                 }
@@ -916,7 +916,7 @@
 
         document.getElementById('editSatisId').value = id;
         document.getElementById('editMusteriId').value = musteriId;
-        document.getElementById('editVisionerId').value = visionerId;
+        document.getElementById('editVekarerId').value = visionerId;
         document.getElementById('editTarih').value = tarih;
         document.getElementById('editTutar').value = tutar;
         document.getElementById('editBolge').value = bolge;
