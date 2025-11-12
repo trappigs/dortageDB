@@ -6,10 +6,10 @@
     Layout = "_LayoutVisioner";
 }
 
-<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/user-settings.css" asp-append-version="true" />
 
-<div class="visioner-main-panel">
+<div class="vekarer-main-panel">
     <div class="main-content">
         <div class="container-fluid px-4">
             <div class="breadcrumb">
@@ -57,9 +57,9 @@
                     </button>
                 </div>
                 <div class="settings-user-name">@Model.Ad @Model.Soyad</div>
-                @if (User.IsInRole("visioner"))
+                @if (User.IsInRole("vekarer"))
                 {
-                    <span class="user-role">Visioner</span>
+                    <span class="user-role">Vekarer</span>
                 }
                 @if (User.IsInRole("admin"))
                 {

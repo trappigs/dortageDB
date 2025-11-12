@@ -5,7 +5,7 @@
     Layout = "_LayoutVisioner";
 }
 
-<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
 
 <style>
     .page-header {
@@ -467,7 +467,7 @@
     }
 </style>
 
-<div class="visioner-main-panel">
+<div class="vekarer-main-panel">
     <div class="main-content">
         <div class="page-header">
             <div>
@@ -520,7 +520,7 @@
         <div class="filters-bar">
             <div class="filter-group">
                 <label>Ara</label>
-                <input type="text" id="searchInput" placeholder="Müşteri veya visioner ara...">
+                <input type="text" id="searchInput" placeholder="Müşteri veya vekarer ara...">
             </div>
             <div class="filter-group">
                 <label>Ödeme Tipi</label>
@@ -540,7 +540,7 @@
                         <tr>
                             <th onclick="sortTable(0)">Satış ID</th>
                             <th onclick="sortTable(1)">Müşteri</th>
-                            <th onclick="sortTable(2)">Visioner</th>
+                            <th onclick="sortTable(2)">Vekarer</th>
                             <th onclick="sortTable(3)">Tarih</th>
                             <th onclick="sortTable(4)">Bölge</th>
                             <th onclick="sortTable(5)">Tutar</th>
@@ -666,14 +666,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Visioner *</label>
+                        <label>Vekarer *</label>
                         <select name="VisionerID" required>
-                            <option value="">Visioner Seçin</option>
+                            <option value="">Vekarer Seçin</option>
                             @if (ViewBag.Visionerlar != null)
                             {
-                                @foreach (var visioner in ViewBag.Visionerlar as IEnumerable<AppUser>)
+                                @foreach (var vekarer in ViewBag.Visionerlar as IEnumerable<AppUser>)
                                 {
-                                    <option value="@visioner.Id">@visioner.Ad @visioner.Soyad (@visioner.PhoneNumber)</option>
+                                    <option value="@vekarer.Id">@vekarer.Ad @vekarer.Soyad (@vekarer.PhoneNumber)</option>
                                 }
                             }
                         </select>
@@ -727,7 +727,7 @@
                 <span class="detail-value" id="viewMusteri"></span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Visioner:</span>
+                <span class="detail-label">Vekarer:</span>
                 <span class="detail-value" id="viewVisioner"></span>
             </div>
             <div class="detail-row">
@@ -783,14 +783,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Visioner *</label>
+                        <label>Vekarer *</label>
                         <select name="VisionerID" id="editVisionerId" required>
-                            <option value="">Visioner Seçin</option>
+                            <option value="">Vekarer Seçin</option>
                             @if (ViewBag.Visionerlar != null)
                             {
-                                @foreach (var visioner in ViewBag.Visionerlar as IEnumerable<AppUser>)
+                                @foreach (var vekarer in ViewBag.Visionerlar as IEnumerable<AppUser>)
                                 {
-                                    <option value="@visioner.Id">@visioner.Ad @visioner.Soyad (@visioner.PhoneNumber)</option>
+                                    <option value="@vekarer.Id">@vekarer.Ad @vekarer.Soyad (@vekarer.PhoneNumber)</option>
                                 }
                             }
                         </select>
@@ -870,7 +870,7 @@
     // View Modal - DATA ATTRIBUTE İLE
     function openViewModalData(button) {
         const musteri = button.getAttribute('data-musteri');
-        const visioner = button.getAttribute('data-visioner');
+        const vekarer = button.getAttribute('data-vekarer');
         const tarih = button.getAttribute('data-tarih');
         const bolge = button.getAttribute('data-bolge');
         const tutar = parseFloat(button.getAttribute('data-tutar'));
@@ -879,7 +879,7 @@
 
         console.log('👁️ View modal açılıyor');
         console.log('Musteri:', musteri);
-        console.log('Visioner:', visioner);
+        console.log('Vekarer:', vekarer);
         console.log('Tarih:', tarih);
         console.log('Bolge:', bolge);
         console.log('Tutar:', tutar);
@@ -887,7 +887,7 @@
         console.log('Taksit:', taksit);
 
         document.getElementById('viewMusteri').textContent = musteri;
-        document.getElementById('viewVisioner').textContent = visioner;
+        document.getElementById('viewVisioner').textContent = vekarer;
         document.getElementById('viewTarih').textContent = tarih;
         document.getElementById('viewBolge').textContent = bolge;
         document.getElementById('viewTutar').textContent = '₺' + tutar.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -905,7 +905,7 @@
     function openEditModalData(button) {
         const id = button.getAttribute('data-id');
         const musteriId = button.getAttribute('data-musteri-id');
-        const visionerId = button.getAttribute('data-visioner-id');
+        const visionerId = button.getAttribute('data-vekarer-id');
         const tarih = button.getAttribute('data-tarih');
         const tutar = button.getAttribute('data-tutar');
         const bolge = button.getAttribute('data-bolge');
@@ -1013,7 +1013,7 @@
 
 **Satışlar Tablosunda (tbody kısmı):**
 - Müşteri sütununda: İsim **bold** olarak üstte, telefon numarası küçük gri renkle altta gösteriliyor
-- Visioner sütununda: İsim **bold** olarak üstte, telefon numarası küçük gri renkle altta gösteriliyor
+- Vekarer sütununda: İsim **bold** olarak üstte, telefon numarası küçük gri renkle altta gösteriliyor
 - `data-search` attribute'üne telefon numaraları da eklendi (arama yaparken telefon numarasına göre de arama yapılabilsin)
 
 **Görünüm:**

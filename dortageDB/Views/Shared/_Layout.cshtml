@@ -62,7 +62,7 @@
                             <a class="nav-link text-dark" asp-controller="User" asp-action="Index">Kullanıcılar</a>
                         </li>
                     }
-                    @if (User.IsInRole("visioner") || User.IsInRole("admin"))
+                    @if (User.IsInRole("vekarer") || User.IsInRole("admin"))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Musteri" asp-action="Index">Müşteriler</a>

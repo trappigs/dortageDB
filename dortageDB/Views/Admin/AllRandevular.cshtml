@@ -5,7 +5,7 @@
     Layout = "_LayoutVisioner";
 }
 
-<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
 
 <style>
     .page-header {
@@ -432,7 +432,7 @@
     }
 </style>
 
-<div class="visioner-main-panel">
+<div class="vekarer-main-panel">
     <div class="main-content">
         @if (TempData["SuccessMessage"] != null)
         {
@@ -475,7 +475,7 @@
             </div>
             <div class="filter-group">
                 <label>Ara</label>
-                <input type="text" id="searchInput" placeholder="Müşteri veya visioner ara...">
+                <input type="text" id="searchInput" placeholder="Müşteri veya vekarer ara...">
             </div>
         </div>
 
@@ -487,7 +487,7 @@
                         <tr>
                             <th>Randevu ID</th>
                             <th>Müşteri</th>
-                            <th>Visioner</th>
+                            <th>Vekarer</th>
                             <th>Tarih & Saat</th>
                             <th>Tip</th>
                             <th>Durum</th>
@@ -582,16 +582,16 @@
                 <input type="hidden" name="RandevuZaman" id="createRandevuZaman">
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Visioner *</label>
+                        <label>Vekarer *</label>
                         <select name="VisionerID" id="createVisioner" required>
-                            <option value="">Visioner Seçin</option>
+                            <option value="">Vekarer Seçin</option>
                             @{
                                 var userManager = ViewContext.HttpContext.RequestServices
                                 .GetService(typeof(Microsoft.AspNetCore.Identity.UserManager<dortageDB.Entities.AppUser>))
                                 as Microsoft.AspNetCore.Identity.UserManager<dortageDB.Entities.AppUser>;
                                 if (userManager != null)
                                 {
-                                    var visionerlar = await userManager.GetUsersInRoleAsync("visioner");
+                                    var visionerlar = await userManager.GetUsersInRoleAsync("vekarer");
                                     foreach (var t in visionerlar.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
                                     {
                                         <option value="@t.Id">@t.Ad @t.Soyad (@t.PhoneNumber)</option>
@@ -669,7 +669,7 @@
                 <span class="detail-value" id="viewMusteri"></span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Visioner:</span>
+                <span class="detail-label">Vekarer:</span>
                 <span class="detail-value" id="viewVisioner"></span>
             </div>
             <div class="detail-row">
@@ -864,7 +864,7 @@
     // View Modal - DATA ATTRIBUTE İLE
     function openViewModalData(button) {
         const musteri = button.getAttribute('data-musteri');
-        const visioner = button.getAttribute('data-visioner');
+        const vekarer = button.getAttribute('data-vekarer');
         const tarih = button.getAttribute('data-tarih');
         const aciklama = button.getAttribute('data-aciklama');
         const tip = button.getAttribute('data-tip');
@@ -873,7 +873,7 @@
         console.log('👁️ View modal açılıyor');
 
         document.getElementById('viewMusteri').textContent = musteri;
-        document.getElementById('viewVisioner').textContent = visioner;
+        document.getElementById('viewVisioner').textContent = vekarer;
         document.getElementById('viewTarih').textContent = tarih;
         document.getElementById('viewTip').textContent = tip;
         document.getElementById('viewAciklama').textContent = aciklama || '-';
@@ -976,7 +976,7 @@
             populateCreateHourOptions(this.value);
         });
 
-        // CREATE MODAL - Visioner selection filters musteriler
+        // CREATE MODAL - Vekarer selection filters musteriler
         const visionerSelect = document.getElementById('createVisioner');
 
         visionerSelect?.addEventListener('change', function() {
@@ -992,17 +992,17 @@
             originalMusteriOptions.forEach(option => {
                 const optionVisionerId = option.getAttribute('data-visionerid');
 
-                // Show only musteriler of selected visioner
+                // Show only musteriler of selected vekarer
                 if (!selectedVisionerId || optionVisionerId === selectedVisionerId) {
                     const newOption = option.cloneNode(true);
                     musteriSelect.appendChild(newOption);
                 }
             });
 
-            console.log('✅ Visioner seçildi - Müşteriler filtrelendi');
+            console.log('✅ Vekarer seçildi - Müşteriler filtrelendi');
         });
 
-        // CREATE MODAL - Musteri selection auto-selects visioner
+        // CREATE MODAL - Musteri selection auto-selects vekarer
         musteriSelect?.addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
             if (!selectedOption || !selectedOption.value) {
@@ -1014,7 +1014,7 @@
             if (visionerId) {
                 visionerSelect.value = visionerId;
                 visionerSelect.disabled = true;
-                console.log('✅ Müşteri seçildi - Visioner otomatik seçildi:', visionerId);
+                console.log('✅ Müşteri seçildi - Vekarer otomatik seçildi:', visionerId);
             }
         });
 
@@ -1034,7 +1034,7 @@
             document.getElementById('createRandevuZaman').value = randevuZaman;
             console.log('✅ Yeni randevu oluşturuluyor - Randevu Zamanı:', randevuZaman);
 
-            // Re-enable visioner before submit (so it gets posted)
+            // Re-enable vekarer before submit (so it gets posted)
             visionerSelect.disabled = false;
         });
     });

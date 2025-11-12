@@ -5,7 +5,7 @@
     Layout = "_LayoutVisioner";
 }
 
-<link rel="stylesheet" href="~/css/visioner-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
 
 <style>
     .page-header {
@@ -398,7 +398,7 @@
     }
 </style>
 
-<div class="visioner-main-panel">
+<div class="vekarer-main-panel">
     <div class="main-content">
         @if (TempData["SuccessMessage"] != null)
         {
@@ -565,16 +565,16 @@
                 </div>
 
                 <div class="form-group full-width">
-                    <label>Visioner *</label>
+                    <label>Vekarer *</label>
                     <select name="VisionerID" required>
-                        <option value="">Visioner Seçin</option>
+                        <option value="">Vekarer Seçin</option>
                         @{
                             var userManager = ViewContext.HttpContext.RequestServices
                             .GetService(typeof(Microsoft.AspNetCore.Identity.UserManager<dortageDB.Entities.AppUser>))
                             as Microsoft.AspNetCore.Identity.UserManager<dortageDB.Entities.AppUser>;
                             if (userManager != null)
                             {
-                                var visionerlar = await userManager.GetUsersInRoleAsync("visioner");
+                                var visionerlar = await userManager.GetUsersInRoleAsync("vekarer");
                                 foreach (var t in visionerlar.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
                                 {
                                     <option value="@t.Id">@t.Ad @t.Soyad (@t.PhoneNumber)</option>
