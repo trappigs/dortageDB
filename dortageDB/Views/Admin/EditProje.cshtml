@@ -623,12 +623,23 @@
 
     // Dosya input değişikliği
     fileInput.addEventListener('change', function(e) {
-        handleFiles(e.target.files);
-    });
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            handleFiles(files);
+        }
+    }, { once: false });
 
-    // Upload area'ya tıklama
-    uploadArea.addEventListener('click', function() {
-        fileInput.click();
+    // Upload area'ya tıklama (etiket hariç)
+    uploadArea.addEventListener('click', function(e) {
+        // Eğer tıklanan öğe label veya label içinde bir öğeyse, iptal et
+        if (e.target.tagName === 'LABEL' || e.target.closest('label')) {
+            return;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        if (fileInput) {
+            fileInput.click();
+        }
     });
 
     // Drag & Drop events
@@ -655,11 +666,12 @@
 
     // Dosyaları işle
     async function handleFiles(files) {
-        if (files.length === 0) return;
+        if (!files || files.length === 0) return;
 
         // Maksimum dosya kontrolü
         if (galleryImages.length + files.length > 50) {
             alert('Maksimum 50 görsel ekleyebilirsiniz!');
+            fileInput.value = '';
             return;
         }
 
@@ -694,27 +706,35 @@
                     body: formData
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+
                 const result = await response.json();
 
                 if (result.success) {
                     galleryImages.push(result.url);
                     uploadedFiles++;
                 } else {
-                    alert(`${file.name} yüklenemedi: ${result.message}`);
+                    const errorMsg = result.message || 'Bilinmeyen hata oluştu';
+                    alert(`${file.name} yüklenemedi: ${errorMsg}`);
+                    console.error('Upload failed:', result);
                 }
             } catch (error) {
-                console.error('Upload error:', error);
-                alert(`${file.name} yüklenirken bir hata oluştu!`);
+                console.error('Upload error for file:', file.name, error);
+                alert(`${file.name} yüklenirken bir hata oluştu: ${error.message}`);
             }
         }
 
         uploadProgressBar.style.width = '100%';
         uploadProgressText.textContent = `${uploadedFiles} dosya başarıyla yüklendi!`;
 
+        // File input'u hemen reset et
+        fileInput.value = '';
+
         setTimeout(() => {
             uploadProgress.style.display = 'none';
             uploadProgressBar.style.width = '0%';
-            fileInput.value = '';
         }, 2000);
 
         renderGallery();
