@@ -615,53 +615,62 @@
     // DOSYA YÜKLEME FONKSİYONLARI
     // ===================================
 
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('fileInput');
-    const uploadProgress = document.getElementById('uploadProgress');
-    const uploadProgressBar = document.getElementById('uploadProgressBar');
-    const uploadProgressText = document.getElementById('uploadProgressText');
+    // DOMContentLoaded içinde başlat
+    document.addEventListener('DOMContentLoaded', function() {
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const uploadProgressBar = document.getElementById('uploadProgressBar');
+        const uploadProgressText = document.getElementById('uploadProgressText');
 
-    // Dosya input değişikliği
-    fileInput.addEventListener('change', function(e) {
-        const files = e.target.files;
-        if (files && files.length > 0) {
-            handleFiles(files);
-        }
-    }, { once: false });
-
-    // Upload area'ya tıklama (etiket hariç)
-    uploadArea.addEventListener('click', function(e) {
-        // Eğer tıklanan öğe label veya label içinde bir öğeyse, iptal et
-        if (e.target.tagName === 'LABEL' || e.target.closest('label')) {
+        // Elementlerin var olup olmadığını kontrol et
+        if (!uploadArea || !fileInput) {
+            console.error('Upload elementleri bulunamadı!');
             return;
         }
-        e.preventDefault();
-        e.stopPropagation();
-        if (fileInput) {
-            fileInput.click();
-        }
-    });
 
-    // Drag & Drop events
-    uploadArea.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        uploadArea.classList.add('dragover');
-    });
+        // Dosya input değişikliği
+        fileInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                handleFiles(files);
+            }
+        }, { once: false });
 
-    uploadArea.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        uploadArea.classList.remove('dragover');
-    });
+        // Upload area'ya tıklama (etiket hariç)
+        uploadArea.addEventListener('click', function(e) {
+            // Eğer tıklanan öğe label veya label içinde bir öğeyse, iptal et
+            if (e.target.tagName === 'LABEL' || e.target.closest('label')) {
+                return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            if (fileInput) {
+                fileInput.click();
+            }
+        });
 
-    uploadArea.addEventListener('drop', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        uploadArea.classList.remove('dragover');
+        // Drag & Drop events
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.add('dragover');
+        });
 
-        const files = e.dataTransfer.files;
-        handleFiles(files);
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
     });
 
     // Dosyaları işle
