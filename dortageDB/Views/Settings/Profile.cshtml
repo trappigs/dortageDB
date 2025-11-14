@@ -3,15 +3,13 @@
 
 @{
     ViewData["Title"] = "Profil Ayarları";
-    Layout = "_LayoutVisioner";
+    Layout = "_LayoutVekarer";
 }
 
 <link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/user-settings.css" asp-append-version="true" />
 
-<div class="vekarer-main-panel">
-    <div class="main-content">
-        <div class="container-fluid px-4">
+<div class="container-fluid px-4">
             <div class="breadcrumb">
                 <a asp-controller="Home" asp-action="Index">Ana Sayfa</a> >
                 <a asp-controller="Dashboard" asp-action="Index">Dashboard</a> >
@@ -243,8 +241,6 @@
     <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
 
-        </div>
-    </div>
 </div>
 
 @section Scripts {

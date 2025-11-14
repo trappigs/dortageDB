@@ -1,10 +1,10 @@
 @{
-    ViewData["Title"] = "Tüm Vekarerlar";
+    ViewData["Title"] = "Tï¿½m Vekarerlar";
     Layout = "_LayoutVekarer";
     var VekarerData = ViewBag.VekarerData as List<dynamic>;
 }
 
-<link rel="stylesheet" href="~/css/Vekarer-main-panel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
 
 <style>
     .page-header {
@@ -412,7 +412,7 @@
         <div class="page-header">
             <div>
                 <h1 class="page-title">
-                    Tüm Vekarerlar
+                    Tï¿½m Vekarerlar
                     <span class="admin-badge">ADMIN</span>
                 </h1>
                 <p style="color: #6b7280;">Sistemde toplam @(VekarerData?.Count ?? 0) Vekarer</p>
@@ -422,7 +422,7 @@
                     ? Yeni Vekarer
                 </button>
                 <a asp-action="Index" class="btn-back">
-                    ‹ Dashboard'a Dön
+                    ï¿½ Dashboard'a Dï¿½n
                 </a>
             </div>
         </div>
@@ -459,7 +459,7 @@
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
                                 </svg>
-                                DEAKTÝF HESAP
+                                DEAKTï¿½F HESAP
                             </div>
                         }
                         <div class="Vekarer-header">
@@ -513,36 +513,36 @@
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value">@satisCount</div>
-                                <div class="stat-label">Satýþ</div>
+                                <div class="stat-label">Satï¿½ï¿½</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value">@((satisCount > 0 ? (decimal)randevuCount / satisCount * 100 : 0).ToString("F0"))%</div>
-                                <div class="stat-label">Baþarý</div>
+                                <div class="stat-label">Baï¿½arï¿½</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-value">?@totalCiro.ToString("N0")</div>
+                                <div class="stat-value">â‚º@totalCiro.ToString("N0")</div>
                                 <div class="stat-label">Ciro</div>
                             </div>
                         </div>
 
                         <div class="commission-badge" style="margin-top: 16px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
-                            ?@totalCiro.ToString("N0") Ciro
+                            â‚º@totalCiro.ToString("N0") Ciro
                         </div>
 
                         <div class="commission-badge" style="margin-top: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                            ?@totalKomisyon.ToString("N0") Komisyon
+                            â‚º@totalKomisyon.ToString("N0") Komisyon
                         </div>
 
                         @if (!user.LockoutEnd.HasValue || user.LockoutEnd.Value <= DateTimeOffset.Now)
                         {
                             <button class="btn-deactivate" onclick="openDeactivateModal(@user.Id, '@user.Ad @user.Soyad')" style="margin-top: 12px; width: 100%; padding: 10px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                                ?? Hesabý Deaktif Et
+                                ðŸ”’ HesabÄ± Deaktif Et
                             </button>
                         }
                         else
                         {
                             <button class="btn-reactivate" onclick="openReactivateModal(@user.Id, '@user.Ad @user.Soyad')" style="margin-top: 12px; width: 100%; padding: 10px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                                ? Hesabý Aktifleþtir
+                                ? Hesabï¿½ Aktifleï¿½tir
                             </button>
                         }
                     </div>
@@ -553,8 +553,8 @@
         {
             <div class="empty-state">
                 <div class="empty-icon">??</div>
-                <h3 style="color: #1f2937; margin-bottom: 8px;">Henüz Vekarer yok</h3>
-                <p style="color: #6b7280;">Sistemde kayýtlý Vekarer bulunmuyor</p>
+                <h3 style="color: #1f2937; margin-bottom: 8px;">Henï¿½z Vekarer yok</h3>
+                <p style="color: #6b7280;">Sistemde kayï¿½tlï¿½ Vekarer bulunmuyor</p>
             </div>
         }
     </div>
@@ -565,7 +565,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h3>? Yeni Vekarer Ekle</h3>
-            <button type="button" class="modal-close" onclick="closeCreateModal()">×</button>
+            <button type="button" class="modal-close" onclick="closeCreateModal()">ï¿½</button>
         </div>
         <form asp-controller="Admin" asp-action="CreateVekarer" method="post" id="createVekarerForm">
             @Html.AntiForgeryToken()
@@ -607,14 +607,14 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Þehir *</label>
-                        <input type="text" name="Sehir" required placeholder="Þehir" maxlength="100">
+                        <label>ï¿½ehir *</label>
+                        <input type="text" name="Sehir" required placeholder="ï¿½ehir" maxlength="100">
                     </div>
                     <div class="form-group">
                         <label>Cinsiyet *</label>
                         <select name="Cinsiyet" required>
-                            <option value="">Seçin</option>
-                            <option value="false">Kadýn</option>
+                            <option value="">Seï¿½in</option>
+                            <option value="false">Kadï¿½n</option>
                             <option value="true">Erkek</option>
                         </select>
                     </div>
@@ -622,17 +622,17 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Þifre *</label>
+                        <label>ï¿½ifre *</label>
                         <input type="password" name="Password" required placeholder="Minimum 6 karakter" minlength="6">
                     </div>
                     <div class="form-group">
-                        <label>Þifre Tekrar *</label>
-                        <input type="password" name="ConfirmPassword" required placeholder="Þifre tekrar" minlength="6">
+                        <label>ï¿½ifre Tekrar *</label>
+                        <input type="password" name="ConfirmPassword" required placeholder="ï¿½ifre tekrar" minlength="6">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeCreateModal()">Ýptal</button>
+                <button type="button" class="btn-modal btn-cancel" onclick="closeCreateModal()">ï¿½ptal</button>
                 <button type="submit" class="btn-modal btn-save">Kaydet</button>
             </div>
         </form>
@@ -643,8 +643,8 @@
 <div class="modal-overlay" id="deactivateModal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
-            <h3>?? Hesabý Deaktif Et</h3>
-            <button type="button" class="modal-close" onclick="closeDeactivateModal()">×</button>
+            <h3>?? Hesabï¿½ Deaktif Et</h3>
+            <button type="button" class="modal-close" onclick="closeDeactivateModal()">ï¿½</button>
         </div>
         <form asp-controller="Admin" asp-action="DeactivateVekarer" method="post" id="deactivateForm">
             @Html.AntiForgeryToken()
@@ -660,18 +660,18 @@
                         <h4 style="margin: 0; color: #991b1b; font-size: 16px;">Dikkat!</h4>
                     </div>
                     <p style="color: #7f1d1d; margin: 0; font-size: 14px; line-height: 1.5;">
-                        <strong id="deactivateUserName"></strong> kullanýcýsýnýn hesabýný deaktif etmek üzeresiniz.
+                        <strong id="deactivateUserName"></strong> kullanï¿½cï¿½sï¿½nï¿½n hesabï¿½nï¿½ deaktif etmek ï¿½zeresiniz.
                     </p>
                     <p style="color: #7f1d1d; margin: 8px 0 0 0; font-size: 14px; line-height: 1.5;">
-                        Bu kullanýcý sisteme giriþ yapamayacak ve tüm eriþimleri engellenecektir.
+                        Bu kullanï¿½cï¿½ sisteme giriï¿½ yapamayacak ve tï¿½m eriï¿½imleri engellenecektir.
                     </p>
                 </div>
                 <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                    Bu iþlemi gerçekleþtirmek istediðinizden emin misiniz?
+                    Bu iï¿½lemi gerï¿½ekleï¿½tirmek istediï¿½inizden emin misiniz?
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeDeactivateModal()">Ýptal</button>
+                <button type="button" class="btn-modal btn-cancel" onclick="closeDeactivateModal()">ï¿½ptal</button>
                 <button type="button" class="btn-modal" onclick="confirmDeactivate()" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white;">
                     ?? Deaktif Et
                 </button>
@@ -684,8 +684,8 @@
 <div class="modal-overlay" id="reactivateModal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
-            <h3>? Hesabý Aktifleþtir</h3>
-            <button type="button" class="modal-close" onclick="closeReactivateModal()">×</button>
+            <h3>? Hesabï¿½ Aktifleï¿½tir</h3>
+            <button type="button" class="modal-close" onclick="closeReactivateModal()">ï¿½</button>
         </div>
         <form asp-controller="Admin" asp-action="ReactivateVekarer" method="post" id="reactivateForm">
             @Html.AntiForgeryToken()
@@ -697,23 +697,23 @@
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                         </svg>
-                        <h4 style="margin: 0; color: #065f46; font-size: 16px;">Hesap Aktifleþtirme</h4>
+                        <h4 style="margin: 0; color: #065f46; font-size: 16px;">Hesap Aktifleï¿½tirme</h4>
                     </div>
                     <p style="color: #064e3b; margin: 0; font-size: 14px; line-height: 1.5;">
-                        <strong id="reactivateUserName"></strong> kullanýcýsýnýn hesabýný aktifleþtirmek üzeresiniz.
+                        <strong id="reactivateUserName"></strong> kullanï¿½cï¿½sï¿½nï¿½n hesabï¿½nï¿½ aktifleï¿½tirmek ï¿½zeresiniz.
                     </p>
                     <p style="color: #064e3b; margin: 8px 0 0 0; font-size: 14px; line-height: 1.5;">
-                        Bu kullanýcý tekrar sisteme giriþ yapabilecek ve tüm yetkileri geri gelecektir.
+                        Bu kullanï¿½cï¿½ tekrar sisteme giriï¿½ yapabilecek ve tï¿½m yetkileri geri gelecektir.
                     </p>
                 </div>
                 <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                    Bu iþlemi gerçekleþtirmek istediðinizden emin misiniz?
+                    Bu iï¿½lemi gerï¿½ekleï¿½tirmek istediï¿½inizden emin misiniz?
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeReactivateModal()">Ýptal</button>
+                <button type="button" class="btn-modal btn-cancel" onclick="closeReactivateModal()">ï¿½ptal</button>
                 <button type="button" class="btn-modal" onclick="confirmReactivate()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
-                    ? Aktifleþtir
+                    ? Aktifleï¿½tir
                 </button>
             </div>
         </form>
@@ -723,7 +723,7 @@
 <script>
     // Create Modal functions
     function openCreateModal() {
-        console.log('? Create modal açýlýyor');
+        console.log('? Create modal aï¿½ï¿½lï¿½yor');
         document.getElementById('createVekarerForm').reset();
         document.getElementById('createModal').classList.add('active');
     }
@@ -793,7 +793,7 @@
 
             if (password !== confirmPassword) {
                 e.preventDefault();
-                alert('Þifreler eþleþmiyor!');
+                alert('ï¿½ifreler eï¿½leï¿½miyor!');
                 return false;
             }
         });
@@ -804,7 +804,7 @@
     let deactivateUserName = '';
 
     function openDeactivateModal(userId, userName) {
-        console.log('?? Deactivate modal açýlýyor:', userId, userName);
+        console.log('?? Deactivate modal aï¿½ï¿½lï¿½yor:', userId, userName);
         deactivateUserId = userId;
         deactivateUserName = userName;
         document.getElementById('deactivateUserName').textContent = userName;
@@ -820,7 +820,7 @@
 
     function confirmDeactivate() {
         if (deactivateUserId) {
-            console.log('? Deaktif etme onaylandý:', deactivateUserId);
+            console.log('? Deaktif etme onaylandï¿½:', deactivateUserId);
             document.getElementById('deactivateForm').submit();
         }
     }
@@ -830,7 +830,7 @@
     let reactivateUserName = '';
 
     function openReactivateModal(userId, userName) {
-        console.log('? Reactivate modal açýlýyor:', userId, userName);
+        console.log('? Reactivate modal aï¿½ï¿½lï¿½yor:', userId, userName);
         reactivateUserId = userId;
         reactivateUserName = userName;
         document.getElementById('reactivateUserName').textContent = userName;
@@ -846,7 +846,7 @@
 
     function confirmReactivate() {
         if (reactivateUserId) {
-            console.log('? Aktifleþtirme onaylandý:', reactivateUserId);
+            console.log('? Aktifleï¿½tirme onaylandï¿½:', reactivateUserId);
             document.getElementById('reactivateForm').submit();
         }
     }

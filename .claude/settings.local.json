@@ -29,7 +29,14 @@
       "Bash(powershell -ExecutionPolicy Bypass -File:*)",
       "Bash(find:*)",
       "Bash(__NEW_LINE__ echo \"✓ Yorum satırları ve string literals güncellendi\")",
-      "Bash(dotnet ef dbcontext:*)"
+      "Bash(dotnet ef dbcontext:*)",
+      "Bash(cat:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(python update_visioner.py:*)",
+      "Bash(git rm:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(Select-String -Pattern \"error|warning|Build succeeded\" -Context 2)"
     ],
     "deny": [],
     "ask": []

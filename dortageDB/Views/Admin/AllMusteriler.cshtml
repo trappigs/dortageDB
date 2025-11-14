@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Tüm Müşteriler";
-    Layout = "_LayoutVisioner";
+    Layout = "_LayoutVekarer";
 }
 
 <link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
@@ -574,8 +574,8 @@
                             as Microsoft.AspNetCore.Identity.UserManager<dortageDB.Entities.AppUser>;
                             if (userManager != null)
                             {
-                                var visionerlar = await userManager.GetUsersInRoleAsync("vekarer");
-                                foreach (var t in visionerlar.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
+                                var vekarerler = await userManager.GetUsersInRoleAsync("vekarer");
+                                foreach (var t in vekarerler.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
                                 {
                                     <option value="@t.Id">@t.Ad @t.Soyad (@t.PhoneNumber)</option>
                                 }

@@ -2,7 +2,7 @@
     <!-- Main Navigation -->
     <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
         <a asp-controller="" asp-action="" class="logo" style="text-decoration: none;">
-            <img src="~/images/logo.svg" alt="Dortage Logo" class="logo-image" />
+            <img src="~/images/logo.svg" alt="Vekarer Logo" class="logo-image" />
         </a>
 
         <!-- Desktop Menu -->
@@ -11,13 +11,13 @@
                 <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" && ViewContext.RouteData.Values["controller"]?.ToString() == "" ? "active" : "")">Anasayfa</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="VisionerNedir" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Vekarer Nedir?</a>
+                <a asp-controller="VekarerNedir" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Vekarer Nedir?</a>
             </li>
             <li class="nav-item">
                 <a asp-controller="Proje" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Proje" ? "active" : "")">Projeler</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="VisionerAkademi" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "VisionerAkademi" ? "active" : "")">Vekarer Akademi</a>
+                <a asp-controller="VekarerAkademi" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "VekarerAkademi" ? "active" : "")">Vekarer Akademi</a>
             </li>
             <li class="nav-item">
                 <a asp-controller="Hakkimizda" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Hakkimizda" ? "active" : "")">Hakkımızda</a>
@@ -56,7 +56,7 @@
     <div class="mobile-menu">
         <div class="mobile-menu-header">
             <a asp-controller="" asp-action="" class="logo" style="text-decoration: none;">
-                <img style="height: 45px;" src="~/images/logo-.svg" alt="Dortage Logo" class="logo-image" />
+                <img style="height: 45px;" src="~/images/logo-.svg" alt="Vekarer Logo" class="logo-image" />
             </a>
             <button class="close-menu" aria-label="Menüyü kapat">×</button>
         </div>
@@ -72,7 +72,7 @@
                 <a asp-controller="Proje" asp-action="Index" class="mobile-nav-link">Projeler</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="VisionerAkademi" asp-action="Index" class="mobile-nav-link">Vekarer Akademi</a>
+                <a asp-controller="VekarerAkademi" asp-action="Index" class="mobile-nav-link">Vekarer Akademi</a>
             </li>
             <li class="mobile-nav-item">
                 <a asp-controller="Hakkimizda" asp-action="Index" class="mobile-nav-link">Hakkımızda</a>

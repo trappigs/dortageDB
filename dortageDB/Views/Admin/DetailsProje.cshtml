@@ -1,7 +1,7 @@
 ﻿@model dortageDB.Entities.Proje
 @{
     ViewData["Title"] = "Proje Detayları";
-    Layout = "_LayoutVisioner";
+    Layout = "_LayoutVekarer";
     var satisYuzdesi = Model.ToplamParsel > 0 ? (double)Model.SatilanParsel / Model.ToplamParsel * 100 : 0;
 }
 

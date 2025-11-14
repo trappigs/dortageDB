@@ -467,4 +467,4 @@ function isStrongPassword(password) {
         /[+!@#$%^&*(),.?":{}|<>]/.test(password);
 }
 
-console.log('✅ DORTAGE Registration Form initialized successfully');
+console.log('✅ VEKARER Registration Form initialized successfully');

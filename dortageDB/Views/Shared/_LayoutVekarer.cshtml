@@ -15,6 +15,27 @@
     <link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
 
     <style>
+        /* CSS Variables for Theme */
+        :root {
+            --primary: #000a68;
+            --primary-dark: #001a88;
+            --success: #10b981;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --warning: #f59e0b;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
         /* Alert Styles */
         .alert {
             padding: 16px 20px;
@@ -211,7 +232,13 @@
 
         /* Adjust main content for navbar */
         .main-content {
-            margin-top: 45px;
+            margin-top: 20px;
+            margin-left: 150px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 80px;
         }
 
         /* Mobile navbar */
@@ -258,7 +285,8 @@
             }
 
             .main-content {
-                margin-top: 5px;
+                margin-top: 0px;
+                margin-left: 0;
             }
         }
     </style>
@@ -273,7 +301,7 @@
     <nav class="top-navbar">
         <div class="top-navbar-left">
             <!-- Mobile Menu Button -->
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Men�y� a�">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menüyü aç">
                 <svg viewBox="0 0 24 24">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -281,7 +309,7 @@
                 </svg>
             </button>
             <a asp-controller="Home" asp-action="Index" class="top-navbar-logo">
-                <img src="~/images/logo.svg" alt="Dortage Logo" />
+                <img src="~/images/logo.svg" alt="Vekarer Logo" />
                 <span>Vekarer</span>
             </a>
         </div>
@@ -311,7 +339,7 @@
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar" role="navigation" aria-label="Ana navigasyon">
         <!-- Collapse Button (Desktop Only) -->
-        <button class="collapse-btn" id="collapseBtn" aria-label="Kenar �ubu�unu daralt">
+        <button class="collapse-btn" id="collapseBtn" aria-label="Kenar çubuğunu daralt">
             <svg class="collapse-icon" viewBox="0 0 24 24">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -329,7 +357,7 @@
         @{
             var user = await UserManager.GetUserAsync(User);
             var initials = user != null ? $"{user.Ad?.Substring(0, 1)}{user.Soyad?.Substring(0, 1)}" : "??";
-            var fullName = user != null ? $"{user.Ad} {user.Soyad}" : "Kullan�c�";
+            var fullName = user != null ? $"{user.Ad} {user.Soyad}" : "Kullanıcı";
             var isAdmin = User.IsInRole("admin");
             var isVekarer = User.IsInRole("Vekarer");
         }
@@ -365,7 +393,7 @@
                 .Where(s => s.VekarerID == currentUserId.Value)
                 .Sum(s => (decimal?)s.OdenecekKomisyon) ?? 0;
 
-                // Bu Vekarera ait m��teri say�s�
+                // Bu Vekarera ait müşteri sayısı
                 totalMusteriler = context.Musteriler.Count(m => m.VekarerID == currentUserId.Value);
 
                 pendingRandevular = context.Randevular
@@ -388,7 +416,7 @@
                 </a>
             </li>
 
-            <li class="nav-item">
+            @* <li class="nav-item">
                 <a asp-controller="Musteri" asp-action="Index"
                    class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Musteri" ? "active" : "")">
                     <svg class="nav-icon" viewBox="0 0 24 24">
@@ -397,14 +425,14 @@
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
-                    <span class="nav-text">M��terilerim</span>
+                    <span class="nav-text">Müşterilerim</span>
                     @if (totalMusteriler > 0)
                     {
                         <span class="nav-badge badge-blue">@totalMusteriler</span>
                     }
-                    <span class="tooltip">M��terilerim</span>
+                    <span class="tooltip">Müşterilerim</span>
                 </a>
-            </li>
+            </li> *@
 
             <li class="nav-item">
                 <a asp-controller="Randevu" asp-action="Index"
@@ -415,12 +443,12 @@
                         <line x1="8" y1="2" x2="8" y2="6"></line>
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
-                    <span class="nav-text">Randevular�m</span>
+                    <span class="nav-text">Randevularım</span>
                     @if (pendingRandevular > 0)
                     {
                         <span class="nav-badge badge-orange pulse">@pendingRandevular</span>
                     }
-                    <span class="tooltip">Randevular�m</span>
+                    <span class="tooltip">Randevularım</span>
                 </a>
             </li>
 
@@ -431,8 +459,8 @@
                         <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
                         <polyline points="16 7 22 7 22 13"></polyline>
                     </svg>
-                    <span class="nav-text">Sat��lar�m</span>
-                    <span class="tooltip">Sat��lar�m</span>
+                    <span class="nav-text">Satışlarım</span>
+                    <span class="tooltip">Satışlarım</span>
                 </a>
             </li>
 
@@ -484,8 +512,8 @@
                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                     </svg>
-                    <span class="nav-text">Yard�m & Destek</span>
-                    <span class="tooltip">Yard�m & Destek</span>
+                    <span class="nav-text">Yardım & Destek</span>
+                    <span class="tooltip">Yardım & Destek</span>
                 </a>
             </li>
 
@@ -497,8 +525,8 @@
                             <polyline points="16 17 21 12 16 7"></polyline>
                             <line x1="21" y1="12" x2="9" y2="12"></line>
                         </svg>
-                        <span class="nav-text">��k�� Yap</span>
-                        <span class="tooltip">��k�� Yap</span>
+                        <span class="nav-text">Çıkış Yap</span>
+                        <span class="tooltip">Çıkış Yap</span>
                     </button>
                 </form>
             </li>

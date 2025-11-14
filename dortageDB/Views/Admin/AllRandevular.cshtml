@@ -591,8 +591,8 @@
                                 as Microsoft.AspNetCore.Identity.UserManager<dortageDB.Entities.AppUser>;
                                 if (userManager != null)
                                 {
-                                    var visionerlar = await userManager.GetUsersInRoleAsync("vekarer");
-                                    foreach (var t in visionerlar.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
+                                    var vekarerler = await userManager.GetUsersInRoleAsync("vekarer");
+                                    foreach (var t in vekarerler.OrderBy(x => x.Ad).ThenBy(x => x.Soyad))
                                     {
                                         <option value="@t.Id">@t.Ad @t.Soyad (@t.PhoneNumber)</option>
                                     }
@@ -670,7 +670,7 @@
             </div>
             <div class="detail-row">
                 <span class="detail-label">Vekarer:</span>
-                <span class="detail-value" id="viewVisioner"></span>
+                <span class="detail-value" id="viewVekarer"></span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Randevu Tarihi:</span>
@@ -873,7 +873,7 @@
         console.log('👁️ View modal açılıyor');
 
         document.getElementById('viewMusteri').textContent = musteri;
-        document.getElementById('viewVisioner').textContent = vekarer;
+        document.getElementById('viewVekarer').textContent = vekarer;
         document.getElementById('viewTarih').textContent = tarih;
         document.getElementById('viewTip').textContent = tip;
         document.getElementById('viewAciklama').textContent = aciklama || '-';
@@ -968,7 +968,7 @@
 
         // CREATE MODAL - Store original musteri options
         const musteriSelect = document.getElementById('createMusteri');
-        originalMusteriOptions = Array.from(musteriSelect?.querySelectorAll('option[data-visionerid]') || []);
+        originalMusteriOptions = Array.from(musteriSelect?.querySelectorAll('option[data-vekarerid]') || []);
 
         // CREATE MODAL - Date change
         const createTarihInput = document.getElementById('createTarih');
@@ -980,7 +980,7 @@
         const vekarerSelect = document.getElementById('createVekarer');
 
         vekarerSelect?.addEventListener('change', function() {
-            const selectedVisionerId = this.value;
+            const selectedVekarerId = this.value;
 
             // Clear musteri selection
             musteriSelect.value = '';
@@ -990,10 +990,10 @@
             musteriSelect.innerHTML = '<option value="">Müşteri Seçin</option>';
 
             originalMusteriOptions.forEach(option => {
-                const optionVisionerId = option.getAttribute('data-visionerid');
+                const optionvekarerId = option.getAttribute('data-vekarerId');
 
                 // Show only musteriler of selected vekarer
-                if (!selectedVisionerId || optionVisionerId === selectedVisionerId) {
+                if (!selectedVekarerId || optionvekarerId === selectedVekarerId) {
                     const newOption = option.cloneNode(true);
                     musteriSelect.appendChild(newOption);
                 }
@@ -1006,15 +1006,15 @@
         musteriSelect?.addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
             if (!selectedOption || !selectedOption.value) {
-                visionerSelect.disabled = false;
+                vekarerSelect.disabled = false;
                 return;
             }
 
-            const visionerId = selectedOption.getAttribute('data-visionerid');
-            if (visionerId) {
-                visionerSelect.value = visionerId;
-                visionerSelect.disabled = true;
-                console.log('✅ Müşteri seçildi - Vekarer otomatik seçildi:', visionerId);
+            const vekarerId = selectedOption.getAttribute('data-vekarerId');
+            if (vekarerId) {
+                vekarerSelect.value = vekarerId;
+                vekarerSelect.disabled = true;
+                console.log('✅ Müşteri seçildi - Vekarer otomatik seçildi:', vekarerId);
             }
         });
 
@@ -1035,7 +1035,7 @@
             console.log('✅ Yeni randevu oluşturuluyor - Randevu Zamanı:', randevuZaman);
 
             // Re-enable vekarer before submit (so it gets posted)
-            visionerSelect.disabled = false;
+            vekarerSelect.disabled = false;
         });
     });
 

@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Tüm Satışlar";
-    Layout = "_LayoutVisioner";
+    Layout = "_LayoutVekarer";
 }
 
 <link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
@@ -728,7 +728,7 @@
             </div>
             <div class="detail-row">
                 <span class="detail-label">Vekarer:</span>
-                <span class="detail-value" id="viewVisioner"></span>
+                <span class="detail-value" id="viewVekarer"></span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Satış Tarihi:</span>
@@ -887,7 +887,7 @@
         console.log('Taksit:', taksit);
 
         document.getElementById('viewMusteri').textContent = musteri;
-        document.getElementById('viewVisioner').textContent = vekarer;
+        document.getElementById('viewVekarer').textContent = vekarer;
         document.getElementById('viewTarih').textContent = tarih;
         document.getElementById('viewBolge').textContent = bolge;
         document.getElementById('viewTutar').textContent = '₺' + tutar.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -905,7 +905,7 @@
     function openEditModalData(button) {
         const id = button.getAttribute('data-id');
         const musteriId = button.getAttribute('data-musteri-id');
-        const visionerId = button.getAttribute('data-vekarer-id');
+        const vekarerId = button.getAttribute('data-vekarer-id');
         const tarih = button.getAttribute('data-tarih');
         const tutar = button.getAttribute('data-tutar');
         const bolge = button.getAttribute('data-bolge');
@@ -916,7 +916,7 @@
 
         document.getElementById('editSatisId').value = id;
         document.getElementById('editMusteriId').value = musteriId;
-        document.getElementById('editVekarerId').value = visionerId;
+        document.getElementById('editVekarerId').value = vekarerId;
         document.getElementById('editTarih').value = tarih;
         document.getElementById('editTutar').value = tutar;
         document.getElementById('editBolge').value = bolge;

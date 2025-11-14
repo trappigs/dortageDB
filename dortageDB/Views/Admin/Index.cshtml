@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Admin Dashboard";
-    Layout = "_LayoutVisioner";
+    Layout = "_LayoutVekarer";
     var stats = ViewBag.Stats;
 }
 
@@ -189,7 +189,7 @@
             <div class="stat-card">
                 <div class="stat-header">
                     <div>
-                        <div class="stat-value">@stats.TotalVisioners.Count</div>
+                        <div class="stat-value">@stats.TotalVekarers.Count</div>
                         <div class="stat-label">Toplam Vekarer</div>
                     </div>
                     <div class="stat-icon red">👥</div>
@@ -288,10 +288,10 @@
                 </div>
             </a>
 
-            <a asp-action="AllVisioners" class="action-card">
+            <a asp-action="AllVekarers" class="action-card">
                 <div class="action-icon">👥</div>
                 <div class="action-content">
-                    <h3>Tüm Visionerlar</h3>
+                    <h3>Tüm Vekarerler</h3>
                     <p>Vekarer hesaplarını görüntüle</p>
                 </div>
             </a>
