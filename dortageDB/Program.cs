@@ -14,15 +14,44 @@ static async Task CreateAdminUser(IServiceProvider serviceProvider)
     // Admin rolü yoksa oluştur
     if (!await roleManager.RoleExistsAsync("admin"))
     {
-        await roleManager.CreateAsync(new AppRole { Name = "admin" });
+        var adminRole = new AppRole { Name = "admin" };
+        await roleManager.CreateAsync(adminRole);
         Console.WriteLine("✅ Admin rolü oluşturuldu");
     }
 
     // Vekarer rolü yoksa oluştur
     if (!await roleManager.RoleExistsAsync("Vekarer"))
     {
-        await roleManager.CreateAsync(new AppRole { Name = "Vekarer" });
+        var vekarerRole = new AppRole { Name = "Vekarer" };
+        await roleManager.CreateAsync(vekarerRole);
         Console.WriteLine("✅ Vekarer rolü oluşturuldu");
+    }
+    else
+    {
+        // Vekarer rolü varsa, NormalizedName'in doğru olduğundan emin ol
+        var vekarerRole = await roleManager.FindByNameAsync("Vekarer");
+        if (vekarerRole != null && vekarerRole.NormalizedName != "VEKARER")
+        {
+            vekarerRole.NormalizedName = "VEKARER";
+            await roleManager.UpdateAsync(vekarerRole);
+            Console.WriteLine("✅ Vekarer rolü NormalizedName düzeltildi");
+        }
+    }
+
+    // Belirli kullanıcılara Vekarer rolü ata (eğer rolü yoksa)
+    var vekarerUsers = new[] { "milyonlarcaharf@gmail.com" };
+    foreach (var email in vekarerUsers)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        if (user != null)
+        {
+            var userRoles = await userManager.GetRolesAsync(user);
+            if (!userRoles.Contains("Vekarer") && !userRoles.Contains("admin"))
+            {
+                await userManager.AddToRoleAsync(user, "Vekarer");
+                Console.WriteLine($"✅ {email} kullanıcısına Vekarer rolü atandı");
+            }
+        }
     }
 
     // Admin kullanıcısı yoksa oluştur

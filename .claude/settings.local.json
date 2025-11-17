@@ -36,7 +36,10 @@
       "Bash(python update_visioner.py:*)",
       "Bash(git rm:*)",
       "WebFetch(domain:localhost)",
-      "Bash(Select-String -Pattern \"error|warning|Build succeeded\" -Context 2)"
+      "Bash(Select-String -Pattern \"error|warning|Build succeeded\" -Context 2)",
+      "Bash(git checkout:*)",
+      "Bash(Select-String -Pattern \"error|warning|Build succeeded|Build FAILED\")",
+      "Bash(Select-String -Pattern \"CS0266\" -Context 2)"
     ],
     "deny": [],
     "ask": []

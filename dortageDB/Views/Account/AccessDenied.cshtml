@@ -1,5 +1,21 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
+    ViewData["Title"] = "Erişim Engellendi";
 }
+
+<div style="text-align: center; padding: 50px;">
+    <h1 style="color: #dc3545;">🚫 Erişim Engellendi</h1>
+    <p style="font-size: 18px; margin-top: 20px;">Bu sayfaya erişim yetkiniz bulunmamaktadır.</p>
+
+    @if (ViewBag.UserEmail != null)
+    {
+        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; max-width: 600px; margin-left: auto; margin-right: auto;">
+            <h3>Debug Bilgileri:</h3>
+            <p><strong>Email:</strong> @ViewBag.UserEmail</p>
+            <p><strong>Roller:</strong> @ViewBag.UserRoles</p>
+        </div>
+    }
+
+    <div style="margin-top: 30px;">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Ana Sayfaya Dön</a>
+    </div>
+</div>

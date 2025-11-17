@@ -232,7 +232,7 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label asp-for="RandevuZaman">Randevu Tarihi <span class="required">*</span></label>
+                        <label asp-for="RandevuTarih">Randevu Tarihi <span class="required">*</span></label>
                         <div class="input-wrapper">
                             <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -240,19 +240,19 @@
                                 <line x1="8" y1="2" x2="8" y2="6"></line>
                                 <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
-                            <input asp-for="RandevuZaman" type="date" id="randevuTarihInput" />
+                            <input asp-for="RandevuTarih" type="date" id="randevuTarihInput" />
                         </div>
-                        <span asp-validation-for="RandevuZaman" class="text-danger"></span>
+                        <span asp-validation-for="RandevuTarih" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
-                        <label>Randevu Saati <span class="required">*</span></label>
+                        <label asp-for="RandevuSaat">Randevu Saati <span class="required">*</span></label>
                         <div class="input-wrapper">
                             <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <polyline points="12 6 12 12 16 14"></polyline>
                             </svg>
-                            <select id="randevuSaatInput" style="padding-left: 48px;">
+                            <select asp-for="RandevuSaat" id="randevuSaatInput" style="padding-left: 48px;">
                                 <option value="">Saat seçin</option>
                                 <option value="06:00">06:00</option>
                                 <option value="07:00">07:00</option>
@@ -271,6 +271,7 @@
                                 <option value="20:00">20:00</option>
                             </select>
                         </div>
+                        <span asp-validation-for="RandevuSaat" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -339,61 +340,17 @@
     </div>
 </div>
 
-
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <partial name="_ValidationScriptsPartial" />
 <script>
-    // Tarih ve saati birleştir
+    // Tarih input'u için minimum tarihi ayarla
     document.addEventListener('DOMContentLoaded', function() {
         const tarihInput = document.getElementById('randevuTarihInput');
-        const saatInput = document.getElementById('randevuSaatInput');
-        const form = document.querySelector('form');
 
         // Set minimum date to today
         if (tarihInput) {
             const today = new Date().toISOString().split('T')[0];
             tarihInput.min = today;
-        }
-
-        // Eğer edit modundaysa ve mevcut değer varsa, tarih ve saati ayır
-        const mevcutDeger = tarihInput.value;
-        if (mevcutDeger && mevcutDeger.includes('T')) {
-            const [tarih, saat] = mevcutDeger.split('T');
-            tarihInput.value = tarih;
-            saatInput.value = saat.substring(0, 5); // HH:mm formatı
-        }
-
-        // Form submit edildiğinde tarih ve saati birleştir
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                console.log('Form submit event triggered');
-
-                const tarih = tarihInput.value;
-                const saat = saatInput.value;
-
-                console.log('Tarih:', tarih);
-                console.log('Saat:', saat);
-
-                if (!tarih) {
-                    e.preventDefault();
-                    alert('Lütfen randevu tarihi seçiniz.');
-                    return false;
-                }
-
-                if (!saat) {
-                    e.preventDefault();
-                    alert('Lütfen randevu saati seçiniz.');
-                    return false;
-                }
-
-                // Tarih ve saati birleştir ve RandevuZaman input'una ata
-                const birlesikTarih = `${tarih}T${saat}:00`;
-                console.log('Birleşik tarih:', birlesikTarih);
-                tarihInput.value = birlesikTarih;
-
-                // Form'un submit olmasına izin ver
-                console.log('Form submitting...');
-                return true;
-            });
         }
     });
 </script>

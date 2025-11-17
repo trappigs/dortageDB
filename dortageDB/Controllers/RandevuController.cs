@@ -41,7 +41,7 @@ namespace dortageDB.Controllers
                 .OrderBy(r => r.RandevuZaman)
                 .ToListAsync();
 
-            // Sadece kendi randevularýný göster (admin hariç)
+            // Sadece kendi randevularï¿½nï¿½ gï¿½ster (admin hariï¿½)
             if (!User.IsInRole("admin"))
             {
                 randevular = randevular.Where(r => r.VekarerID == user.Id).ToList();
@@ -59,7 +59,7 @@ namespace dortageDB.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // Sadece kendi müþterilerini göster (admin hariç)
+            // Sadece kendi mï¿½ï¿½terilerini gï¿½ster (admin hariï¿½)
             var musteriQuery = User.IsInRole("admin")
                 ? _context.Musteriler
                 : _context.Musteriler.Where(m => m.VekarerID == user.Id);
@@ -85,7 +85,29 @@ namespace dortageDB.Controllers
         {
             _logger.LogInformation("Create POST action called");
 
-            // ModelState hatalarýný logla ve view'a geri dön
+            // Tarih ve saati birleÅŸtir ve parse et (ModelState kontrolÃ¼nden Ã–NCE)
+            if (!string.IsNullOrWhiteSpace(model.RandevuTarih) && !string.IsNullOrWhiteSpace(model.RandevuSaat))
+            {
+                if (DateTime.TryParseExact(
+                    $"{model.RandevuTarih} {model.RandevuSaat}",
+                    "yyyy-MM-dd HH:mm",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out var randevuZaman))
+                {
+                    model.RandevuZaman = randevuZaman;
+                    // ModelState'ten RandevuZaman hatalarÄ±nÄ± temizle
+                    ModelState.Remove(nameof(model.RandevuZaman));
+                }
+            }
+
+            // RandevuZaman parse edilemedi ise hata ekle
+            if (!model.RandevuZaman.HasValue)
+            {
+                ModelState.AddModelError(nameof(model.RandevuZaman), "GeÃ§erli bir tarih ve saat seÃ§iniz.");
+            }
+
+            // ModelState hatalarÄ±nÄ± logla ve view'a geri dÃ¶n
             if (!ModelState.IsValid)
             {
                 foreach (var modelState in ModelState.Values)
@@ -103,58 +125,62 @@ namespace dortageDB.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
 
-                // Yeni müþteri mi, mevcut müþteri mi?
+                // Yeni mï¿½ï¿½teri mi, mevcut mï¿½ï¿½teri mi?
                 int musteriId;
 
-                // Artýk sadece yeni müþteri ekliyoruz
+                // Artï¿½k sadece yeni mï¿½ï¿½teri ekliyoruz
                 model.YeniMusteri = true;
 
                 if (model.YeniMusteri)
                 {
-                    // Yeni müþteri oluþtur
+                    // Yeni mï¿½ï¿½teri oluï¿½tur
                     if (string.IsNullOrWhiteSpace(model.YeniMusteriAd) ||
                         string.IsNullOrWhiteSpace(model.YeniMusteriSoyad) ||
                         string.IsNullOrWhiteSpace(model.YeniMusteriTelefon))
                     {
-                        ModelState.AddModelError("", "Yeni müþteri için Ad, Soyad ve Telefon zorunludur.");
+                        ModelState.AddModelError("", "Yeni mï¿½ï¿½teri iï¿½in Ad, Soyad ve Telefon zorunludur.");
                         await LoadMusterilerSelectList();
                         return View(model);
                     }
 
-                    // Telefon numarasýný temizle
+                    // Telefon numarasï¿½nï¿½ temizle
                     var cleanPhone = model.YeniMusteriTelefon.Replace("(", "").Replace(")", "").Replace(" ", "").Trim();
 
-                    // Telefon kontrolü
-                    var existingPhone = await _context.Musteriler.AnyAsync(m => m.Telefon == cleanPhone);
-                    if (existingPhone)
+                    // Aynï¿½ telefon numarasï¿½na sahip mï¿½ï¿½teri var mï¿½ kontrol et
+                    var mevcutMusteri = await _context.Musteriler.FirstOrDefaultAsync(m => m.Telefon == cleanPhone);
+
+                    if (mevcutMusteri != null)
                     {
-                        ModelState.AddModelError("YeniMusteriTelefon", "Bu telefon numarasý zaten kayýtlý.");
-                        await LoadMusterilerSelectList();
-                        return View(model);
+                        // Mevcut mï¿½ï¿½teriyi kullan
+                        musteriId = mevcutMusteri.IdMusteri;
+                        _logger.LogInformation($"? Mevcut mï¿½ï¿½teri kullanï¿½ldï¿½: {musteriId} - {mevcutMusteri.Ad} {mevcutMusteri.Soyad}");
                     }
-
-                    var yeniMusteri = new Musteri
+                    else
                     {
-                        Ad = model.YeniMusteriAd.Trim(),
-                        Soyad = model.YeniMusteriSoyad.Trim(),
-                        Telefon = cleanPhone,
-                        Cinsiyet = model.YeniMusteriCinsiyet,
-                        TcNo = model.YeniMusteriTcNo?.Trim(),
-                        VekarerID = user!.Id
-                    };
+                        // Yeni mï¿½ï¿½teri oluï¿½tur
+                        var yeniMusteri = new Musteri
+                        {
+                            Ad = model.YeniMusteriAd.Trim(),
+                            Soyad = model.YeniMusteriSoyad.Trim(),
+                            Telefon = cleanPhone,
+                            Cinsiyet = model.YeniMusteriCinsiyet,
+                            TcNo = model.YeniMusteriTcNo?.Trim(),
+                            VekarerID = user!.Id
+                        };
 
-                    _context.Musteriler.Add(yeniMusteri);
-                    await _context.SaveChangesAsync();
+                        _context.Musteriler.Add(yeniMusteri);
+                        await _context.SaveChangesAsync();
 
-                    musteriId = yeniMusteri.IdMusteri;
-                    _logger.LogInformation($"? Yeni müþteri oluþturuldu: {musteriId} - {yeniMusteri.Ad} {yeniMusteri.Soyad}");
+                        musteriId = yeniMusteri.IdMusteri;
+                        _logger.LogInformation($"? Yeni mï¿½ï¿½teri oluï¿½turuldu: {musteriId} - {yeniMusteri.Ad} {yeniMusteri.Soyad}");
+                    }
                 }
                 else
                 {
-                    // Mevcut müþteri seçilmeli
+                    // Mevcut mï¿½ï¿½teri seï¿½ilmeli
                     if (!model.MusteriId.HasValue || model.MusteriId.Value == 0)
                     {
-                        ModelState.AddModelError("MusteriId", "Lütfen bir müþteri seçin veya yeni müþteri ekleyin.");
+                        ModelState.AddModelError("MusteriId", "Lï¿½tfen bir mï¿½ï¿½teri seï¿½in veya yeni mï¿½ï¿½teri ekleyin.");
                         await LoadMusterilerSelectList();
                         return View(model);
                     }
@@ -163,19 +189,19 @@ namespace dortageDB.Controllers
                 }
 
                 // Randevu tarihini kontrol et
-                if (model.RandevuZaman < DateTime.Now)
+                if (model.RandevuZaman.Value < DateTime.Now)
                 {
-                    ModelState.AddModelError("RandevuZaman", "Geçmiþ tarihli randevu oluþturamazsýnýz.");
+                    ModelState.AddModelError("RandevuTarih", "GeÃ§miÅŸ tarihli randevu oluÅŸturamazsÄ±nÄ±z.");
                     await LoadMusterilerSelectList();
                     return View(model);
                 }
 
-                // Randevu oluþtur
+                // Randevu oluÅŸtur
                 var randevu = new Randevu
                 {
                     MusteriId = musteriId,
                     Aciklama = model.Aciklama,
-                    RandevuZaman = model.RandevuZaman,
+                    RandevuZaman = model.RandevuZaman.Value,
                     RandevuTipi = model.RandevuTipi,
                     VekarerID = user!.Id,
                     RandevuDurum = RandevuDurum.OnayBekliyor
@@ -184,45 +210,45 @@ namespace dortageDB.Controllers
                 _context.Randevular.Add(randevu);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"? Randevu oluþturuldu: {randevu.RandevuID}");
+                _logger.LogInformation($"? Randevu oluï¿½turuldu: {randevu.RandevuID}");
 
-                // Müþteri bilgilerini al
+                // Mï¿½ï¿½teri bilgilerini al
                 var musteri = await _context.Musteriler.FindAsync(musteriId);
 
-                // E-posta gönder
+                // E-posta gï¿½nder
                 try
                 {
-                    var emailSubject = "Yeni Randevu Oluþturuldu";
+                    var emailSubject = "Yeni Randevu Oluï¿½turuldu";
                     var emailBody = $@"
                         <h2>Yeni Randevu Bilgileri</h2>
                         <p><strong>Randevu ID:</strong> {randevu.RandevuID}</p>
                         <p><strong>Vekarer:</strong> {user.Ad} {user.Soyad} ({user.Email})</p>
-                        <p><strong>Müþteri:</strong> {musteri?.Ad} {musteri?.Soyad}</p>
+                        <p><strong>Mï¿½ï¿½teri:</strong> {musteri?.Ad} {musteri?.Soyad}</p>
                         <p><strong>Telefon:</strong> {musteri?.Telefon}</p>
                         <p><strong>Tarih/Saat:</strong> {randevu.RandevuZaman:dd.MM.yyyy HH:mm}</p>
                         <p><strong>Tip:</strong> {randevu.RandevuTipi}</p>
-                        <p><strong>Açýklama:</strong> {randevu.Aciklama ?? "Yok"}</p>
+                        <p><strong>Aï¿½ï¿½klama:</strong> {randevu.Aciklama ?? "Yok"}</p>
                         <p><strong>Durum:</strong> Bekliyor</p>
                     ";
 
                     await _emailService.SendEmailAsync("info@dortage.com", emailSubject, emailBody);
-                    _logger.LogInformation($"? Randevu bildirimi e-postasý gönderildi: {randevu.RandevuID}");
+                    _logger.LogInformation($"? Randevu bildirimi e-postasï¿½ gï¿½nderildi: {randevu.RandevuID}");
                 }
                 catch (Exception emailEx)
                 {
-                    _logger.LogError($"? E-posta gönderme hatasý: {emailEx.Message}");
-                    // E-posta hatasý randevu oluþturmayý engellemesin
+                    _logger.LogError($"? E-posta gï¿½nderme hatasï¿½: {emailEx.Message}");
+                    // E-posta hatasï¿½ randevu oluï¿½turmayï¿½ engellemesin
                 }
 
                 TempData["SuccessMessage"] = model.YeniMusteri
-                    ? "Yeni müþteri ve randevu baþarýyla oluþturuldu."
-                    : "Randevu baþarýyla oluþturuldu.";
+                    ? "Yeni mï¿½ï¿½teri ve randevu baï¿½arï¿½yla oluï¿½turuldu."
+                    : "Randevu baï¿½arï¿½yla oluï¿½turuldu.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"? Randevu oluþturma hatasý: {ex.Message}");
-                ModelState.AddModelError("", "Bir hata oluþtu. Lütfen tekrar deneyin.");
+                _logger.LogError($"? Randevu oluï¿½turma hatasï¿½: {ex.Message}");
+                ModelState.AddModelError("", "Bir hata oluï¿½tu. Lï¿½tfen tekrar deneyin.");
                 await LoadMusterilerSelectList();
                 return View(model);
             }
@@ -242,11 +268,11 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
-            // Sadece kendi randevusunu düzenleyebilir (admin hariç)
+            // Sadece kendi randevusunu dï¿½zenleyebilir (admin hariï¿½)
             var user = await _userManager.GetUserAsync(User);
             if (!User.IsInRole("admin") && randevu.VekarerID != user.Id)
             {
-                TempData["ErrorMessage"] = "Bu randevuyu düzenleme yetkiniz yok.";
+                TempData["ErrorMessage"] = "Bu randevuyu dï¿½zenleme yetkiniz yok.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -254,6 +280,8 @@ namespace dortageDB.Controllers
             {
                 MusteriId = randevu.MusteriId,
                 Aciklama = randevu.Aciklama,
+                RandevuTarih = randevu.RandevuZaman.ToString("yyyy-MM-dd"),
+                RandevuSaat = randevu.RandevuZaman.ToString("HH:mm"),
                 RandevuZaman = randevu.RandevuZaman,
                 RandevuTipi = randevu.RandevuTipi,
                 VekarerID = randevu.VekarerID
@@ -270,6 +298,28 @@ namespace dortageDB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, RandevuCreateVM model)
         {
+            // Tarih ve saati birleÅŸtir ve parse et (ModelState kontrolÃ¼nden Ã–NCE)
+            if (!string.IsNullOrWhiteSpace(model.RandevuTarih) && !string.IsNullOrWhiteSpace(model.RandevuSaat))
+            {
+                if (DateTime.TryParseExact(
+                    $"{model.RandevuTarih} {model.RandevuSaat}",
+                    "yyyy-MM-dd HH:mm",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out var randevuZaman))
+                {
+                    model.RandevuZaman = randevuZaman;
+                    // ModelState'ten RandevuZaman hatalarÄ±nÄ± temizle
+                    ModelState.Remove(nameof(model.RandevuZaman));
+                }
+            }
+
+            // RandevuZaman parse edilemedi ise hata ekle
+            if (!model.RandevuZaman.HasValue)
+            {
+                ModelState.AddModelError(nameof(model.RandevuZaman), "GeÃ§erli bir tarih ve saat seÃ§iniz.");
+            }
+
             try
             {
                 if (!ModelState.IsValid)
@@ -285,37 +335,37 @@ namespace dortageDB.Controllers
                     return NotFound();
                 }
 
-                // Yetki kontrolü
+                // Yetki kontrolï¿½
                 var user = await _userManager.GetUserAsync(User);
                 if (!User.IsInRole("admin") && randevu.VekarerID != user.Id)
                 {
-                    TempData["ErrorMessage"] = "Bu randevuyu düzenleme yetkiniz yok.";
+                    TempData["ErrorMessage"] = "Bu randevuyu dï¿½zenleme yetkiniz yok.";
                     return RedirectToAction(nameof(Index));
                 }
 
                 // MusteriId validation (Edit doesn't support creating new customers)
                 if (!model.MusteriId.HasValue || model.MusteriId.Value == 0)
                 {
-                    ModelState.AddModelError("MusteriId", "Lütfen bir müþteri seçin.");
+                    ModelState.AddModelError("MusteriId", "LÃ¼tfen bir mÃ¼ÅŸteri seÃ§in.");
                     await LoadMusterilerSelectList();
                     return View(model);
                 }
 
                 randevu.MusteriId = model.MusteriId.Value;
                 randevu.Aciklama = model.Aciklama;
-                randevu.RandevuZaman = model.RandevuZaman;
+                randevu.RandevuZaman = model.RandevuZaman.Value;
                 randevu.RandevuTipi = model.RandevuTipi;
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"? Randevu güncellendi: {id}");
-                TempData["SuccessMessage"] = "Randevu baþarýyla güncellendi.";
+                _logger.LogInformation($"? Randevu gï¿½ncellendi: {id}");
+                TempData["SuccessMessage"] = "Randevu baï¿½arï¿½yla gï¿½ncellendi.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"? Randevu güncelleme hatasý: {ex.Message}");
-                ModelState.AddModelError("", "Bir hata oluþtu. Lütfen tekrar deneyin.");
+                _logger.LogError($"? Randevu gï¿½ncelleme hatasï¿½: {ex.Message}");
+                ModelState.AddModelError("", "Bir hata oluï¿½tu. Lï¿½tfen tekrar deneyin.");
                 await LoadMusterilerSelectList();
                 ViewData["RandevuId"] = id;
                 return View(model);
@@ -323,7 +373,7 @@ namespace dortageDB.Controllers
         }
 
         // POST: Randevu/UpdateStatus/5
-        // ?? SADECE ADMIN YETKÝSÝ - Randevu durumunu deðiþtirme
+        // ?? SADECE ADMIN YETKï¿½Sï¿½ - Randevu durumunu deï¿½iï¿½tirme
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin")] // ?? SADECE ADMIN
@@ -342,20 +392,20 @@ namespace dortageDB.Controllers
                     randevu.RandevuDurum = durum;
                     await _context.SaveChangesAsync();
 
-                    _logger.LogInformation($"? Randevu durumu güncellendi: {id} -> {status} (Admin: {User.Identity.Name})");
-                    TempData["SuccessMessage"] = "Randevu durumu güncellendi.";
+                    _logger.LogInformation($"? Randevu durumu gï¿½ncellendi: {id} -> {status} (Admin: {User.Identity.Name})");
+                    TempData["SuccessMessage"] = "Randevu durumu gï¿½ncellendi.";
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Geçersiz durum deðeri.";
+                    TempData["ErrorMessage"] = "Geï¿½ersiz durum deï¿½eri.";
                 }
 
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"? Randevu durum güncelleme hatasý: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluþtu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Randevu durum gï¿½ncelleme hatasï¿½: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluï¿½tu. Lï¿½tfen tekrar deneyin.";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -378,7 +428,7 @@ namespace dortageDB.Controllers
                 return NotFound();
             }
 
-            // Yetki kontrolü
+            // Yetki kontrolï¿½
             var user = await _userManager.GetUserAsync(User);
             if (!User.IsInRole("admin") && randevu.VekarerID != user.Id)
             {
@@ -402,7 +452,7 @@ namespace dortageDB.Controllers
                     return NotFound();
                 }
 
-                // Yetki kontrolü
+                // Yetki kontrolï¿½
                 var user = await _userManager.GetUserAsync(User);
                 if (!User.IsInRole("admin") && randevu.VekarerID != user.Id)
                 {
@@ -414,13 +464,13 @@ namespace dortageDB.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation($"? Randevu silindi: {id}");
-                TempData["SuccessMessage"] = "Randevu baþarýyla silindi.";
+                TempData["SuccessMessage"] = "Randevu baï¿½arï¿½yla silindi.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"? Randevu silme hatasý: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluþtu. Lütfen tekrar deneyin.";
+                _logger.LogError($"? Randevu silme hatasï¿½: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluï¿½tu. Lï¿½tfen tekrar deneyin.";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -446,11 +496,42 @@ namespace dortageDB.Controllers
             return View(randevu);
         }
 
+        // GET: Randevu/BulMusteriByPhone
+        [HttpGet]
+        [Authorize(Roles = "Vekarer,admin")]
+        public async Task<IActionResult> BulMusteriByPhone(string telefon)
+        {
+            if (string.IsNullOrWhiteSpace(telefon))
+            {
+                return Json(new { bulundu = false });
+            }
+
+            // Telefon numarasï¿½nï¿½ temizle
+            var cleanPhone = telefon.Replace("(", "").Replace(")", "").Replace(" ", "").Replace("-", "").Trim();
+
+            // Telefon numarasï¿½yla mï¿½ï¿½teri ara
+            var musteri = await _context.Musteriler.FirstOrDefaultAsync(m => m.Telefon == cleanPhone);
+
+            if (musteri != null)
+            {
+                return Json(new
+                {
+                    bulundu = true,
+                    ad = musteri.Ad,
+                    soyad = musteri.Soyad,
+                    cinsiyet = musteri.Cinsiyet,
+                    idMusteri = musteri.IdMusteri
+                });
+            }
+
+            return Json(new { bulundu = false });
+        }
+
         private async Task LoadMusterilerSelectList()
         {
             var user = await _userManager.GetUserAsync(User);
 
-            // Sadece kendi müþterilerini göster (admin hariç)
+            // Sadece kendi mï¿½ï¿½terilerini gï¿½ster (admin hariï¿½)
             var musteriQuery = User.IsInRole("admin")
                 ? _context.Musteriler
                 : _context.Musteriler.Where(m => m.VekarerID == user!.Id);

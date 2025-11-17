@@ -5,11 +5,11 @@ namespace dortageDB.ViewModels
 {
     public class RandevuCreateVM
     {
-        // Mevcut müþteri seçimi
+        // Mevcut mï¿½ï¿½teri seï¿½imi
         public int? MusteriId { get; set; }
 
-        // YENÝ MÜÞTERÝ BÝLGÝLERÝ (opsiyonel)
-        public bool YeniMusteri { get; set; } // Checkbox için
+        // YENï¿½ Mï¿½ï¿½TERï¿½ Bï¿½LGï¿½LERï¿½ (opsiyonel)
+        public bool YeniMusteri { get; set; } // Checkbox iï¿½in
         [StringLength(100)] public string? YeniMusteriAd { get; set; }
         [StringLength(100)] public string? YeniMusteriSoyad { get; set; }
         [StringLength(15)] public string? YeniMusteriTelefon { get; set; }
@@ -18,7 +18,17 @@ namespace dortageDB.ViewModels
 
         // Randevu bilgileri
         [StringLength(500)] public string? Aciklama { get; set; }
-        [Required] public DateTime RandevuZaman { get; set; }
+
+        // Tarih ve saat ayrÄ± alanlar (form'dan gelecek)
+        [Required(ErrorMessage = "Randevu tarihi zorunludur")]
+        public string? RandevuTarih { get; set; }
+
+        [Required(ErrorMessage = "Randevu saati zorunludur")]
+        public string? RandevuSaat { get; set; }
+
+        // BirleÅŸtirilmiÅŸ deÄŸer (controller'da doldurulacak)
+        public DateTime? RandevuZaman { get; set; }
+
         [Required, StringLength(50)] public string RandevuTipi { get; set; } = null!;
         public int? VekarerID { get; set; }
     }

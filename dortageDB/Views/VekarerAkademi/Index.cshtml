@@ -32,21 +32,21 @@
                 <div class="stat-icon">
                     <i class="fas fa-video"></i>
                 </div>
-                <div class="stat-number">25+</div>
+                <div class="stat-number">15+</div>
                 <div class="stat-label">Eğitim Videosu</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">
                     <i class="fas fa-book-open"></i>
                 </div>
-                <div class="stat-number">50+</div>
+                <div class="stat-number">10+</div>
                 <div class="stat-label">Makale & Rehber</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="stat-number">2000+</div>
+                <div class="stat-number">100+</div>
                 <div class="stat-label">Aktif Öğrenci</div>
             </div>
             <div class="stat-card">
@@ -330,7 +330,7 @@
             </p>
             @if (User.Identity?.IsAuthenticated == true)
             {
-                <a href="#egitimler" class="btn btn-cta-large">
+                <a asp-controller="VekarerAkademi" asp-action="Index" class="btn btn-cta-large">
                     <i class="fas fa-play-circle"></i>
                     Eğitimlere Başla
                 </a>
