@@ -829,8 +829,12 @@ namespace dortageDB.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"? G�rsel y�kleme hatas�: {ex.Message}");
-                return Json(new { success = false, message = "Dosya y�klenirken bir hata olu�tu." });
+                _logger.LogError(ex, $"Görsel yükleme hatası: {ex.Message}");
+                return Json(new {
+                    success = false,
+                    message = $"Dosya yüklenirken bir hata oluştu: {ex.Message}",
+                    error = ex.ToString() // Detaylı hata (production'da kaldırılabilir)
+                });
             }
         }
 

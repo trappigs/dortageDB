@@ -290,9 +290,9 @@
                                         <i class="bi bi-cloud-upload" style="font-size: 3rem; color: #000a68;"></i>
                                         <p class="mb-2"><strong>Dosyaları buraya sürükleyin</strong></p>
                                         <p class="text-muted mb-3">veya</p>
-                                        <label for="fileInput" class="btn btn-primary">
+                                        <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click(); event.stopPropagation();">
                                             <i class="bi bi-folder2-open"></i> Dosya Seç
-                                        </label>
+                                        </button>
                                         <input type="file" id="fileInput" accept="image/jpeg,image/jpg,image/png,image/webp,image/gif" multiple style="display: none;" />
                                         <p class="text-muted mt-2" style="font-size: 0.875rem;">
                                             JPG, PNG, WEBP, GIF - Maksimum 5MB
@@ -637,14 +637,14 @@
             }
         }, { once: false });
 
-        // Upload area'ya tıklama (etiket hariç)
+        // Upload area'ya tıklama (buton hariç)
         uploadArea.addEventListener('click', function(e) {
-            // Eğer tıklanan öğe label veya label içinde bir öğeyse, iptal et
-            if (e.target.tagName === 'LABEL' || e.target.closest('label')) {
+            // Eğer tıklanan öğe button veya button içinde bir öğeyse, button'ın kendi davranışını kullan
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                // Button zaten file input'u tetikleyecek, hiçbir şey yapma
                 return;
             }
-            e.preventDefault();
-            e.stopPropagation();
+            // Diğer alanlara tıklanırsa da file input'u tetikle
             if (fileInput) {
                 fileInput.click();
             }
