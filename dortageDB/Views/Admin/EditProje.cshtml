@@ -280,6 +280,30 @@
                             </div>
                         </div>
 
+                        <!-- Kapak Videosu -->
+                        <div class="card mb-4" style="border: 2px solid #ef4444;">
+                            <div class="card-header" style="background-color: #ef4444; color: white;">
+                                <h5 class="mb-0"><i class="bi bi-play-circle"></i> Kapak Videosu (Galeri İlk Öğe)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label asp-for="KapakVideosu" class="form-label">Video URL (YouTube, Vimeo, vb.)</label>
+                                    <input asp-for="KapakVideosu" class="form-control" placeholder="https://www.youtube.com/watch?v=... veya https://www.youtube.com/embed/..." />
+                                    <small class="text-muted">
+                                        YouTube veya Vimeo video URL'si. Hem normal hem embed URL'leri desteklenir.
+                                        Galeri bölümünde ilk öğe olarak gösterilecektir.
+                                    </small>
+                                </div>
+                                @if (!string.IsNullOrEmpty(Model.KapakVideosu))
+                                {
+                                    <div class="alert alert-info">
+                                        <i class="bi bi-info-circle"></i> Mevcut video:
+                                        <a href="@Model.KapakVideosu" target="_blank" class="alert-link">Videoyu Görüntüle</a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
                         <!-- Galeri Görselleri Yönetimi -->
                         <div class="mb-4">
                             <label class="form-label">Galeri Görselleri (Maksimum 50)</label>

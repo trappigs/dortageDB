@@ -30,6 +30,8 @@ public class Proje
 
     public string? GaleriGorselleri { get; set; } // JSON array olarak saklanacak
 
+    public string? KapakVideosu { get; set; } // Galerinin ilk öğesi olarak gösterilecek video URL (YouTube, Vimeo vb.)
+
     public string? Tour360Url { get; set; } // 360 derece sanal tur iframe URL'i veya turlar klasöründeki proje adı
 
     public string? SunumDosyaUrl { get; set; } // Proje sunumu (PDF, PPT vb.)

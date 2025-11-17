@@ -63,6 +63,8 @@
                 <div class="detail-gallery" data-aos="fade-up">
                     @{
                         var galeriGorselleri = new List<string>();
+                        var hasVideo = !string.IsNullOrEmpty(Model.KapakVideosu);
+
                         if (!string.IsNullOrEmpty(Model.GaleriGorselleri))
                         {
                             try
@@ -80,35 +82,126 @@
                         {
                             galeriGorselleri.Add(Model.KapakGorseli);
                         }
+
+                        // YouTube/Vimeo URL'yi embed formatına çevir
+                        string GetEmbedUrl(string url)
+                        {
+                            if (string.IsNullOrEmpty(url)) return url;
+
+                            // YouTube
+                            if (url.Contains("youtube.com/watch"))
+                            {
+                                var videoId = url.Split("v=")[1].Split("&")[0];
+                                return $"https://www.youtube.com/embed/{videoId}";
+                            }
+                            else if (url.Contains("youtu.be/"))
+                            {
+                                var videoId = url.Split("youtu.be/")[1].Split("?")[0];
+                                return $"https://www.youtube.com/embed/{videoId}";
+                            }
+                            // Vimeo
+                            else if (url.Contains("vimeo.com/") && !url.Contains("/video/"))
+                            {
+                                var videoId = url.Split("vimeo.com/")[1].Split("?")[0];
+                                return $"https://player.vimeo.com/video/{videoId}";
+                            }
+
+                            return url; // Zaten embed formatındaysa olduğu gibi dön
+                        }
+
+                        var embedVideoUrl = hasVideo ? GetEmbedUrl(Model.KapakVideosu) : "";
+
+                        // Video thumbnail URL'ini çıkar (YouTube için)
+                        string GetVideoThumbnail(string url)
+                        {
+                            if (string.IsNullOrEmpty(url)) return "";
+
+                            // YouTube
+                            if (url.Contains("youtube.com/watch"))
+                            {
+                                var videoId = url.Split("v=")[1].Split("&")[0];
+                                return $"https://img.youtube.com/vi/{videoId}/maxresdefault.jpg";
+                            }
+                            else if (url.Contains("youtu.be/"))
+                            {
+                                var videoId = url.Split("youtu.be/")[1].Split("?")[0];
+                                return $"https://img.youtube.com/vi/{videoId}/maxresdefault.jpg";
+                            }
+
+                            return ""; // Vimeo veya diğerleri için boş dön
+                        }
+
+                        var videoThumbnail = hasVideo ? GetVideoThumbnail(Model.KapakVideosu) : "";
                     }
 
-                    @if (galeriGorselleri.Count > 0)
+                    @if (hasVideo || galeriGorselleri.Count > 0)
                     {
-                        <!-- Ana Görsel -->
+                        <!-- Ana Görsel veya Video -->
                         <div class="gallery-main" data-index="0">
-                            <img src="@galeriGorselleri[0]" alt="@Model.ProjeAdi" class="img-fluid">
-                            <div class="gallery-overlay">
-                                <button class="gallery-fullscreen-btn" onclick="openLightbox(0)">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-                                    </svg>
-                                    Tam Ekran
-                                </button>
-                            </div>
+                            @if (hasVideo)
+                            {
+                                <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                                    <iframe
+                                        src="@embedVideoUrl"
+                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
+                            }
+                            else if (galeriGorselleri.Count > 0)
+                            {
+                                <img src="@galeriGorselleri[0]" alt="@Model.ProjeAdi" class="img-fluid">
+                                <div class="gallery-overlay">
+                                    <button class="gallery-fullscreen-btn" onclick="openLightbox(0)">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                                        </svg>
+                                        Tam Ekran
+                                    </button>
+                                </div>
+                            }
                         </div>
 
                         <!-- Önizleme Grid (2x5) -->
-                        @if (galeriGorselleri.Count > 1)
+                        @if (hasVideo || galeriGorselleri.Count > 1)
                         {
                             <div class="gallery-thumbnails">
-                                @for (int i = 0; i < Math.Min(galeriGorselleri.Count, 10); i++)
+                                @* Video thumbnail (eğer varsa) *@
+                                @if (hasVideo)
                                 {
-                                    <div class="thumbnail-item @(i == 0 ? "active" : "")" onclick="changeMainImage(@i, '@galeriGorselleri[i]')">
-                                        <img src="@galeriGorselleri[i]" alt="@Model.ProjeAdi Görsel @(i + 1)">
-                                        @if (i == 9 && galeriGorselleri.Count > 10)
+                                    <div class="thumbnail-item active" onclick="changeMainImage(0, '', true);">
+                                        @if (!string.IsNullOrEmpty(videoThumbnail))
                                         {
-                                            <div class="thumbnail-more" onclick="openLightbox(@i)">
-                                                <span>+@(galeriGorselleri.Count - 10)</span>
+                                            <img src="@videoThumbnail" alt="@Model.ProjeAdi Video">
+                                        }
+                                        else
+                                        {
+                                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                                <svg viewBox="0 0 24 24" fill="white" style="width: 40px; height: 40px;">
+                                                    <path d="M8 5v14l11-7z"/>
+                                                </svg>
+                                            </div>
+                                        }
+                                        <div class="video-play-overlay">
+                                            <svg viewBox="0 0 24 24" fill="white" style="width: 48px; height: 48px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">
+                                                <circle cx="12" cy="12" r="10" fill="rgba(0,0,0,0.6)"/>
+                                                <path d="M10 8l6 4-6 4V8z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                }
+
+                                @* Görsel thumbnails *@
+                                @for (int i = 0; i < Math.Min(galeriGorselleri.Count, hasVideo ? 9 : 10); i++)
+                                {
+                                    var thumbnailIndex = hasVideo ? i + 1 : i;
+                                    <div class="thumbnail-item @(i == 0 && !hasVideo ? "active" : "")" onclick="changeMainImage(@thumbnailIndex, '@galeriGorselleri[i]')">
+                                        <img src="@galeriGorselleri[i]" alt="@Model.ProjeAdi Görsel @(i + 1)">
+                                        @if (i == (hasVideo ? 8 : 9) && galeriGorselleri.Count > (hasVideo ? 9 : 10))
+                                        {
+                                            <div class="thumbnail-more" onclick="openLightbox(@thumbnailIndex)">
+                                                <span>+@(galeriGorselleri.Count - (hasVideo ? 9 : 10))</span>
                                             </div>
                                         }
                                     </div>
@@ -628,6 +721,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="~/css/projeler.css" asp-append-version="true" />
 
+    <style>
+        .thumbnail-item {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .video-play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            transition: transform 0.2s ease;
+        }
+
+        .thumbnail-item:hover .video-play-overlay {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+    </style>
+
     <script>
         AOS.init({
             duration: 600,
@@ -641,12 +754,47 @@
         let currentLightboxIndex = 0;
 
         // Ana görseli değiştir
-        function changeMainImage(index, imageUrl) {
-            const mainImage = document.querySelector('.gallery-main img');
+        function changeMainImage(index, imageUrl, isVideo = false) {
+            const galleryMain = document.querySelector('.gallery-main');
             const thumbnails = document.querySelectorAll('.thumbnail-item');
+            const currentIndex = parseInt(galleryMain.getAttribute('data-index') || '0');
 
-            mainImage.src = imageUrl;
-            document.querySelector('.gallery-main').setAttribute('data-index', index);
+            console.log('changeMainImage called:', { currentIndex, index, isVideo });
+
+            // Aynı index'e tıklanmışsa hiçbir şey yapma (özellikle video için önemli)
+            if (currentIndex === index) {
+                console.log('Same index, returning early');
+                return;
+            }
+
+            if (isVideo) {
+                // Video göster
+                galleryMain.innerHTML = `
+                    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                        <iframe
+                            src="@embedVideoUrl"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                `;
+            } else {
+                // Görsel göster
+                galleryMain.innerHTML = `
+                    <img src="${imageUrl}" alt="@Model.ProjeAdi" class="img-fluid">
+                    <div class="gallery-overlay">
+                        <button class="gallery-fullscreen-btn" onclick="openLightbox(${index})">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                            </svg>
+                            Tam Ekran
+                        </button>
+                    </div>
+                `;
+            }
+
+            galleryMain.setAttribute('data-index', index);
 
             thumbnails.forEach((thumb, i) => {
                 thumb.classList.toggle('active', i === index);
