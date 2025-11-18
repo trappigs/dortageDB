@@ -1420,5 +1420,181 @@ namespace dortageDB.Controllers
                 return RedirectToAction(nameof(AllVekarers));
             }
         }
+
+        // ====================================
+        // SEO SETTINGS MANAGEMENT
+        // ====================================
+
+        // GET: Admin/SeoSettings
+        public async Task<IActionResult> SeoSettings()
+        {
+            var seoSettings = await _context.SeoSettings
+                .OrderBy(s => s.PagePath)
+                .ToListAsync();
+
+            return View(seoSettings);
+        }
+
+        // GET: Admin/CreateSeoSetting
+        public IActionResult CreateSeoSetting()
+        {
+            return View();
+        }
+
+        // POST: Admin/CreateSeoSetting
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateSeoSetting(SeoSetting seoSetting)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(seoSetting.PagePath))
+                {
+                    TempData["ErrorMessage"] = "Sayfa yolu zorunludur.";
+                    return View(seoSetting);
+                }
+
+                // PagePath zaten var mı kontrol et
+                if (await _context.SeoSettings.AnyAsync(s => s.PagePath == seoSetting.PagePath))
+                {
+                    TempData["ErrorMessage"] = "Bu sayfa yolu için zaten bir SEO ayarı mevcut.";
+                    return View(seoSetting);
+                }
+
+                seoSetting.CreatedAt = DateTime.Now;
+                _context.SeoSettings.Add(seoSetting);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"📝 Yeni SEO ayarı oluşturuldu: {seoSetting.PagePath} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "SEO ayarı başarıyla oluşturuldu.";
+                return RedirectToAction(nameof(SeoSettings));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ SEO ayarı oluşturma hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return View(seoSetting);
+            }
+        }
+
+        // GET: Admin/EditSeoSetting/5
+        public async Task<IActionResult> EditSeoSetting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var seoSetting = await _context.SeoSettings.FindAsync(id);
+            if (seoSetting == null)
+            {
+                return NotFound();
+            }
+
+            return View(seoSetting);
+        }
+
+        // POST: Admin/EditSeoSetting/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSeoSetting(int id, SeoSetting seoSetting)
+        {
+            if (id != seoSetting.Id)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                var existingSetting = await _context.SeoSettings.FindAsync(id);
+                if (existingSetting == null)
+                {
+                    return NotFound();
+                }
+
+                // PagePath değiştirilmişse, başka bir kayıtta kullanılmadığını kontrol et
+                if (existingSetting.PagePath != seoSetting.PagePath)
+                {
+                    if (await _context.SeoSettings.AnyAsync(s => s.PagePath == seoSetting.PagePath && s.Id != id))
+                    {
+                        TempData["ErrorMessage"] = "Bu sayfa yolu başka bir SEO ayarında kullanılıyor.";
+                        return View(seoSetting);
+                    }
+                }
+
+                // Update properties
+                existingSetting.PagePath = seoSetting.PagePath;
+                existingSetting.PageTitle = seoSetting.PageTitle;
+                existingSetting.MetaDescription = seoSetting.MetaDescription;
+                existingSetting.OgTitle = seoSetting.OgTitle;
+                existingSetting.OgDescription = seoSetting.OgDescription;
+                existingSetting.OgImage = seoSetting.OgImage;
+                existingSetting.OgType = seoSetting.OgType;
+                existingSetting.Author = seoSetting.Author;
+                existingSetting.Robots = seoSetting.Robots;
+                existingSetting.CanonicalUrl = seoSetting.CanonicalUrl;
+                existingSetting.TwitterTitle = seoSetting.TwitterTitle;
+                existingSetting.TwitterDescription = seoSetting.TwitterDescription;
+                existingSetting.IsActive = seoSetting.IsActive;
+                existingSetting.UpdatedAt = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"📝 SEO ayarı güncellendi: {seoSetting.PagePath} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "SEO ayarı başarıyla güncellendi.";
+                return RedirectToAction(nameof(SeoSettings));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ SEO ayarı güncelleme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return View(seoSetting);
+            }
+        }
+
+        // GET: Admin/DeleteSeoSetting/5
+        public async Task<IActionResult> DeleteSeoSetting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var seoSetting = await _context.SeoSettings.FindAsync(id);
+            if (seoSetting == null)
+            {
+                return NotFound();
+            }
+
+            return View(seoSetting);
+        }
+
+        // POST: Admin/DeleteSeoSettingConfirmed/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteSeoSettingConfirmed(int id)
+        {
+            try
+            {
+                var seoSetting = await _context.SeoSettings.FindAsync(id);
+                if (seoSetting == null)
+                {
+                    return NotFound();
+                }
+
+                _context.SeoSettings.Remove(seoSetting);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"🗑️ SEO ayarı silindi: {seoSetting.PagePath} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "SEO ayarı başarıyla silindi.";
+                return RedirectToAction(nameof(SeoSettings));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ SEO ayarı silme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(SeoSettings));
+            }
+        }
     }
 }

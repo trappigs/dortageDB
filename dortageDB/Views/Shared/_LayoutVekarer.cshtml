@@ -1,14 +1,108 @@
 @using dortageDB.Entities
 @using Microsoft.AspNetCore.Identity
+@using dortageDB.Services
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
+@inject ISeoService SeoService
 
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Vekarer Dashboard</title>
+
+    @{
+        // Veritabanından SEO ayarlarını yükle
+        var currentPath = Context.Request.Path.Value ?? "/";
+        var seoSettings = await SeoService.GetSeoSettingAsync(currentPath);
+
+        // Debug bilgisi
+        System.Diagnostics.Debug.WriteLine($"[SEO DEBUG] Current Path: {currentPath}");
+        System.Diagnostics.Debug.WriteLine($"[SEO DEBUG] Settings Found: {seoSettings != null}");
+        if (seoSettings != null)
+        {
+            System.Diagnostics.Debug.WriteLine($"[SEO DEBUG] Title: {seoSettings.PageTitle}");
+        }
+
+        // SEO Meta Tag Değerleri (Öncelik: ViewData > Database > Defaults)
+        var pageTitle = ViewData["Title"]?.ToString()
+            ?? seoSettings?.PageTitle
+            ?? "Vekarer Dashboard";
+
+        var metaDescription = ViewData["MetaDescription"]?.ToString()
+            ?? seoSettings?.MetaDescription
+            ?? "Vekarer ile gayrimenkul yatırımlarınızı güvenle yapın. Arsa, konut ve ticari gayrimenkul fırsatları için hemen inceleyin.";
+
+        var ogTitle = ViewData["OgTitle"]?.ToString()
+            ?? seoSettings?.OgTitle
+            ?? pageTitle;
+
+        var ogDescription = ViewData["OgDescription"]?.ToString()
+            ?? seoSettings?.OgDescription
+            ?? metaDescription;
+
+        var ogImage = ViewData["OgImage"]?.ToString()
+            ?? seoSettings?.OgImage
+            ?? Url.Content("~/images/favicon-logo.png");
+
+        var ogType = ViewData["OgType"]?.ToString()
+            ?? seoSettings?.OgType
+            ?? "website";
+
+        var author = ViewData["Author"]?.ToString()
+            ?? seoSettings?.Author
+            ?? "Vekarer";
+
+        var robots = ViewData["Robots"]?.ToString()
+            ?? seoSettings?.Robots
+            ?? "index, follow";
+
+        var canonicalUrl = ViewData["CanonicalUrl"]?.ToString()
+            ?? seoSettings?.CanonicalUrl
+            ?? (Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path);
+
+        var twitterTitle = ViewData["TwitterTitle"]?.ToString()
+            ?? seoSettings?.TwitterTitle
+            ?? ogTitle;
+
+        var twitterDescription = ViewData["TwitterDescription"]?.ToString()
+            ?? seoSettings?.TwitterDescription
+            ?? ogDescription;
+
+        // Tam URL oluştur (og:image için)
+        if (!ogImage.StartsWith("http"))
+        {
+            ogImage = Context.Request.Scheme + "://" + Context.Request.Host + ogImage;
+        }
+    }
+
+    <!-- SEO DEBUG: Path=@currentPath, SettingsFound=@(seoSettings != null), Title=@(seoSettings?.PageTitle ?? "null") -->
+
+    <title>@pageTitle - Vekarer</title>
+
+    <!-- Meta Tags -->
+    <meta name="description" content="@metaDescription" />
+    <meta name="author" content="@author" />
+    <meta name="robots" content="@robots" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="@canonicalUrl" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="@ogType" />
+    <meta property="og:url" content="@canonicalUrl" />
+    <meta property="og:title" content="@ogTitle" />
+    <meta property="og:description" content="@ogDescription" />
+    <meta property="og:image" content="@ogImage" />
+    <meta property="og:site_name" content="Vekarer" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="@canonicalUrl" />
+    <meta name="twitter:title" content="@twitterTitle" />
+    <meta name="twitter:description" content="@twitterDescription" />
+    <meta name="twitter:image" content="@ogImage" />
+
     <link rel="icon" type="image/png" href="~/images/favicon-logo.png" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />

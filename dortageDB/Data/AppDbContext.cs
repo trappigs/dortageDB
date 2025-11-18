@@ -15,6 +15,7 @@ namespace dortageDB.Data
         public DbSet<Referral> Referrals => Set<Referral>();
         public DbSet<Proje> Projeler => Set<Proje>();
         public DbSet<EgitimVideo> EgitimVideolar => Set<EgitimVideo>();
+        public DbSet<SeoSetting> SeoSettings => Set<SeoSetting>();
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
@@ -194,6 +195,19 @@ namespace dortageDB.Data
                 entity.HasIndex(e => e.OneEikan);
 
                 entity.Property(e => e.EklenmeTarihi).HasDefaultValueSql("GETDATE()");
+            });
+
+            // ============================================
+            // SEO SETTINGS
+            // ============================================
+            b.Entity<SeoSetting>(entity =>
+            {
+                entity.HasKey(s => s.Id);
+
+                entity.HasIndex(s => s.PagePath).IsUnique();
+                entity.HasIndex(s => s.IsActive);
+
+                entity.Property(s => s.CreatedAt).HasDefaultValueSql("GETDATE()");
             });
         }
     }

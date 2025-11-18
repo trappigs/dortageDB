@@ -1,0 +1,73 @@
+@model dortageDB.Entities.SeoSetting
+@{
+    ViewData["Title"] = "SEO Ayarı Sil";
+    Layout = "_LayoutVekarer";
+}
+
+<link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
+
+<div class="main-panel">
+    <div class="panel-header">
+        <h2><i class="fas fa-trash"></i> SEO Ayarı Sil</h2>
+    </div>
+
+    <div class="panel-body">
+        <div class="alert alert-warning">
+            <h4><i class="fas fa-exclamation-triangle"></i> Dikkat!</h4>
+            <p class="mb-0">Bu SEO ayarını silmek istediğinizden emin misiniz?</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">SEO Ayar Detayları</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Sayfa Yolu:</dt>
+                    <dd class="col-sm-9"><strong>@Model.PagePath</strong></dd>
+
+                    <dt class="col-sm-3">Sayfa Başlığı:</dt>
+                    <dd class="col-sm-9">@(Model.PageTitle ?? "-")</dd>
+
+                    <dt class="col-sm-3">Meta Açıklama:</dt>
+                    <dd class="col-sm-9">@(Model.MetaDescription ?? "-")</dd>
+
+                    <dt class="col-sm-3">OG Başlık:</dt>
+                    <dd class="col-sm-9">@(Model.OgTitle ?? "-")</dd>
+
+                    <dt class="col-sm-3">Durum:</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success">Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Pasif</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Oluşturulma:</dt>
+                    <dd class="col-sm-9">@Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                    @if (Model.UpdatedAt != null)
+                    {
+                        <dt class="col-sm-3">Son Güncelleme:</dt>
+                        <dd class="col-sm-9">@Model.UpdatedAt.Value.ToString("dd.MM.yyyy HH:mm")</dd>
+                    }
+                </dl>
+            </div>
+        </div>
+
+        <form asp-action="DeleteSeoSettingConfirmed" asp-route-id="@Model.Id" method="post" class="mt-4">
+            <div class="d-flex justify-content-between">
+                <a asp-action="SeoSettings" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> İptal
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Evet, Sil
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

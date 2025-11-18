@@ -1,0 +1,153 @@
+@model dortageDB.Entities.SeoSetting
+@{
+    ViewData["Title"] = "Yeni SEO Ayarı Ekle";
+    Layout = "_LayoutVekarer";
+}
+
+<link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
+
+<div class="main-panel">
+    <div class="panel-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2><i class="fas fa-plus"></i> Yeni SEO Ayarı Ekle</h2>
+            <a asp-action="SeoSettings" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Geri Dön
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="panel-body">
+        <form asp-action="CreateSeoSetting" method="post">
+
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Temel Bilgiler</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="PagePath" class="form-label">Sayfa Yolu *</label>
+                        <input asp-for="PagePath" class="form-control" placeholder="Örn: /, /proje, /hakkimizda" required />
+                        <small class="text-muted">URL'deki sayfa yolu (örn: "/", "/proje", "/hakkimizda")</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PageTitle" class="form-label">Sayfa Başlığı</label>
+                        <input asp-for="PageTitle" class="form-control" placeholder="Örn: Anasayfa" />
+                        <small class="text-muted">Browser tab'ında ve arama sonuçlarında görünecek başlık</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MetaDescription" class="form-label">Meta Açıklama</label>
+                        <textarea asp-for="MetaDescription" class="form-control" rows="3"
+                                  placeholder="Örn: Vekarer ile gayrimenkul yatırımlarınızı güvenle yapın..."></textarea>
+                        <small class="text-muted">Arama sonuçlarında görünecek açıklama (150-160 karakter önerilir)</small>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="IsActive" class="form-check-input" type="checkbox" checked />
+                        <label asp-for="IsActive" class="form-check-label">Aktif</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Open Graph (Facebook / LinkedIn)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="OgTitle" class="form-label">OG Başlık</label>
+                        <input asp-for="OgTitle" class="form-control" />
+                        <small class="text-muted">Boş bırakılırsa Sayfa Başlığı kullanılır</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="OgDescription" class="form-label">OG Açıklama</label>
+                        <textarea asp-for="OgDescription" class="form-control" rows="2"></textarea>
+                        <small class="text-muted">Boş bırakılırsa Meta Açıklama kullanılır</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="OgImage" class="form-label">OG Görsel URL</label>
+                        <input asp-for="OgImage" class="form-control" placeholder="Örn: ~/images/og-image.jpg" />
+                        <small class="text-muted">Sosyal medyada paylaşıldığında gösterilecek görsel (1200x630px önerilir)</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="OgType" class="form-label">OG Type</label>
+                        <select asp-for="OgType" class="form-select">
+                            <option value="">Varsayılan (website)</option>
+                            <option value="website">website</option>
+                            <option value="article">article</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Twitter Card</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TwitterTitle" class="form-label">Twitter Başlık</label>
+                        <input asp-for="TwitterTitle" class="form-control" />
+                        <small class="text-muted">Boş bırakılırsa OG Başlık kullanılır</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TwitterDescription" class="form-label">Twitter Açıklama</label>
+                        <textarea asp-for="TwitterDescription" class="form-control" rows="2"></textarea>
+                        <small class="text-muted">Boş bırakılırsa OG Açıklama kullanılır</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Gelişmiş Ayarlar</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Author" class="form-label">Yazar</label>
+                        <input asp-for="Author" class="form-control" placeholder="Varsayılan: Vekarer" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Robots" class="form-label">Robots</label>
+                        <select asp-for="Robots" class="form-select">
+                            <option value="">Varsayılan (index, follow)</option>
+                            <option value="index, follow">index, follow (İndeksle ve takip et)</option>
+                            <option value="noindex, follow">noindex, follow (İndeksleme, sadece takip et)</option>
+                            <option value="index, nofollow">index, nofollow (İndeksle, takip etme)</option>
+                            <option value="noindex, nofollow">noindex, nofollow (İndeksleme ve takip etme)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CanonicalUrl" class="form-label">Canonical URL</label>
+                        <input asp-for="CanonicalUrl" class="form-control" placeholder="Boş bırakılırsa mevcut URL kullanılır" />
+                        <small class="text-muted">Tercih edilen URL (duplicate content önleme)</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="SeoSettings" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> İptal
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
