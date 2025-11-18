@@ -344,13 +344,16 @@
         const satisFiyatiInput = document.getElementById('satisFiyati');
         const komisyonTutarElement = document.getElementById('komisyonTutar');
 
-        satisFiyatiInput.addEventListener('input', function() {
-            const fiyat = parseFloat(this.value) || 0;
-            const komisyon = fiyat * 0.03;
-            komisyonTutarElement.textContent = '₺' + komisyon.toLocaleString('tr-TR', {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
+        // Element var mı kontrol et
+        if (satisFiyatiInput && komisyonTutarElement) {
+            satisFiyatiInput.addEventListener('input', function() {
+                const fiyat = parseFloat(this.value) || 0;
+                const komisyon = fiyat * 0.03;
+                komisyonTutarElement.textContent = '₺' + komisyon.toLocaleString('tr-TR', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
             });
-        });
+        }
     </script>
 }

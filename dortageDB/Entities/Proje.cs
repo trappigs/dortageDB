@@ -6,6 +6,8 @@ public class Proje
 
     public required string ProjeAdi { get; set; }
 
+    public string? Slug { get; set; } // SEO-friendly URL
+
     public required string Aciklama { get; set; }
 
     public string? KisaAciklama { get; set; } // Kart görünümünde gösterilecek kısa açıklama

@@ -192,7 +192,7 @@
                             <h3 class="card-title">@proje.ProjeAdi</h3>
                         </div>
 
-                        <a href="@Url.Action("Details", "Proje", new { id = proje.ProjeID })" title="@proje.ProjeAdi Detayları" class="card-image-container">
+                        <a href="/@(proje.Slug ?? proje.ProjeID.ToString())" title="@proje.ProjeAdi Detayları" class="card-image-container">
                             @if (!string.IsNullOrEmpty(proje.KapakGorseli))
                             {
                                 <img src="@proje.KapakGorseli" alt="@proje.ProjeAdi">
@@ -216,7 +216,7 @@
                                 <i class="fa-solid fa-turkish-lira-sign"></i>
                                     <span>@proje.MinFiyat.ToString("N0")'den başlayan fiyatlarla</span></div>
                             <div class="card-actions">
-                                <a href="@Url.Action("Details", "Proje", new { id = proje.ProjeID })" title="@proje.ProjeAdi Detayları" class="btn btn-primary">PROJEYİ İNCELE</a>
+                                <a href="/@(proje.Slug ?? proje.ProjeID.ToString())" title="@proje.ProjeAdi Detayları" class="btn btn-primary">PROJEYİ İNCELE</a>
                                 @* <a href="#" class="btn btn-secondary">FORM DOLDURUN</a> *@
                             </div>
                         </div>

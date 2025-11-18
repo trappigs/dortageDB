@@ -195,9 +195,17 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Varsayılan route önce
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Özel route: Proje slug'ları için (örn: /dikili)
+// Bu route en sonda olmalı, böylece diğer route'lar önce denenir
+app.MapControllerRoute(
+    name: "proje-slug",
+    pattern: "{slug}",
+    defaults: new { controller = "Proje", action = "Details" });
 
 Console.WriteLine("✅ Uygulama başlatıldı!");
 

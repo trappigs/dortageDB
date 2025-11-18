@@ -1,5 +1,6 @@
 using dortageDB.Data;
 using dortageDB.Entities;
+using dortageDB.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -598,6 +599,16 @@ namespace dortageDB.Controllers
                 proje.KayitTarihi = DateTime.Now;
                 proje.AktifMi = true;
 
+                // Slug boşsa otomatik oluştur, doluysa kullanıcının yazdığını kullan
+                if (string.IsNullOrWhiteSpace(proje.Slug))
+                {
+                    proje.Slug = SlugHelper.GenerateSlug(proje.ProjeAdi);
+                }
+                else
+                {
+                    proje.Slug = SlugHelper.GenerateSlug(proje.Slug); // Temizle
+                }
+
                 _context.Projeler.Add(proje);
                 await _context.SaveChangesAsync();
 
@@ -656,6 +667,17 @@ namespace dortageDB.Controllers
 
                 // Update properties
                 existingProje.ProjeAdi = proje.ProjeAdi;
+
+                // Slug boşsa otomatik oluştur, doluysa kullanıcının yazdığını kullan
+                if (string.IsNullOrWhiteSpace(proje.Slug))
+                {
+                    existingProje.Slug = SlugHelper.GenerateSlug(proje.ProjeAdi);
+                }
+                else
+                {
+                    existingProje.Slug = SlugHelper.GenerateSlug(proje.Slug); // Temizle
+                }
+
                 existingProje.Aciklama = proje.Aciklama;
                 existingProje.KisaAciklama = proje.KisaAciklama;
                 existingProje.Konum = proje.Konum;

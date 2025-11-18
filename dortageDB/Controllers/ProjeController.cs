@@ -75,16 +75,32 @@ public class ProjeController : Controller
         return View(projeler);
     }
 
-    // GET: /Proje/Details/5
-    public async Task<IActionResult> Details(int? id)
+    // GET: /dikili (direkt slug URL)
+    public async Task<IActionResult> Details(string? slug)
     {
-        if (id == null)
+        if (string.IsNullOrEmpty(slug))
         {
             return NotFound();
         }
 
-        var proje = await _context.Projeler
-            .FirstOrDefaultAsync(m => m.ProjeID == id && m.AktifMi);
+        Proje? proje = null;
+
+        // Önce slug'a göre ara
+        proje = await _context.Projeler
+            .FirstOrDefaultAsync(m => m.Slug == slug && m.AktifMi);
+
+        // Slug bulunamazsa, eski ID formatı için sayısal kontrol yap (geriye dönük uyumluluk)
+        if (proje == null && int.TryParse(slug, out int projeId))
+        {
+            proje = await _context.Projeler
+                .FirstOrDefaultAsync(m => m.ProjeID == projeId && m.AktifMi);
+
+            // Eğer ID ile bulunduysa ve slug varsa, slug URL'ine redirect et
+            if (proje != null && !string.IsNullOrEmpty(proje.Slug))
+            {
+                return RedirectPermanent("/" + proje.Slug);
+            }
+        }
 
         if (proje == null)
         {
@@ -93,7 +109,7 @@ public class ProjeController : Controller
 
         // İstatistikler
         var toplamSatis = await _context.Satislar
-            .Where(s => s.ProjeID == id)
+            .Where(s => s.ProjeID == proje.ProjeID)
             .CountAsync();
 
         var satisYuzdesi = proje.ToplamParsel > 0
