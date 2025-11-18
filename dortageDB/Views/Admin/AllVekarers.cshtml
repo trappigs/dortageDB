@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "T�m Vekarerlar";
+    ViewData["Title"] = "Tüm Vekarerlar";
     Layout = "_LayoutVekarer";
     var VekarerData = ViewBag.VekarerData as List<dynamic>;
 }
@@ -412,17 +412,17 @@
         <div class="page-header">
             <div>
                 <h1 class="page-title">
-                    T�m Vekarerlar
+                    Tüm Vekarerlar
                     <span class="admin-badge">ADMIN</span>
                 </h1>
                 <p style="color: #6b7280;">Sistemde toplam @(VekarerData?.Count ?? 0) Vekarer</p>
             </div>
             <div style="display: flex; gap: 12px;">
                 <button type="button" class="btn-new-Vekarer" onclick="openCreateModal()">
-                    ? Yeni Vekarer
+                    ➕ Yeni Vekarer
                 </button>
                 <a asp-action="Index" class="btn-back">
-                    � Dashboard'a D�n
+                    ← Dashboard'a Dön
                 </a>
             </div>
         </div>
@@ -459,7 +459,7 @@
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
                                 </svg>
-                                DEAKT�F HESAP
+                                DEAKTİF HESAP
                             </div>
                         }
                         <div class="Vekarer-header">
@@ -513,11 +513,11 @@
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value">@satisCount</div>
-                                <div class="stat-label">Sat��</div>
+                                <div class="stat-label">Satış</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value">@((satisCount > 0 ? (decimal)randevuCount / satisCount * 100 : 0).ToString("F0"))%</div>
-                                <div class="stat-label">Ba�ar�</div>
+                                <div class="stat-label">Başarı</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value">₺@totalCiro.ToString("N0")</div>
@@ -542,7 +542,7 @@
                         else
                         {
                             <button class="btn-reactivate" onclick="openReactivateModal(@user.Id, '@user.Ad @user.Soyad')" style="margin-top: 12px; width: 100%; padding: 10px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                                ? Hesab� Aktifle�tir
+                                ✓ Hesabı Aktifleştir
                             </button>
                         }
                     </div>
@@ -552,9 +552,9 @@
         else
         {
             <div class="empty-state">
-                <div class="empty-icon">??</div>
-                <h3 style="color: #1f2937; margin-bottom: 8px;">Hen�z Vekarer yok</h3>
-                <p style="color: #6b7280;">Sistemde kay�tl� Vekarer bulunmuyor</p>
+                <div class="empty-icon">👥</div>
+                <h3 style="color: #1f2937; margin-bottom: 8px;">Henüz Vekarer yok</h3>
+                <p style="color: #6b7280;">Sistemde kayıtlı Vekarer bulunmuyor</p>
             </div>
         }
     </div>
@@ -564,8 +564,8 @@
 <div class="modal-overlay" id="createModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>? Yeni Vekarer Ekle</h3>
-            <button type="button" class="modal-close" onclick="closeCreateModal()">�</button>
+            <h3>➕ Yeni Vekarer Ekle</h3>
+            <button type="button" class="modal-close" onclick="closeCreateModal()">✕</button>
         </div>
         <form asp-controller="Admin" asp-action="CreateVekarer" method="post" id="createVekarerForm">
             @Html.AntiForgeryToken()
@@ -607,14 +607,14 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>�ehir *</label>
-                        <input type="text" name="Sehir" required placeholder="�ehir" maxlength="100">
+                        <label>Şehir *</label>
+                        <input type="text" name="Sehir" required placeholder="Şehir" maxlength="100">
                     </div>
                     <div class="form-group">
                         <label>Cinsiyet *</label>
                         <select name="Cinsiyet" required>
-                            <option value="">Se�in</option>
-                            <option value="false">Kad�n</option>
+                            <option value="">Seçin</option>
+                            <option value="false">Kadın</option>
                             <option value="true">Erkek</option>
                         </select>
                     </div>
@@ -622,17 +622,17 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>�ifre *</label>
+                        <label>Şifre *</label>
                         <input type="password" name="Password" required placeholder="Minimum 6 karakter" minlength="6">
                     </div>
                     <div class="form-group">
-                        <label>�ifre Tekrar *</label>
-                        <input type="password" name="ConfirmPassword" required placeholder="�ifre tekrar" minlength="6">
+                        <label>Şifre Tekrar *</label>
+                        <input type="password" name="ConfirmPassword" required placeholder="Şifre tekrar" minlength="6">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeCreateModal()">�ptal</button>
+                <button type="button" class="btn-modal btn-cancel" onclick="closeCreateModal()">İptal</button>
                 <button type="submit" class="btn-modal btn-save">Kaydet</button>
             </div>
         </form>
@@ -643,8 +643,8 @@
 <div class="modal-overlay" id="deactivateModal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
-            <h3>?? Hesab� Deaktif Et</h3>
-            <button type="button" class="modal-close" onclick="closeDeactivateModal()">�</button>
+            <h3>🔒 Hesabı Deaktif Et</h3>
+            <button type="button" class="modal-close" onclick="closeDeactivateModal()">✕</button>
         </div>
         <form asp-controller="Admin" asp-action="DeactivateVekarer" method="post" id="deactivateForm">
             @Html.AntiForgeryToken()
@@ -660,20 +660,20 @@
                         <h4 style="margin: 0; color: #991b1b; font-size: 16px;">Dikkat!</h4>
                     </div>
                     <p style="color: #7f1d1d; margin: 0; font-size: 14px; line-height: 1.5;">
-                        <strong id="deactivateUserName"></strong> kullan�c�s�n�n hesab�n� deaktif etmek �zeresiniz.
+                        <strong id="deactivateUserName"></strong> kullanıcısının hesabını deaktif etmek üzeresiniz.
                     </p>
                     <p style="color: #7f1d1d; margin: 8px 0 0 0; font-size: 14px; line-height: 1.5;">
-                        Bu kullan�c� sisteme giri� yapamayacak ve t�m eri�imleri engellenecektir.
+                        Bu kullanıcı sisteme giriş yapamayacak ve tüm erişimleri engellenecektir.
                     </p>
                 </div>
                 <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                    Bu i�lemi ger�ekle�tirmek istedi�inizden emin misiniz?
+                    Bu işlemi gerçekleştirmek istediğinizden emin misiniz?
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeDeactivateModal()">�ptal</button>
+                <button type="button" class="btn-modal btn-cancel" onclick="closeDeactivateModal()">İptal</button>
                 <button type="button" class="btn-modal" onclick="confirmDeactivate()" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white;">
-                    ?? Deaktif Et
+                    🔒 Deaktif Et
                 </button>
             </div>
         </form>
@@ -684,8 +684,8 @@
 <div class="modal-overlay" id="reactivateModal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
-            <h3>? Hesab� Aktifle�tir</h3>
-            <button type="button" class="modal-close" onclick="closeReactivateModal()">�</button>
+            <h3>✅ Hesabı Aktifleştir</h3>
+            <button type="button" class="modal-close" onclick="closeReactivateModal()">✕</button>
         </div>
         <form asp-controller="Admin" asp-action="ReactivateVekarer" method="post" id="reactivateForm">
             @Html.AntiForgeryToken()
@@ -697,23 +697,23 @@
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                         </svg>
-                        <h4 style="margin: 0; color: #065f46; font-size: 16px;">Hesap Aktifle�tirme</h4>
+                        <h4 style="margin: 0; color: #065f46; font-size: 16px;">Hesap Aktifleştirme</h4>
                     </div>
                     <p style="color: #064e3b; margin: 0; font-size: 14px; line-height: 1.5;">
-                        <strong id="reactivateUserName"></strong> kullan�c�s�n�n hesab�n� aktifle�tirmek �zeresiniz.
+                        <strong id="reactivateUserName"></strong> kullanıcısının hesabını aktifleştirmek üzeresiniz.
                     </p>
                     <p style="color: #064e3b; margin: 8px 0 0 0; font-size: 14px; line-height: 1.5;">
-                        Bu kullan�c� tekrar sisteme giri� yapabilecek ve t�m yetkileri geri gelecektir.
+                        Bu kullanıcı tekrar sisteme giriş yapabilecek ve tüm yetkileri geri gelecektir.
                     </p>
                 </div>
                 <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                    Bu i�lemi ger�ekle�tirmek istedi�inizden emin misiniz?
+                    Bu işlemi gerçekleştirmek istediğinizden emin misiniz?
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeReactivateModal()">�ptal</button>
+                <button type="button" class="btn-modal btn-cancel" onclick="closeReactivateModal()">İptal</button>
                 <button type="button" class="btn-modal" onclick="confirmReactivate()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
-                    ? Aktifle�tir
+                    ✅ Aktifleştir
                 </button>
             </div>
         </form>
@@ -723,7 +723,7 @@
 <script>
     // Create Modal functions
     function openCreateModal() {
-        console.log('? Create modal a��l�yor');
+        console.log('➕ Create modal açılıyor');
         document.getElementById('createVekarerForm').reset();
         document.getElementById('createModal').classList.add('active');
     }
@@ -793,7 +793,7 @@
 
             if (password !== confirmPassword) {
                 e.preventDefault();
-                alert('�ifreler e�le�miyor!');
+                alert('Şifreler e�le�miyor!');
                 return false;
             }
         });
@@ -804,7 +804,7 @@
     let deactivateUserName = '';
 
     function openDeactivateModal(userId, userName) {
-        console.log('?? Deactivate modal a��l�yor:', userId, userName);
+        console.log('🔒 Deactivate modal açılıyor:', userId, userName);
         deactivateUserId = userId;
         deactivateUserName = userName;
         document.getElementById('deactivateUserName').textContent = userName;
@@ -820,7 +820,7 @@
 
     function confirmDeactivate() {
         if (deactivateUserId) {
-            console.log('? Deaktif etme onayland�:', deactivateUserId);
+            console.log('✅ Deaktif etme onaylandı:', deactivateUserId);
             document.getElementById('deactivateForm').submit();
         }
     }
@@ -830,7 +830,7 @@
     let reactivateUserName = '';
 
     function openReactivateModal(userId, userName) {
-        console.log('? Reactivate modal a��l�yor:', userId, userName);
+        console.log('✅ Reactivate modal açılıyor:', userId, userName);
         reactivateUserId = userId;
         reactivateUserName = userName;
         document.getElementById('reactivateUserName').textContent = userName;
@@ -846,7 +846,7 @@
 
     function confirmReactivate() {
         if (reactivateUserId) {
-            console.log('? Aktifle�tirme onayland�:', reactivateUserId);
+            console.log('✅ Aktifleştirme onayland�:', reactivateUserId);
             document.getElementById('reactivateForm').submit();
         }
     }

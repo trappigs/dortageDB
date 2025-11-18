@@ -40,7 +40,9 @@
       "Bash(git checkout:*)",
       "Bash(Select-String -Pattern \"error|warning|Build succeeded|Build FAILED\")",
       "Bash(Select-String -Pattern \"CS0266\" -Context 2)",
-      "Bash(nul)"
+      "Bash(nul)",
+      "Bash(python fix_encoding.py:*)",
+      "Bash(del fix_encoding.py)"
     ],
     "deny": [],
     "ask": []
