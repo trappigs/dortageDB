@@ -288,7 +288,7 @@
         }
 
         .top-navbar-logo img {
-            height: 35px;
+            height: 140px;
             width: auto;
         }
 
@@ -352,7 +352,7 @@
             }
 
             .top-navbar-logo img {
-                height: 28px;
+                height: 128px;
             }
 
             .top-navbar-logo span {
@@ -382,6 +382,25 @@
                 margin-top: 0px;
                 margin-left: 0;
             }
+        }
+
+        /* Mobile Overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+            opacity: 1;
         }
     </style>
 </head>
@@ -428,7 +447,7 @@
     </nav>
 
     <!-- Mobile Overlay -->
-    @* <div class="mobile-overlay" id="mobileOverlay"></div> *@
+    <div class="mobile-overlay" id="mobileOverlay"></div>
 
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar" role="navigation" aria-label="Ana navigasyon">
@@ -648,7 +667,7 @@
         const navLinks = document.querySelectorAll('.nav-link');
 
         // Collapse/Expand Sidebar (Desktop)
-        if (collapseBtn) {
+        if (collapseBtn && sidebar) {
             collapseBtn.addEventListener('click', () => {
                 if (window.innerWidth > 768) {
                     sidebar.classList.toggle('collapsed');
@@ -660,7 +679,7 @@
 
         // Load saved state
         window.addEventListener('DOMContentLoaded', () => {
-            if (window.innerWidth > 768) {
+            if (window.innerWidth > 768 && sidebar) {
                 const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
                 if (isCollapsed) {
                     sidebar.classList.add('collapsed');
@@ -680,6 +699,8 @@
 
         // Mobile Menu Toggle
         function toggleMobileMenu() {
+            if (!sidebar || !mobileOverlay) return;
+
             sidebar.classList.toggle('mobile-open');
             mobileOverlay.classList.toggle('active');
             document.body.style.overflow = sidebar.classList.contains('mobile-open') ? 'hidden' : '';
@@ -700,7 +721,7 @@
         // Close mobile menu on link click
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
-                if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+                if (window.innerWidth <= 768 && sidebar && sidebar.classList.contains('mobile-open')) {
                     toggleMobileMenu();
                 }
             });
@@ -711,18 +732,26 @@
         window.addEventListener('resize', () => {
             const currentWidth = window.innerWidth;
             if (previousWidth <= 768 && currentWidth > 768) {
-                sidebar.classList.remove('mobile-open');
-                mobileOverlay.classList.remove('active');
+                if (sidebar) {
+                    sidebar.classList.remove('mobile-open');
+                }
+                if (mobileOverlay) {
+                    mobileOverlay.classList.remove('active');
+                }
                 document.body.style.overflow = '';
                 const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-                if (isCollapsed) {
+                if (isCollapsed && sidebar) {
                     sidebar.classList.add('collapsed');
                 }
             }
             if (previousWidth > 768 && currentWidth <= 768) {
-                sidebar.classList.remove('collapsed');
-                sidebar.classList.remove('mobile-open');
-                mobileOverlay.classList.remove('active');
+                if (sidebar) {
+                    sidebar.classList.remove('collapsed');
+                    sidebar.classList.remove('mobile-open');
+                }
+                if (mobileOverlay) {
+                    mobileOverlay.classList.remove('active');
+                }
                 document.body.style.overflow = '';
             }
             previousWidth = currentWidth;
