@@ -103,7 +103,7 @@
     <meta name="twitter:description" content="@twitterDescription" />
     <meta name="twitter:image" content="@ogImage" />
 
-    <link rel="icon" type="image/png" href="~/images/favicon-logo.png" />
+    <link rel="icon" type="image/png" href="~/images/favicon-logo.png" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
@@ -288,7 +288,7 @@
         }
 
         .top-navbar-logo img {
-            height: 140px;
+            height: 50px;
             width: auto;
         }
 
@@ -352,7 +352,7 @@
             }
 
             .top-navbar-logo img {
-                height: 128px;
+                height: 40px;
             }
 
             .top-navbar-logo span {
@@ -422,8 +422,8 @@
                 </svg>
             </button>
             <a asp-controller="Home" asp-action="Index" class="top-navbar-logo">
-                <img src="~/images/logo.svg" alt="Vekarer Logo" />
-                <span>Vekarer</span>
+                <img src="~/images/logo.svg" alt="Vekarer Logo" asp-append-version="true" />
+                @* <span>Vekarer</span> *@
             </a>
         </div>
         <div class="top-navbar-right">
