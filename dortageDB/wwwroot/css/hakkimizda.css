@@ -368,10 +368,13 @@
     color: var(--primary-color);
 }
 
-.btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
-}
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        background: #000a68;
+        color: white;
+        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        border: 2px solid var(--white);
+    }
 
 .btn-outline {
     background: transparent;

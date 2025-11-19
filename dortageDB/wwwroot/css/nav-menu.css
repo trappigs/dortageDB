@@ -60,6 +60,7 @@
 }
 
 .nav-menus .nav-link {
+    font-weight: 700 !important;
     font-size: 14px;
     font-weight: 500;
     color: var(--text-primary);

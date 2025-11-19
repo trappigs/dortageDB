@@ -533,17 +533,18 @@
     min-width: 0;
 }
 
-.btn-primary {
+.projeler .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
     color: white;
 }
 
-.btn-primary:hover {
-    background-color: white;
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-}
+    .projeler .btn-primary:hover {
+        background: none;
+        background-color: white;
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
 
 .btn-secondary {
     background-color: white;

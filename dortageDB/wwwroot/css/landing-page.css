@@ -37,7 +37,7 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     color: var(--text-dark);
     line-height: 1.6;
     overflow-x: hidden;
@@ -169,11 +169,12 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.btn-outline:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
-    color: var(--white);
-}
+    .btn-outline:hover {
+        /*background: rgba(255, 255, 255, 0.1);*/
+        background: white;
+            border-color: rgba(255, 255, 255, 0.5);
+        color: #000a68;
+    }
 
 .btn-icon {
     width: 20px;
