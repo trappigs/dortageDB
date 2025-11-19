@@ -73,7 +73,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.15;
+    opacity: 0.25; /* 0.1 = Çok hafif | 0.25 = Orta | 0.4 = Belirgin | 0.6 = Çok belirgin */
     z-index: 1;
 }
 
