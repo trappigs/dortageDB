@@ -280,12 +280,23 @@
             color: #000a68;
             font-weight: 700;
             font-size: 18px;
-            transition: opacity 0.2s;
+            transition: all 0.2s ease;
+            outline: none;
         }
 
-        .top-navbar-logo:hover {
-            opacity: 0.8;
-        }
+            .top-navbar-logo:hover {
+                opacity: 0.8;
+                transform: scale(1.02);
+            }
+
+            .top-navbar-logo:active {
+                transform: scale(0.98);
+            }
+
+            .top-navbar-logo:focus {
+                outline: none;
+                opacity: 0.9;
+            }
 
         .top-navbar-logo img {
             height: 50px;
@@ -298,6 +309,48 @@
             gap: 16px;
         }
 
+        .mobile-menu-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+            .mobile-menu-btn svg {
+                width: 24px;
+                height: 24px;
+                stroke: #6b7280;
+                stroke-width: 2;
+                transition: all 0.2s ease;
+            }
+
+            .mobile-menu-btn:hover {
+                background: #f3f4f6;
+                transform: scale(1.05);
+            }
+
+                .mobile-menu-btn:hover svg {
+                    stroke: #000a68;
+                }
+
+            .mobile-menu-btn:active {
+                transform: scale(0.95);
+                background: #e5e7eb;
+            }
+
+            .mobile-menu-btn:focus {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
+            }
+
         .navbar-link {
             display: flex;
             align-items: center;
@@ -308,13 +361,26 @@
             color: #6b7280;
             font-size: 14px;
             font-weight: 500;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            outline: none;
+            position: relative;
         }
 
-        .navbar-link:hover {
-            background: #f3f4f6;
-            color: #000a68;
-        }
+            .navbar-link:hover {
+                background: #f3f4f6;
+                color: #000a68;
+                transform: translateY(-1px);
+            }
+
+            .navbar-link:active {
+                transform: translateY(0);
+                background: #e5e7eb;
+            }
+
+            .navbar-link:focus {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
+            }
 
         .navbar-link svg {
             width: 18px;

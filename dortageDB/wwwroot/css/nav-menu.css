@@ -24,15 +24,24 @@
         color: var(--primary);
         letter-spacing: -0.5px;
         cursor: pointer;
-        transition: transform 0.3s ease;
+        transition: all 0.2s ease;
         text-decoration: none;
         display: flex;
         align-items: center;
         height: 100%;
+        outline: none;
     }
 
         .nav-menus .navbar .logo:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
+        }
+
+        .nav-menus .navbar .logo:active {
+            transform: scale(0.98);
+        }
+
+        .nav-menus .navbar .logo:focus {
+            outline: none;
         }
 
     .nav-menus .navbar .logo-image {
@@ -65,17 +74,28 @@
     font-weight: 500;
     color: var(--text-primary);
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 4px;
     height: 100%;
     white-space: nowrap;
+    outline: none;
+    position: relative;
 }
 
     .nav-menus .nav-link:hover {
         color: var(--primary);
+        transform: translateY(-1px);
+    }
+
+    .nav-menus .nav-link:active {
+        transform: translateY(0);
+    }
+
+    .nav-menus .nav-link:focus {
+        outline: none;
     }
 
     .nav-menus .nav-link.active {
@@ -155,15 +175,27 @@
     font-weight: 600;
     border-radius: 8px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
+    outline: none;
 }
 
     .nav-menus .navbar .btn-outlined:hover {
         background: var(--primary);
         color: var(--white);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 10, 104, 0.2);
+    }
+
+    .nav-menus .navbar .btn-outlined:active {
+        transform: translateY(0);
+    }
+
+    .nav-menus .navbar .btn-outlined:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
     }
 
 .nav-menus .navbar .btn-filled {
@@ -174,16 +206,26 @@
     font-weight: 600;
     border-radius: 8px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     border: none;
     white-space: nowrap;
+    outline: none;
 }
 
     .nav-menus .navbar .btn-filled:hover {
-        transform: translateY(-1px);
+        transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 10, 104, 0.3);
+    }
+
+    .nav-menus .navbar .btn-filled:active {
+        transform: translateY(0);
+    }
+
+    .nav-menus .navbar .btn-filled:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
     }
 /* Mobile Menu Toggle */
 .nav-menus .mobile-menu-toggle {
@@ -194,7 +236,24 @@
     padding: 8px;
     background: none;
     border: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    outline: none;
 }
+
+    .nav-menus .mobile-menu-toggle:hover {
+        background: rgba(0, 10, 104, 0.05);
+        transform: scale(1.05);
+    }
+
+    .nav-menus .mobile-menu-toggle:active {
+        transform: scale(0.95);
+    }
+
+    .nav-menus .mobile-menu-toggle:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
+    }
 
     .nav-menus .mobile-menu-toggle span {
         width: 24px;
@@ -323,10 +382,4 @@
         display: flex;
     }
 }
-/* Focus states for accessibility */
-.nav-menus .navbar .btn:focus,
-.nav-menus .nav-link:focus,
-.nav-menus .mobile-menu-toggle:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-}
+/* Focus states are now handled inline with each element for better control */
