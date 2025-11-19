@@ -18,8 +18,21 @@ namespace dortageDB.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult GizlilikPolitikasi()
         {
+            ViewBag.PdfPath = "/documents/gizlilik.pdf";
+            return View();
+        }
+
+        public IActionResult KVKK()
+        {
+            ViewBag.PdfPath = "/documents/kvkk.pdf";
+            return View();
+        }
+
+        public IActionResult AydınlatmaMetni()
+        {
+            ViewBag.PdfPath = "/documents/aydinlatma-metni.pdf";
             return View();
         }
 

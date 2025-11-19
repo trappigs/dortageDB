@@ -201,6 +201,22 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Özel route'lar: Yasal sayfalar için
+app.MapControllerRoute(
+    name: "gizlilik-politikasi",
+    pattern: "gizlilik-politikasi",
+    defaults: new { controller = "Home", action = "GizlilikPolitikasi" });
+
+app.MapControllerRoute(
+    name: "kvkk",
+    pattern: "kvkk",
+    defaults: new { controller = "Home", action = "KVKK" });
+
+app.MapControllerRoute(
+    name: "aydinlatma-metni",
+    pattern: "aydinlatma-metni",
+    defaults: new { controller = "Home", action = "AydınlatmaMetni" });
+
 // Özel route: Proje slug'ları için (örn: /dikili)
 // Bu route en sonda olmalı, böylece diğer route'lar önce denenir
 app.MapControllerRoute(
