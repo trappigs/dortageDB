@@ -63,6 +63,7 @@
                 <div class="detail-gallery" data-aos="fade-up">
                     @{
                         var galeriGorselleri = new List<string>();
+                        var galeriAltTexts = new List<string>();
                         var hasVideo = !string.IsNullOrEmpty(Model.KapakVideosu);
 
                         if (!string.IsNullOrEmpty(Model.GaleriGorselleri))
@@ -77,10 +78,40 @@
                             }
                         }
 
+                        // Alt text'leri parse et
+                        if (!string.IsNullOrEmpty(Model.GaleriGorselleriAlt))
+                        {
+                            try
+                            {
+                                galeriAltTexts = System.Text.Json.JsonSerializer.Deserialize<List<string>>(Model.GaleriGorselleriAlt) ?? new List<string>();
+                            }
+                            catch
+                            {
+                                // JSON parse hatası durumunda boş liste kullan
+                            }
+                        }
+
+                        // Alt text dizisini görseller ile eşitle (eksik varsa doldur)
+                        while (galeriAltTexts.Count < galeriGorselleri.Count)
+                        {
+                            galeriAltTexts.Add("");
+                        }
+
                         // Eğer galeri boşsa ve kapak görseli varsa, onu galeri olarak kullan
                         if (galeriGorselleri.Count == 0 && !string.IsNullOrEmpty(Model.KapakGorseli))
                         {
                             galeriGorselleri.Add(Model.KapakGorseli);
+                            galeriAltTexts.Add(!string.IsNullOrEmpty(Model.KapakGorseliAlt) ? Model.KapakGorseliAlt : "");
+                        }
+
+                        // Alt text helper fonksiyonu
+                        string GetAltText(int index)
+                        {
+                            if (index < galeriAltTexts.Count && !string.IsNullOrWhiteSpace(galeriAltTexts[index]))
+                            {
+                                return galeriAltTexts[index];
+                            }
+                            return Model.ProjeAdi;
                         }
 
                         // YouTube/Vimeo URL'yi embed formatına çevir
@@ -151,7 +182,7 @@
                             }
                             else if (galeriGorselleri.Count > 0)
                             {
-                                <img src="@galeriGorselleri[0]" alt="@Model.ProjeAdi" class="img-fluid">
+                                <img src="@galeriGorselleri[0]" alt="@GetAltText(0)" class="img-fluid">
                                 <div class="gallery-overlay">
                                     <button class="gallery-fullscreen-btn" onclick="openLightbox(0)">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -196,8 +227,8 @@
                                 @for (int i = 0; i < Math.Min(galeriGorselleri.Count, hasVideo ? 9 : 10); i++)
                                 {
                                     var thumbnailIndex = hasVideo ? i + 1 : i;
-                                    <div class="thumbnail-item @(i == 0 && !hasVideo ? "active" : "")" onclick="changeMainImage(@thumbnailIndex, '@galeriGorselleri[i]')">
-                                        <img src="@galeriGorselleri[i]" alt="@Model.ProjeAdi Görsel @(i + 1)">
+                                    <div class="thumbnail-item @(i == 0 && !hasVideo ? "active" : "")" onclick="changeMainImage(@thumbnailIndex, '@galeriGorselleri[i]', '@GetAltText(i)')">
+                                        <img src="@galeriGorselleri[i]" alt="@GetAltText(i)">
                                         @if (i == (hasVideo ? 8 : 9) && galeriGorselleri.Count > (hasVideo ? 9 : 10))
                                         {
                                             <div class="thumbnail-more" onclick="openLightbox(@thumbnailIndex)">
@@ -708,7 +739,7 @@
             @for (int i = 0; i < galeriGorselleri.Count; i++)
             {
                 <div class="lightbox-thumb @(i == 0 ? "active" : "")" onclick="goToImage(@i)">
-                    <img src="@galeriGorselleri[i]" alt="Görsel @(i + 1)">
+                    <img src="@galeriGorselleri[i]" alt="@GetAltText(i)">
                 </div>
             }
         </div>
@@ -751,10 +782,11 @@
 
         // Galeri görselleri dizisi
         const galleryImages = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(galeriGorselleri));
+        const galleryAltTexts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(galeriAltTexts));
         let currentLightboxIndex = 0;
 
         // Ana görseli değiştir
-        function changeMainImage(index, imageUrl, isVideo = false) {
+        function changeMainImage(index, imageUrl, altText = '', isVideo = false) {
             const galleryMain = document.querySelector('.gallery-main');
             const thumbnails = document.querySelectorAll('.thumbnail-item');
             const currentIndex = parseInt(galleryMain.getAttribute('data-index') || '0');
@@ -780,9 +812,12 @@
                     </div>
                 `;
             } else {
+                // Alt text'i belirle: parametreden gelen, JSON'dan gelen veya varsayılan
+                const finalAltText = altText || (galleryAltTexts[index] && galleryAltTexts[index].trim() !== '' ? galleryAltTexts[index] : '@Model.ProjeAdi');
+
                 // Görsel göster
                 galleryMain.innerHTML = `
-                    <img src="${imageUrl}" alt="@Model.ProjeAdi" class="img-fluid">
+                    <img src="${imageUrl}" alt="${finalAltText}" class="img-fluid">
                     <div class="gallery-overlay">
                         <button class="gallery-fullscreen-btn" onclick="openLightbox(${index})">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -841,6 +876,9 @@
             const thumbnails = document.querySelectorAll('.lightbox-thumb');
 
             lightboxImage.src = galleryImages[currentLightboxIndex];
+            lightboxImage.alt = galleryAltTexts[currentLightboxIndex] && galleryAltTexts[currentLightboxIndex].trim() !== ''
+                ? galleryAltTexts[currentLightboxIndex]
+                : '@Model.ProjeAdi';
             currentIndexSpan.textContent = currentLightboxIndex + 1;
 
             // Thumbnail'leri güncelle

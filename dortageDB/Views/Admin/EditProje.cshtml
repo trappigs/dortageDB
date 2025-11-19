@@ -136,6 +136,25 @@
         font-size: 0.875rem;
     }
 
+    .gallery-item-alt-text {
+        padding: 8px;
+        background: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .gallery-item-alt-text input {
+        width: 100%;
+        padding: 4px 8px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        font-size: 0.75rem;
+    }
+
+    .gallery-item-alt-text input:focus {
+        outline: none;
+        border-color: #000a68;
+    }
+
     .gallery-item-index {
         position: absolute;
         top: 8px;
@@ -269,9 +288,14 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label asp-for="KapakGorseli" class="form-label">Kapak Görseli URL</label>
                                 <input asp-for="KapakGorseli" class="form-control" placeholder="https://..." />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="KapakGorseliAlt" class="form-label">Kapak Görseli Alt Text (SEO)</label>
+                                <input asp-for="KapakGorseliAlt" class="form-control" placeholder="Örn: İstanbul'da satılık arsa projesi" />
+                                <small class="text-muted">Görselin ne olduğunu açıklayan metin (SEO için önemli)</small>
                             </div>
                         </div>
 
@@ -358,6 +382,7 @@
                                 </div>
 
                                 <input type="hidden" asp-for="GaleriGorselleri" id="galeriGorselleriInput" />
+                                <input type="hidden" asp-for="GaleriGorselleriAlt" id="galeriGorselleriAltInput" />
 
                                 <div class="gallery-info mt-2">
                                     <small class="text-muted">
@@ -534,6 +559,7 @@
 <script>
     // Galeri görselleri dizisi
     let galleryImages = [];
+    let galleryAltTexts = []; // Alt text dizisi
 
     // Sayfa yüklendiğinde mevcut görselleri yükle
     document.addEventListener('DOMContentLoaded', function() {
@@ -546,6 +572,22 @@
                 galleryImages = [];
             }
         }
+
+        const galeriAltTextsValue = document.getElementById('galeriGorselleriAltInput').value;
+        if (galeriAltTextsValue && galeriAltTextsValue.trim() !== '') {
+            try {
+                galleryAltTexts = JSON.parse(galeriAltTextsValue);
+            } catch (e) {
+                console.error('Galeri alt text parse hatası:', e);
+                galleryAltTexts = [];
+            }
+        }
+
+        // Alt text dizisini görseller ile eşitle
+        while (galleryAltTexts.length < galleryImages.length) {
+            galleryAltTexts.push('');
+        }
+
         renderGallery();
     });
 
@@ -561,6 +603,13 @@
                 <div class="gallery-item" data-index="${index}">
                     <div class="gallery-item-image">
                         <img src="${url}" alt="Görsel ${index + 1}" onerror="this.src='/images/placeholder.jpg'">
+                    </div>
+                    <div class="gallery-item-alt-text">
+                        <input type="text"
+                               placeholder="Alt text (SEO için önemli)"
+                               value="${galleryAltTexts[index] || ''}"
+                               onchange="updateAltText(${index}, this.value)"
+                               onclick="event.stopPropagation()">
                     </div>
                     <div class="gallery-item-actions">
                         <button type="button" class="btn btn-sm btn-danger" onclick="removeGalleryImage(${index})" title="Sil">
@@ -579,6 +628,12 @@
         }
 
         imageCount.textContent = galleryImages.length;
+        updateHiddenInput();
+    }
+
+    // Alt text güncelle
+    function updateAltText(index, value) {
+        galleryAltTexts[index] = value;
         updateHiddenInput();
     }
 
@@ -608,6 +663,7 @@
         }
 
         galleryImages.push(url);
+        galleryAltTexts.push(''); // Boş alt text ekle
         input.value = '';
         renderGallery();
     }
@@ -616,6 +672,7 @@
     function removeGalleryImage(index) {
         if (confirm('Bu görseli silmek istediğinizden emin misiniz?')) {
             galleryImages.splice(index, 1);
+            galleryAltTexts.splice(index, 1);
             renderGallery();
         }
     }
@@ -625,12 +682,18 @@
         const temp = galleryImages[fromIndex];
         galleryImages[fromIndex] = galleryImages[toIndex];
         galleryImages[toIndex] = temp;
+
+        const tempAlt = galleryAltTexts[fromIndex];
+        galleryAltTexts[fromIndex] = galleryAltTexts[toIndex];
+        galleryAltTexts[toIndex] = tempAlt;
+
         renderGallery();
     }
 
     // Hidden input'u güncelle
     function updateHiddenInput() {
         document.getElementById('galeriGorselleriInput').value = JSON.stringify(galleryImages);
+        document.getElementById('galeriGorselleriAltInput').value = JSON.stringify(galleryAltTexts);
     }
 
     // Enter tuşu ile görsel ekleme
@@ -753,6 +816,7 @@
 
                 if (result.success) {
                     galleryImages.push(result.url);
+                    galleryAltTexts.push(''); // Boş alt text ekle
                     uploadedFiles++;
                 } else {
                     const errorMsg = result.message || 'Bilinmeyen hata oluştu';
@@ -805,6 +869,7 @@
         }
 
         galleryImages.push(url);
+        galleryAltTexts.push(''); // Boş alt text ekle
         input.value = '';
         renderGallery();
     }
@@ -833,6 +898,7 @@
         }
 
         galleryImages.splice(index, 1);
+        galleryAltTexts.splice(index, 1);
         renderGallery();
     }
 

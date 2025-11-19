@@ -30,7 +30,11 @@ public class Proje
 
     public string? KapakGorseli { get; set; }
 
+    public string? KapakGorseliAlt { get; set; } // Kapak görseli için alt text (SEO)
+
     public string? GaleriGorselleri { get; set; } // JSON array olarak saklanacak
+
+    public string? GaleriGorselleriAlt { get; set; } // Galeri görselleri için alt text'ler (JSON array - her görsele karşılık gelen alt text)
 
     public string? KapakVideosu { get; set; } // Galerinin ilk öğesi olarak gösterilecek video URL (YouTube, Vimeo vb.)
 
