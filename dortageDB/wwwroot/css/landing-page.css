@@ -656,7 +656,7 @@ body {
    RESPONSIVE DESIGN
    =================================== */
 
-@media (min-width: 1200px) {
+@media (min-width: 992px) {
     .success-card {
         width: 450px;
         height: 450px;
