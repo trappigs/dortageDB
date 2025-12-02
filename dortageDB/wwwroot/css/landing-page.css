@@ -656,6 +656,13 @@ body {
    RESPONSIVE DESIGN
    =================================== */
 
+@media (min-width: 1200px) {
+    .success-card {
+        width: 450px;
+        height: 450px;
+    }
+}
+
 @media (max-width: 1200px) {
     .hero-title {
         font-size: 3rem;
