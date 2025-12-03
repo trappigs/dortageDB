@@ -56,8 +56,21 @@
             <div class="col-lg-6">
                 <div class="hero-visual">
                     <div class="success-card">
-                        <iframe src="/images/logo_animation_3.html" style="width: 100%; height: 100%; border: none; overflow: hidden; background-color: transparent;" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+                        <iframe id="logoAnimationFrame" src="" style="width: 100%; height: 100%; border: none; overflow: hidden; background-color: transparent;" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
                     </div>
+                    <script>
+                        function setAnimationSource() {
+                            var iframe = document.getElementById('logoAnimationFrame');
+                            if (window.innerWidth >= 992) {
+                                iframe.src = "/images/logo_animation_3_desktop.html";
+                            } else {
+                                iframe.src = "/images/logo_animation_3_mobile.html";
+                            }
+                        }
+                        
+                        setAnimationSource();
+                        window.addEventListener('resize', setAnimationSource);
+                    </script>
                 </div>
             </div>
         </div>

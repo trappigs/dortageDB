@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vekarer Logo Animasyonu</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: transparent; /* Koyu, şık bir arka plan */
+            overflow: visible;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 20px rgba(11, 99, 255, 0.2)); /* Hafif mavi glow */
+            overflow: visible;
+            animation: globalGlow 3s infinite;
+        }
+
+        /* Başlangıç durumları */
+        #left, #top, #right {
+            opacity: 0;
+            transform-origin: center;
+        }
+
+        /* Animasyon Tanımları */
+        .animate-left {
+            animation: 
+                slideInLeft 1.0s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
+                activePulseLeft 2s ease-in-out infinite 1.0s;
+        }
+
+        .animate-right {
+            animation: 
+                slideInRight 1.0s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
+                activePulseRight 2s ease-in-out infinite 1.0s;
+        }
+
+        .animate-top {
+            animation: 
+                slideInTop 1.0s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
+                activePulseTop 2s ease-in-out infinite 1.0s;
+        }
+
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translate(-100px, 100px) scale(0.5); }
+            100% { opacity: 1; transform: translate(0, 0) scale(1); }
+        }
+
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translate(100px, -50px) scale(0.5); }
+            100% { opacity: 1; transform: translate(0, 0) scale(1); }
+        }
+
+        @keyframes slideInTop {
+            0% { opacity: 0; transform: translate(0, -100px) scale(0.5); }
+            100% { opacity: 1; transform: translate(0, 0) scale(1); }
+        }
+
+        /* --- SONSUZ DÖNGÜ ANİMASYONLARI (Kesintisiz Zıt Hareket) --- */
+        
+        /* Sol parça merkezde sabit kalsın */
+        @keyframes activePulseLeft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.98); }
+        }
+
+        /* Sağ Parça (Right): Yukarı çıkıp devam etsin, alttan gelip otursun */
+        @keyframes activePulseRight {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            35% {
+                transform: translate(30px, -57px); /* Yukarı doğru devam et */
+                opacity: 0;
+            }
+            36% {
+                transform: translate(-30px, 57px); /* Aşağıya ışınlan */
+                opacity: 0;
+            }
+            70% {
+                transform: translate(0, 0); /* Yerine otur */
+                opacity: 1;
+            }
+            100% {
+                transform: translate(0, 0); /* Bekle */
+                opacity: 1;
+            }
+        }
+
+        /* Üst Parça (Top): Yukarı çıkıp devam etsin, alttan gelip otursun */
+        @keyframes activePulseTop {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            35% {
+                transform: translate(30px, -57px); /* Yukarı doğru devam et */
+                opacity: 0;
+            }
+            36% {
+                transform: translate(-30px, 57px); /* Aşağıya ışınlan */
+                opacity: 0;
+            }
+            70% {
+                transform: translate(0, 0); /* Yerine otur */
+                opacity: 1;
+            }
+            100% {
+                transform: translate(0, 0); /* Bekle */
+                opacity: 1;
+            }
+        }
+        
+        /* Animasyon Süreleri */
+        .animate-left {
+            animation: slideInLeft 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, activePulseLeft 2s ease-in-out infinite 1s;
+        }
+        /* Right ve Top aynı sürede (2s) çalışsın ki senkron bozulmasın */
+        .animate-right {
+            animation: slideInRight 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, activePulseRight 3s ease-in-out infinite 1s;
+        }
+        .animate-top {
+            animation: slideInTop 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, activePulseTop 3s ease-in-out infinite 1s;
+        }
+        
+        /* Global Glow'u hareketlerle senkronize et (2 vuruşlu) */
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible; /* Parçaların dışarı taşmasını sağlar */
+            animation: globalGlow 3s infinite;
+        }
+
+        @keyframes globalGlow {
+            0%, 50%, 100% { filter: drop-shadow(0 0 15px rgba(11, 99, 255, 0.2)); }
+            25% { filter: drop-shadow(0 -10px 25px rgba(11, 99, 255, 0.5)); } /* Top hareketiyle parla */
+            75% { filter: drop-shadow(10px 0 25px rgba(0, 184, 148, 0.5)); } /* Right hareketiyle parla */
+        }
+        
+        /* Hover Efekti - Mouse üzerine gelince */
+        svg:hover #left { transform: translate(-2px, 2px); transition: transform 0.3s ease; }
+        svg:hover #right { transform: translate(2px, -1px); transition: transform 0.3s ease; }
+        svg:hover #top { transform: translate(0, -2px); transition: transform 0.3s ease; }
+
+    </style>
+</head>
+<body>
+
+    <!-- SVG İçeriği -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <!-- Sol parça -->
+        <polygon id="left" class="animate-left" points="11.51 20.9 0 20.89 31.05 78.14 36.66 67.16 11.51 20.9" fill="#FFFFFF"/> <!-- Rengi koyu arka planda belli olsun diye biraz açtım (orijinal: #111827) -->
+        <!-- Üst parça -->
+        <polygon id="top" class="animate-top" points="82.84 1 36.63 88.37 39.65 94 77.91 22.8 84.92 25.8 82.84 1" fill="#FFFFFF"/>
+        <!-- Sağ parça -->
+        <polygon id="right" class="animate-right" points="58.48 13.42 65.25 16.87 32.35 80.43 35.42 86.13 80.71 0 58.48 13.42" fill="#FFFFFF"/>
+    </svg>
+
+    <script>
+        // Animasyonu tekrar izlemek için sayfaya tıklama özelliği
+        document.body.addEventListener('click', () => {
+            const left = document.getElementById('left');
+            const right = document.getElementById('right');
+            const top = document.getElementById('top');
+            
+            // Classları kaldırıp tekrar ekleyerek animasyonu tetikle (reflow hack)
+            left.classList.remove('animate-left');
+            right.classList.remove('animate-right');
+            top.classList.remove('animate-top');
+            
+            void left.offsetWidth; // trigger reflow
+            
+            left.classList.add('animate-left');
+            right.classList.add('animate-right');
+            top.classList.add('animate-top');
+        });
+    </script>
+</body>
+</html>
