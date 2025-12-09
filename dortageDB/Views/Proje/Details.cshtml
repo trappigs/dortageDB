@@ -267,6 +267,15 @@
                         <span class="price-suffix">'den başlayan fiyatlarla</span>
                     </div>
 
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Randevu" asp-action="Create" asp-route-projeId="@Model.ProjeID" class="btn btn-appointment btn-block mb-4">Randevu Al</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-appointment btn-block mb-4">Randevu Al</a>
+                    }
+
                     @* <div class="stock-box">
                         <div class="stock-progress">
                             <div class="stock-info">
