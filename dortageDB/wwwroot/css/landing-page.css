@@ -157,7 +157,7 @@ body {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
-    margin-bottom: 48px;
+    /*margin-bottom: 48px;*/
 }
 
 .btn {
@@ -724,6 +724,18 @@ body {
 
     .hero-title {
         font-size: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1.1;
+    }
+
+    .hero-title .gradient-text {
+        font-size: 60px !important;
+    }
+
+    .hero-title-suffix {
+        display: block;
     }
 
     .hero-subtitle {
