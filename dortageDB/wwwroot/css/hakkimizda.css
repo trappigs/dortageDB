@@ -15,7 +15,7 @@
 
 /* Hero Section */
 .hakkimizda-hero {
-    padding: 120px 0 60px;
+    padding: 130px 0 60px;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     text-align: center;
     position: relative;

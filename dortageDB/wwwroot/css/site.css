@@ -877,6 +877,10 @@ label {
     padding: 0 var(--spacing-xl);
 }
 
+.public-page-container {
+    padding-top: 130px;
+}
+
 .row {
     display: flex;
     flex-wrap: wrap;

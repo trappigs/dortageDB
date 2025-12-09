@@ -26,7 +26,7 @@ html, body {
 /* Hero Section */
 .vekarer-hero {
     background: linear-gradient(135deg, var(--primary-color) 0%, #001a8a 100%);
-    padding: 100px 0 80px;
+    padding: 130px 0 80px;
     color: var(--white);
     text-align: center;
     position: relative;

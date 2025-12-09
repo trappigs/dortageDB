@@ -35,7 +35,7 @@
    =================================== */
 
 .page-title-section {
-    padding: 120px 0 40px;
+    padding: 130px 0 40px;
     background: var(--primary-color);
     text-align: center;
 }
@@ -803,7 +803,7 @@
    =================================== */
 
 .breadcrumb-section {
-    padding: 110px 0 20px;
+    padding: 130px 0 20px;
     background: white;
     width: 100%;
     margin: 0;
