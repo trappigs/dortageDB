@@ -11,7 +11,7 @@
                 <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" && ViewContext.RouteData.Values["controller"]?.ToString() == "" ? "active" : "")">Anasayfa</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="VekarerNedir" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Vekarer Nedir?</a>
+                <a asp-controller="VekarerNedir" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Vekarer Nedir</a>
             </li>
             <li class="nav-item">
                 <a asp-controller="Proje" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Proje" ? "active" : "")">Projeler</a>
@@ -66,7 +66,7 @@
                 <a asp-controller="" asp-action="" class="mobile-nav-link">Anasayfa</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="" asp-action="" class="mobile-nav-link">Vekarer Nedir?</a>
+                <a asp-controller="" asp-action="" class="mobile-nav-link">Vekarer Nedir</a>
             </li>
             <li class="mobile-nav-item">
                 <a asp-controller="Proje" asp-action="Index" class="mobile-nav-link">Projeler</a>
