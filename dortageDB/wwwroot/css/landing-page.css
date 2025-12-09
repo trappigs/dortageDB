@@ -802,6 +802,11 @@ body {
 
     .section-title {
         font-size: 1.75rem;
+        text-align: center;
+    }
+
+    .section-description {
+        text-align: center;
     }
 
     .section-subtitle {
