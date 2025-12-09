@@ -234,7 +234,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    /*padding: 20px;*/
 }
 
 .success-card {
@@ -719,7 +719,7 @@ body {
         margin-bottom: 5px;
     }
     .hero-section {
-        padding: 130px 0 40px;
+        padding: 90px 0 40px;
     }
 
     .hero-title {
@@ -731,7 +731,7 @@ body {
     }
 
     .hero-title .gradient-text {
-        font-size: 60px !important;
+        /*font-size: 60px !important;*/
     }
 
     .hero-title-suffix {

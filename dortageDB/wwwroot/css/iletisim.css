@@ -21,19 +21,19 @@
     text-align: center;
 }
 
-.iletisim-page-title .page-title {
-    font-size: 2.8rem;
-    font-weight: 400;
-    color: var(--white);
-    letter-spacing: 1.5px;
-    margin: 0 0 10px 0;
-}
+    .iletisim-page-title .page-title {
+        font-size: 2.8rem;
+        font-weight: 400;
+        color: var(--white);
+        letter-spacing: 1.5px;
+        margin: 0 0 10px 0;
+    }
 
-.iletisim-page-title .page-subtitle {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0;
-}
+    .iletisim-page-title .page-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0;
+    }
 
 /* İletişim Section */
 .iletisim-section {
@@ -41,15 +41,15 @@
     background: var(--bg-light);
 }
 
-.iletisim-section .row {
-    display: flex;
-    align-items: stretch;
-}
+    .iletisim-section .row {
+        display: flex;
+        align-items: stretch;
+    }
 
-.iletisim-section .row > [class*="col-"] {
-    display: flex;
-    flex-direction: column;
-}
+        .iletisim-section .row > [class*="col-"] {
+            display: flex;
+            flex-direction: column;
+        }
 
 /* İletişim Bilgileri Card */
 .iletisim-info-card {
@@ -89,11 +89,11 @@
     border-bottom: 1px solid var(--border-color);
 }
 
-.info-item:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-}
+    .info-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
 
 .info-icon {
     width: 50px;
@@ -106,10 +106,10 @@
     flex-shrink: 0;
 }
 
-.info-icon i {
-    font-size: 1.3rem;
-    color: var(--white);
-}
+    .info-icon i {
+        font-size: 1.3rem;
+        color: var(--white);
+    }
 
 .info-content h3 {
     font-size: 1rem;
@@ -132,12 +132,12 @@
     border-top: 1px solid var(--border-color);
 }
 
-.social-links h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 15px;
-}
+    .social-links h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 15px;
+    }
 
 .social-icons {
     display: flex;
@@ -157,15 +157,15 @@
     transition: all 0.3s ease;
 }
 
-.social-icon:hover {
-    background: var(--primary-color);
-    color: var(--white);
-    transform: translateY(-3px);
-}
+    .social-icon:hover {
+        background: var(--primary-color);
+        color: var(--white);
+        transform: translateY(-3px);
+    }
 
-.social-icon i {
-    font-size: 1.1rem;
-}
+    .social-icon i {
+        font-size: 1.1rem;
+    }
 
 /* Form Card */
 .iletisim-form-card {
@@ -205,18 +205,18 @@
     width: 100%;
 }
 
-.form-group label {
-    display: block;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 10px;
-}
+    .form-group label {
+        display: block;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 10px;
+    }
 
-.form-group label i {
-    color: var(--primary-color);
-    margin-right: 6px;
-}
+        .form-group label i {
+            color: var(--primary-color);
+            margin-right: 6px;
+        }
 
 .form-control {
     width: 100%;
@@ -229,15 +229,15 @@
     font-family: inherit;
 }
 
-.form-control:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
-}
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 10, 104, 0.1);
+    }
 
-.form-control::placeholder {
-    color: #9ca3af;
-}
+    .form-control::placeholder {
+        color: #9ca3af;
+    }
 
 textarea.form-control {
     resize: vertical;
@@ -264,9 +264,9 @@ textarea.form-control {
     animation: slideIn 0.3s ease;
 }
 
-.alert i {
-    font-size: 1.1rem;
-}
+    .alert i {
+        font-size: 1.1rem;
+    }
 
 .alert-success {
     background: #d1fae5;
@@ -285,6 +285,7 @@ textarea.form-control {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -315,14 +316,14 @@ textarea.form-control {
     color: var(--white);
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 10, 104, 0.3);
-}
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 10, 104, 0.3);
+    }
 
-.btn-primary i {
-    font-size: 1rem;
-}
+    .btn-primary i {
+        font-size: 1rem;
+    }
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -330,13 +331,13 @@ textarea.form-control {
         padding: 140px 0 30px;
     }
 
-    .iletisim-page-title .page-title {
-        font-size: 2rem;
-    }
+        .iletisim-page-title .page-title {
+            font-size: 2rem;
+        }
 
-    .iletisim-page-title .page-subtitle {
-        font-size: 0.95rem;
-    }
+        .iletisim-page-title .page-subtitle {
+            font-size: 0.95rem;
+        }
 
     .iletisim-section {
         padding: 40px 0 60px;
@@ -345,6 +346,12 @@ textarea.form-control {
     .iletisim-info-card,
     .iletisim-form-card {
         padding: 25px;
+    }
+
+    @media (max-width: 768px) {
+        .iletisim-form-card {
+            margin-top: 30px;
+        }
     }
 
     .info-title,
@@ -363,9 +370,9 @@ textarea.form-control {
         height: 45px;
     }
 
-    .info-icon i {
-        font-size: 1.1rem;
-    }
+        .info-icon i {
+            font-size: 1.1rem;
+        }
 
     .social-icon {
         width: 40px;
@@ -383,7 +390,7 @@ textarea.form-control {
         padding: 130px 0 25px;
     }
 
-    .iletisim-page-title .page-title {
-        font-size: 1.8rem;
-    }
+        .iletisim-page-title .page-title {
+            font-size: 1.8rem;
+        }
 }

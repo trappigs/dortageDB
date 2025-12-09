@@ -20,7 +20,7 @@
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
                 <div class="hikaye-image">
-                    <img src="~/images/hakkimizda-1.jpg" alt="Hikayemiz" onerror="this.src='https://via.placeholder.com/600x400/000a68/ffffff?text=Hikayemiz'">
+                    <img src="/images/el-sikisan-is-adamlari.jpeg" alt="Hikayemiz" onerror="this.src='https://via.placeholder.com/600x400/000a68/ffffff?text=Hikayemiz'">
                     <div class="image-badge">
                         <span>2020'den Beri</span>
                     </div>
@@ -143,7 +143,7 @@
                     <div class="sayi-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <div class="sayi-number" data-target="2000">0</div>
+                    <div class="sayi-number" data-target="100">0</div>
                     <div class="sayi-label">Aktif Vekarer</div>
                 </div>
             </div>
@@ -152,7 +152,7 @@
                     <div class="sayi-icon">
                         <i class="fas fa-handshake"></i>
                     </div>
-                    <div class="sayi-number" data-target="850">0</div>
+                    <div class="sayi-number" data-target="42">0</div>
                     <div class="sayi-label">Başarılı Satış Adedi</div>
                 </div>
             </div>
@@ -161,7 +161,7 @@
                     <div class="sayi-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <div class="sayi-number" data-target="250">0</div>
+                    <div class="sayi-number" data-target="86">0</div>
                     <div class="sayi-label">Gerçekleşen Satış (Milyon ₺)</div>
                 </div>
             </div>
@@ -170,7 +170,7 @@
                     <div class="sayi-icon">
                         <i class="fas fa-percent"></i>
                     </div>
-                    <div class="sayi-number" data-target="98">0</div>
+                    <div class="sayi-number" data-target="100">0</div>
                     <div class="sayi-label">Memnuniyet Oranı</div>
                 </div>
             </div>
@@ -219,8 +219,12 @@
 
                 if (current >= target) {
                     if (label === 'Memnuniyet Oranı') {
-                        element.textContent = '%' + target;
-                    } else if (label.includes('Milyon ₺')) {
+                        element.textContent = target + '%';
+                    }
+                    else if (label === 'Aktif Vekarer') {
+                        element.textContent = '+' + target;
+                    }
+                    else if (label.includes('Milyon ₺')) {
                         element.textContent = target.toLocaleString('tr-TR') + 'M ₺';
                     } else {
                         element.textContent = target.toLocaleString('tr-TR');

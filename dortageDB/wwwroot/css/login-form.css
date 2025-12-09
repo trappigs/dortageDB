@@ -7,7 +7,7 @@
 .login-form .login-container {
     display: flex;
     min-height: 100vh;
-    padding-top: 104px;
+    /*padding-top: 104px;*/
 }
 
 /* Left Section */

@@ -307,7 +307,7 @@
 /* CTA Section */
 .cta-section {
     padding: 80px 0;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    background: #000a68;
     position: relative;
     overflow: hidden;
 }

@@ -923,8 +923,8 @@
 
 .price-box {
     text-align: center;
-    margin-bottom: 20px;
-    padding: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
     background: var(--white);
     border-radius: var(--radius-md);
 }
@@ -1354,7 +1354,7 @@
     }
 
     .price-value {
-        font-size: 1.5rem;
+        font-size: 2rem;
     }
 
     .features-grid {
