@@ -8,6 +8,10 @@ namespace dortageDB.Data
 {
     public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+
         public DbSet<VekarerProfile> VekarerProfiles => Set<VekarerProfile>();
         public DbSet<Musteri> Musteriler => Set<Musteri>();
         public DbSet<Randevu> Randevular => Set<Randevu>();
@@ -15,10 +19,8 @@ namespace dortageDB.Data
         public DbSet<Referral> Referrals => Set<Referral>();
         public DbSet<Proje> Projeler => Set<Proje>();
         public DbSet<EgitimVideo> EgitimVideolar => Set<EgitimVideo>();
-        public DbSet<SeoSetting> SeoSettings => Set<SeoSetting>();
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
+        public DbSet<SeoSetting> SeoSettings { get; set; }
+        public DbSet<Basvuru> Basvurular { get; set; }
 
         protected override void OnModelCreating(ModelBuilder b)
         {

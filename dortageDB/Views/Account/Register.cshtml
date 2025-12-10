@@ -60,9 +60,18 @@
         <!-- Sağ taraf -->
         <div class="right-section">
             <div class="form-container">
-                <div class="form-header">
+                <div class="form-header text-center">
                     <h2>Hesap Oluştur</h2>
-                    <p>Bilgilerinizi doldurun ve hemen başlayın</p>
+                    <p class="mb-3">Bilgilerinizi doldurun ve hemen başlayın</p>
+                    
+                    <button type="button" class="btn btn-outline-primary btn-lg w-100 mb-4 fw-bold" data-bs-toggle="modal" data-bs-target="#basvuruModal" style="border-width: 2px;">
+                        Referans Kodum Yok
+                    </button>
+                    
+                    <div class="position-relative mb-4">
+                        <hr class="text-muted">
+                        <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">VEYA</span>
+                    </div>
                 </div>
 
                 @if (ViewBag.Errors != null)
@@ -291,6 +300,240 @@
     </div>
 </div>
 
+<!-- Başvuru Formu Modal -->
+<div class="modal fade" id="basvuruModal" tabindex="-1" aria-labelledby="basvuruModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="basvuruModalLabel">Vekarer Başvuru Formu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <p class="text-muted small mb-4">Referans kodunuz yoksa, aşağıdaki formu doldurarak başvuruda bulunabilirsiniz. Başvurunuz incelendikten sonra size dönüş yapılacaktır.</p>
+
+                <form id="basvuruForm" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3">
+                        <!-- Kişisel Bilgiler -->
+                        <div class="col-12"><h6 class="text-primary border-bottom pb-2 mb-3">Kişisel Bilgiler</h6></div>
+                        
+                        <div class="col-md-6">
+                            <label for="BasvuruAdSoyad" class="form-label small fw-bold">Ad Soyad <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="BasvuruAdSoyad" name="AdSoyad" required placeholder="Adınız Soyadınız">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="BasvuruTelefon" class="form-label small fw-bold">Telefon <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="BasvuruTelefon" name="Telefon" required placeholder="(5XX) XXX XX XX" oninput="handleBasvuruPhoneInput(event)">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="BasvuruEmail" class="form-label small fw-bold">E-posta <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="BasvuruEmail" name="Email" required placeholder="ornek@email.com">
+                        </div>
+                        <div class="col-md-6">
+                             <!-- Spacer or additional field if needed -->
+                        </div>
+
+                        <!-- Konum ve Meslek -->
+                         <div class="col-12 mt-4"><h6 class="text-primary border-bottom pb-2 mb-3">Konum ve Meslek</h6></div>
+
+                        <div class="col-md-6">
+                            <label for="BasvuruIl" class="form-label small fw-bold">İl <span class="text-danger">*</span></label>
+                            <select class="form-select" id="BasvuruIl" name="Il" required>
+                                <option value="">Seçiniz</option>
+                                <option value="İstanbul">İstanbul</option>
+                                <option value="Ankara">Ankara</option>
+                                <option value="İzmir">İzmir</option>
+                                <option value="Bursa">Bursa</option>
+                                <option value="Antalya">Antalya</option>
+                                <option value="Adana">Adana</option>
+                                <option value="Konya">Konya</option>
+                                <option value="Diğer">Diğer</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="BasvuruIlce" class="form-label small fw-bold">İlçe <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="BasvuruIlce" name="Ilce" required placeholder="İlçe">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="BasvuruMeslek" class="form-label small fw-bold">Şu Anki Mesleğiniz <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="BasvuruMeslek" name="Meslek" required placeholder="Mesleğiniz">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="BasvuruEgitim" class="form-label small fw-bold">Eğitim Durumu <span class="text-danger">*</span></label>
+                            <select class="form-select" id="BasvuruEgitim" name="EgitimDurumu" required>
+                                <option value="">Seçiniz</option>
+                                <option value="İlkokul">İlkokul</option>
+                                <option value="Ortaokul">Ortaokul</option>
+                                <option value="Lise">Lise</option>
+                                <option value="Ön Lisans">Ön Lisans</option>
+                                <option value="Lisans">Lisans</option>
+                                <option value="Yüksek Lisans">Yüksek Lisans</option>
+                                <option value="Doktora">Doktora</option>
+                            </select>
+                        </div>
+
+                        <!-- Tecrübe ve Beklenti -->
+                        <div class="col-12 mt-4"><h6 class="text-primary border-bottom pb-2 mb-3">Tecrübe ve Beklenti</h6></div>
+
+                        <div class="col-md-6">
+                            <label for="BasvuruTecrube" class="form-label small fw-bold">Gayrimenkul Tecrübesi <span class="text-danger">*</span></label>
+                            <select class="form-select" id="BasvuruTecrube" name="GayrimenkulTecrubesi" required>
+                                <option value="">Seçiniz</option>
+                                <option value="Yok">Yok</option>
+                                <option value="0-2 Yıl">0-2 Yıl</option>
+                                <option value="2-5 Yıl">2-5 Yıl</option>
+                                <option value="5+ Yıl">5+ Yıl</option>
+                            </select>
+                        </div>
+                         <div class="col-md-6">
+                            <label for="BasvuruNereden" class="form-label small fw-bold">Bizi Nereden Duydunuz? <span class="text-danger">*</span></label>
+                            <select class="form-select" id="BasvuruNereden" name="NeredenDuydunuz" required>
+                                <option value="">Seçiniz</option>
+                                <option value="Sosyal Medya">Sosyal Medya</option>
+                                <option value="Arkadaş Tavsiyesi">Arkadaş Tavsiyesi</option>
+                                <option value="İnternet Araması">İnternet Araması</option>
+                                <option value="Reklamlar">Reklamlar</option>
+                                <option value="Diğer">Diğer</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="BasvuruKendiniTanit" class="form-label small fw-bold">Kendinizi Tanıtın <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="BasvuruKendiniTanit" name="KendiniziTanitin" rows="3" required placeholder="Kısaca kendinizden bahsedin..."></textarea>
+                        </div>
+                         <div class="col-12">
+                            <label for="BasvuruBeklenti" class="form-label small fw-bold">Beklentiniz (Opsiyonel)</label>
+                            <textarea class="form-control" id="BasvuruBeklenti" name="Beklentiniz" rows="2" placeholder="Vekarer'den beklentileriniz nelerdir?"></textarea>
+                        </div>
+
+                         <!-- Dosya ve Linkler -->
+                        <div class="col-12 mt-4"><h6 class="text-primary border-bottom pb-2 mb-3">CV ve Sosyal Medya</h6></div>
+
+                        <div class="col-md-6">
+                            <label for="BasvuruCv" class="form-label small fw-bold">CV Yükle (PDF, Max 5MB) (Opsiyonel)</label>
+                            <input type="file" class="form-control" id="BasvuruCv" name="CvDosyasi" accept=".pdf">
+                            <div class="form-text small">Sadece PDF formatında dosya yükleyebilirsiniz.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="BasvuruSosyal" class="form-label small fw-bold">LinkedIn / Sosyal Medya (Opsiyonel)</label>
+                            <input type="url" class="form-control" id="BasvuruSosyal" name="SosyalMedyaLink" placeholder="https://...">
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <div class="d-flex align-items-start">
+                                <input class="form-check-input mt-1 me-2" type="checkbox" id="BasvuruKvkk" name="KvkkOnay" value="true" required style="width: 18px; height: 18px; flex-shrink: 0; cursor: pointer;">
+                                <label class="form-check-label small text-muted" for="BasvuruKvkk" style="line-height: 1.6; padding-top: 1px; cursor: pointer;">
+                                    <a href="#" target="_blank" class="text-decoration-underline">KVKK Aydınlatma Metni</a>'ni okudum, kişisel verilerimin işlenmesini onaylıyorum. <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div id="basvuruAlert" class="alert mt-3" style="display:none;"></div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="btnBasvuruGonder">Başvuruyu Gönder</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="basvuruSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+                <div class="mb-4">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h3 class="mb-3">Başvurunuz Alındı!</h3>
+                <p class="text-muted mb-4">Başvuru formunuz başarıyla bize ulaşmıştır. En kısa sürede sizinle iletişime geçeceğiz. İlginiz için teşekkür ederiz.</p>
+                <button type="button" class="btn btn-primary px-5" data-bs-dismiss="modal">Tamam</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script src="~/js/register.js" asp-append-version="true"></script>
+    <script>
+        function handleBasvuruPhoneInput(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) value = value.slice(0, 10);
+
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = '(' + value;
+                } else if (value.length <= 6) {
+                    value = '(' + value.slice(0, 3) + ') ' + value.slice(3);
+                } else if (value.length <= 8) {
+                    value = '(' + value.slice(0, 3) + ') ' + value.slice(3, 6) + ' ' + value.slice(6);
+                } else {
+                    value = '(' + value.slice(0, 3) + ') ' + value.slice(3, 6) + ' ' + value.slice(6, 8) + ' ' + value.slice(8);
+                }
+            }
+            e.target.value = value;
+        }
+
+        $(document).ready(function() {
+            $('#btnBasvuruGonder').click(function() {
+                var form = $('#basvuruForm')[0];
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                // KVKK Check
+                if(!$('#BasvuruKvkk').is(':checked')) {
+                     alert('Lütfen KVKK metnini onaylayınız.');
+                     return;
+                }
+
+                var formData = new FormData(form);
+                var btn = $(this);
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Gönderiliyor...');
+                $('#basvuruAlert').hide().removeClass('alert-success alert-danger');
+
+                $.ajax({
+                    url: '/Basvuru/Submit',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            // Hide form modal
+                            var basvuruModal = bootstrap.Modal.getInstance(document.getElementById('basvuruModal'));
+                            basvuruModal.hide();
+                            
+                            // Reset form
+                            form.reset();
+                            
+                            // Show success modal
+                            var successModal = new bootstrap.Modal(document.getElementById('basvuruSuccessModal'));
+                            successModal.show();
+                        } else {
+                            var errorMsg = response.message;
+                            if(response.errors && response.errors.length > 0) {
+                                errorMsg += '<ul>';
+                                response.errors.forEach(function(err){ errorMsg += '<li>' + err + '</li>'; });
+                                errorMsg += '</ul>';
+                            }
+                            $('#basvuruAlert').addClass('alert-danger').html(errorMsg).show();
+                        }
+                    },
+                    error: function() {
+                        $('#basvuruAlert').addClass('alert-danger').text('Bir hata oluştu. Lütfen tekrar deneyiniz.').show();
+                    },
+                    complete: function() {
+                        btn.prop('disabled', false).text('Başvuruyu Gönder');
+                    }
+                });
+            });
+        });
+    </script>
 }
