@@ -63,7 +63,7 @@ namespace dortageDB.Controllers
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                    Console.WriteLine("? ModelState ge�ersiz:");
+                    Console.WriteLine("? ModelState geçersiz:");
                     foreach (var error1 in errors)
                     {
                         Console.WriteLine($"   - {error1}");
@@ -72,11 +72,11 @@ namespace dortageDB.Controllers
                     return View(model);
                 }
 
-                // KVKK kontrol�
+                // KVKK kontrolü
                 if (!model.Kvkk)
                 {
-                    Console.WriteLine("? KVKK onay� eksik");
-                    ModelState.AddModelError("Kvkk", "KVKK metnini onaylaman�z gerekmektedir.");
+                    Console.WriteLine("? KVKK onayı eksik");
+                    ModelState.AddModelError("Kvkk", "KVKK metnini onaylamanız gerekmektedir.");
                     return View(model);
                 }
 
@@ -84,14 +84,14 @@ namespace dortageDB.Controllers
                 if (!model.Pazarlama)
                 {
                     Console.WriteLine("? Kullan�m ko�ullar� onay� eksik");
-                    ModelState.AddModelError("Pazarlama", "Kullan�m ko�ullar�n� kabul etmelisiniz.");
+                    ModelState.AddModelError("Pazarlama", "Kullanım koşullarını kabul etmelisiniz.");
                     return View(model);
                 }
 
                 // Referral kodu kontrol� - ZORUNLU
                 if (string.IsNullOrWhiteSpace(model.Code))
                 {
-                    Console.WriteLine("? Referans kodu bo�");
+                    Console.WriteLine("? Referans kodu boş");
                     ModelState.AddModelError("Code", "Referans kodu zorunludur.");
                     return View(model);
                 }
@@ -101,8 +101,8 @@ namespace dortageDB.Controllers
 
                 if (!isValid)
                 {
-                    Console.WriteLine($"? Referans kodu ge�ersiz: {error}");
-                    ModelState.AddModelError("Code", error ?? "Ge�ersiz referans kodu.");
+                    Console.WriteLine($"? Referans kodu geçersiz: {error}");
+                    ModelState.AddModelError("Code", error ?? "Geçersiz referans kodu.");
                     return View(model);
                 }
 
@@ -141,17 +141,17 @@ namespace dortageDB.Controllers
 
                         // T�rk�e hata mesajlar�
                         if (err.Code == "DuplicateUserName")
-                            ModelState.AddModelError("Email", "Bu e-posta adresi zaten kay�tl�.");
+                            ModelState.AddModelError("Email", "Bu e-posta adresi zaten kayıtlı.");
                         else if (err.Code == "DuplicateEmail")
-                            ModelState.AddModelError("Email", "Bu e-posta adresi zaten kay�tl�.");
+                            ModelState.AddModelError("Email", "Bu e-posta adresi zaten kayıtlı.");
                         else if (err.Code == "PasswordTooShort")
-                            ModelState.AddModelError("Password", "�ifre en az 6 karakter olmal�d�r.");
+                            ModelState.AddModelError("Password", "Şifre en az 6 karakter olmalıdır.");
                         else if (err.Code == "PasswordRequiresNonAlphanumeric")
-                            ModelState.AddModelError("Password", "�ifre en az bir �zel karakter i�ermelidir.");
+                            ModelState.AddModelError("Password", "Şifre en az bir özel karakter i�ermelidir.");
                         else if (err.Code == "PasswordRequiresDigit")
-                            ModelState.AddModelError("Password", "�ifre en az bir rakam i�ermelidir.");
+                            ModelState.AddModelError("Password", "Şifre en az bir rakam içermelidir.");
                         else if (err.Code == "PasswordRequiresUpper")
-                            ModelState.AddModelError("Password", "�ifre en az bir b�y�k harf i�ermelidir.");
+                            ModelState.AddModelError("Password", "Şifre en az bir büyük harf içermelidir.");
                         else
                             ModelState.AddModelError(string.Empty, err.Description);
                     }
@@ -204,7 +204,7 @@ namespace dortageDB.Controllers
 
                 Console.WriteLine("?? Kay�t i�lemi tamamland�! Login sayfas�na y�nlendiriliyor...");
 
-                TempData["SuccessMessage"] = "Kay�t ba�ar�l�! Referans kodunuz kullan�ld�. Giri� yapabilirsiniz.";
+                TempData["SuccessMessage"] = "Kayıt başarılı! Referans kodunuz kullanıldı. Giriş yapabilirsiniz.";
                 return RedirectToAction(nameof(Login));
             }
             catch (Exception ex)
@@ -217,7 +217,7 @@ namespace dortageDB.Controllers
                     Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
                 }
 
-                ModelState.AddModelError(string.Empty, "Bir hata olu�tu. L�tfen tekrar deneyin.");
+                ModelState.AddModelError(string.Empty, "Bir hata oluştu. Lütfen tekrar deneyin.");
                 return View(model);
             }
         }
@@ -269,12 +269,12 @@ namespace dortageDB.Controllers
             if (result.IsLockedOut)
             {
                 Console.WriteLine($"?? Hesap kilitli: {model.Email}");
-                ModelState.AddModelError("", "Hesab�n�z kilitlenmi�tir. L�tfen daha sonra tekrar deneyin.");
+                ModelState.AddModelError("", "Hesabınız kilitlenmiştir. Lütfen daha sonra tekrar deneyin.");
                 return View(model);
             }
 
             Console.WriteLine($"? Login ba�ar�s�z: {model.Email}");
-            ModelState.AddModelError("", "E-posta veya �ifre hatal�.");
+            ModelState.AddModelError("", "E-posta veya şifre hatalı.");
             return View(model);
         }
 
@@ -312,11 +312,11 @@ namespace dortageDB.Controllers
 
             if (user == null)
             {
-                _logger.LogWarning("�ifre s�f�rlama talebi - Kullan�c� bulunamad�: {Email}", model.Email);
+                _logger.LogWarning("Şifre sıfırlama talebi - Kullanıcı bulunamadı: {Email}", model.Email);
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 
-            _logger.LogInformation("�ifre s�f�rlama talebi g�nderildi: {Email}", model.Email);
+            _logger.LogInformation("Şifre sıfırlama talebi gönderildi: {Email}", model.Email);
 
             // Token olu�tur
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -329,17 +329,17 @@ namespace dortageDB.Controllers
                 protocol: Request.Scheme);
 
             var emailBody = $@"
-                <h2>�ifre S�f�rlama Talebi</h2>
+                <h2>Şifre Sıfırlama Talebi</h2>
                 <p>Merhaba,</p>
-                <p>�ifrenizi s�f�rlamak i�in a�a��daki linke t�klay�n�z:</p>
-                <p><a href='{callbackUrl}'>�ifremi S�f�rla</a></p>
-                <p>E�er bu talebi siz yapmad�ysan�z, bu emaili g�rmezden gelebilirsiniz.</p>
+                <p>Şifrenizi sıfırlamak için aşağıdaki linke tıklayınız:</p>
+                <p><a href='{callbackUrl}'>Şifremi Sıfırla</a></p>
+                <p>Eğer bu talebi siz yapmadıysanız, bu emaili görmezden gelebilirsiniz.</p>
                 <p>Bu link 24 saat ge�erlidir.</p>
             ";
 
             await _emailService.SendEmailAsync(
                 to: model.Email,
-                subject: "�ifre S�f�rlama Talebi",
+                subject: "Şifre Sıfırlama Talebi",
                 htmlBody: emailBody);
 
             return RedirectToAction(nameof(ForgotPasswordConfirmation));
@@ -361,7 +361,7 @@ namespace dortageDB.Controllers
             // ? D�ZELTME: email parametresi de kontrol ediliyor
             if (token == null || email == null)
             {
-                TempData["ErrorMessage"] = "Ge�ersiz �ifre s�f�rlama linki.";
+                TempData["ErrorMessage"] = "Ge�ersiz şifre sıfırlama linki.";
                 return RedirectToAction(nameof(Login));
             }
 
@@ -388,22 +388,22 @@ namespace dortageDB.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                Console.WriteLine($"? �ifre s�f�rlama ba�ar�s�z - Kullan�c� bulunamad�: {model.Email}");
+                Console.WriteLine($"Şifre sıfırlama başarısız - Kullanıcı bulunamadı: {model.Email}");
                 // G�venlik i�in ba�ar�l� mesaj� g�ster
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
 
-            Console.WriteLine($"?? �ifre s�f�rlan�yor: {model.Email}");
+            Console.WriteLine($"Şifre sıfırlanıyor: {model.Email}");
 
             var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
 
             if (result.Succeeded)
             {
-                Console.WriteLine($"? �ifre ba�ar�yla s�f�rland�: {model.Email}");
+                Console.WriteLine($"Şifre başarıyla sıfırlandı: {model.Email}");
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
 
-            Console.WriteLine($"? �ifre s�f�rlama ba�ar�s�z: {model.Email}");
+            Console.WriteLine($"Şifre sıfırlama başarısız: {model.Email}");
             foreach (var error in result.Errors)
             {
                 Console.WriteLine($"   - {error.Description}");

@@ -4,6 +4,9 @@ using dortageDB.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+// Set Console Encoding to UTF-8 to display Turkish characters correctly
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+
 static async Task CreateAdminUser(IServiceProvider serviceProvider)
 {
     var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
