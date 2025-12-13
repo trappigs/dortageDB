@@ -107,6 +107,16 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/vekarer-main-panel.css" asp-append-version="true" />
+    
+    <!-- Anti-FOUC: Prevent Flash of Unstyled Content -->
+    <style>
+        body { opacity: 0; transition: opacity 0.5s ease-in-out; }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.body.style.opacity = "1";
+        });
+    </script>
 
     <style>
         /* CSS Variables for Theme */
