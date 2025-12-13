@@ -9,7 +9,7 @@ namespace dortageDB.ViewModels
         public int? MusteriId { get; set; }
 
         // YEN� M��TER� B�LG�LER� (opsiyonel)
-        public bool YeniMusteri { get; set; } // Checkbox i�in
+        public bool YeniMusteri { get; set; } // Checkbox için
         [StringLength(100)] public string? YeniMusteriAd { get; set; }
         [StringLength(100)] public string? YeniMusteriSoyad { get; set; }
         [StringLength(15)] public string? YeniMusteriTelefon { get; set; }

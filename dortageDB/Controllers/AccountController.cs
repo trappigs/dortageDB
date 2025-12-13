@@ -147,7 +147,7 @@ namespace dortageDB.Controllers
                         else if (err.Code == "PasswordTooShort")
                             ModelState.AddModelError("Password", "Şifre en az 6 karakter olmalıdır.");
                         else if (err.Code == "PasswordRequiresNonAlphanumeric")
-                            ModelState.AddModelError("Password", "Şifre en az bir özel karakter i�ermelidir.");
+                            ModelState.AddModelError("Password", "Şifre en az bir özel karakter içermelidir.");
                         else if (err.Code == "PasswordRequiresDigit")
                             ModelState.AddModelError("Password", "Şifre en az bir rakam içermelidir.");
                         else if (err.Code == "PasswordRequiresUpper")
@@ -334,7 +334,7 @@ namespace dortageDB.Controllers
                 <p>Şifrenizi sıfırlamak için aşağıdaki linke tıklayınız:</p>
                 <p><a href='{callbackUrl}'>Şifremi Sıfırla</a></p>
                 <p>Eğer bu talebi siz yapmadıysanız, bu emaili görmezden gelebilirsiniz.</p>
-                <p>Bu link 24 saat ge�erlidir.</p>
+                <p>Bu link 24 saat geçerlidir.</p>
             ";
 
             await _emailService.SendEmailAsync(
@@ -361,7 +361,7 @@ namespace dortageDB.Controllers
             // ? D�ZELTME: email parametresi de kontrol ediliyor
             if (token == null || email == null)
             {
-                TempData["ErrorMessage"] = "Ge�ersiz şifre sıfırlama linki.";
+                TempData["ErrorMessage"] = "Geçersiz şifre sıfırlama linki.";
                 return RedirectToAction(nameof(Login));
             }
 
