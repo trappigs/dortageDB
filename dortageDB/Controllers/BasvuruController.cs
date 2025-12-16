@@ -86,6 +86,7 @@ namespace dortageDB.Controllers
             // Send Email
             try
             {
+                // 1. Başvuru sahibine onay maili
                 string subject = "Başvurunuz Alındı - Vekarer";
                 string body = $@"
                     <h3>Sayın {model.AdSoyad},</h3>
@@ -96,6 +97,35 @@ namespace dortageDB.Controllers
                     <p>Vekarer Ekibi</p>";
 
                 await _emailService.SendEmailAsync(model.Email, subject, body);
+
+                // 2. Yöneticiye (info@dortage.com) bildirim maili
+                string adminSubject = "Yeni Referans Kodu Talebi (Başvuru)";
+                string adminBody = $@"
+                    <h2>Yeni Başvuru Alındı</h2>
+                    <p><strong>Ad Soyad:</strong> {model.AdSoyad}</p>
+                    <p><strong>Telefon:</strong> {model.Telefon}</p>
+                    <p><strong>Email:</strong> {model.Email}</p>
+                    <p><strong>Şehir:</strong> {model.Il} / {model.Ilce}</p>
+                    <p><strong>Meslek:</strong> {model.Meslek}</p>
+                    <p><strong>Eğitim:</strong> {model.EgitimDurumu}</p>
+                    <p><strong>Tecrübe:</strong> {model.GayrimenkulTecrubesi}</p>
+                    <p><strong>Referans Kaynağı:</strong> {model.NeredenDuydunuz}</p>
+                    <hr>
+                    <p><strong>Kendini Tanıtma:</strong><br>{model.KendiniziTanitin}</p>
+                    <p><strong>Beklenti:</strong><br>{model.Beklentiniz ?? "-"}</p>
+                    <p><strong>Sosyal Medya:</strong> {model.SosyalMedyaLink ?? "-"}</p>
+                    <p><strong>CV:</strong> {(uniqueFileName != null ? "Yüklendi (" + uniqueFileName + ")" : "Yüklenmedi")}</p>
+                ";
+
+                var attachments = new List<string>();
+                if (uniqueFileName != null)
+                {
+                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "cvs");
+                    string cvPath = Path.Combine(uploadsFolder, uniqueFileName);
+                    attachments.Add(cvPath);
+                }
+
+                await _emailService.SendEmailAsync("info@dortage.com", adminSubject, adminBody, attachments);
             }
             catch (Exception)
             {

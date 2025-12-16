@@ -220,6 +220,11 @@ app.MapControllerRoute(
     pattern: "aydinlatma-metni",
     defaults: new { controller = "Home", action = "AydınlatmaMetni" });
 
+app.MapControllerRoute(
+    name: "kayit",
+    pattern: "kayit",
+    defaults: new { controller = "Account", action = "Register" });
+
 // Özel route: Proje slug'ları için (örn: /dikili)
 // Bu route en sonda olmalı, böylece diğer route'lar önce denenir
 app.MapControllerRoute(

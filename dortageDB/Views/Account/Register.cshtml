@@ -62,9 +62,10 @@
             <div class="form-container">
                 <div class="form-header text-center">
                     <h2>Hesap Oluştur</h2>
-                    <p class="mb-3">Bilgilerinizi doldurun ve hemen başlayın</p>
+                    <p class="mb-1 text-danger fw-bold">SADECE REFERANS KODUYLA ÜYE OLUNABİLİR</p>
+                    <p class="mb-3 text-danger fw-bold small">REFERANS KODUNUZ YOKSA LÜTFEN TALEP EDİNİZ</p>
                     
-                    <button type="button" class="btn btn-outline-primary btn-lg w-100 mb-4 fw-bold" data-bs-toggle="modal" data-bs-target="#basvuruModal" style="border-width: 2px;">
+                    <button type="button" class="btn btn-primary btn-lg w-100 mb-4 fw-bold" data-bs-toggle="modal" data-bs-target="#basvuruModal">
                         Referans Kodum Yok
                     </button>
                     
@@ -72,6 +73,8 @@
                         <hr class="text-muted">
                         <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">VEYA</span>
                     </div>
+
+                    <p class="text-center text-primary fw-bold mb-3">REFERANS KODUM VAR</p>
                 </div>
 
                 @if (ViewBag.Errors != null)
@@ -86,11 +89,25 @@
                     </div>
                 }
 
-                <form asp-action="Register" asp-controller="Account" method="post" id="registrationForm">
+                <form asp-route="kayit" method="post" id="registrationForm">
                     @Html.AntiForgeryToken()
 
                     <!-- Hidden fields -->
                     <input type="hidden" asp-for="VekarerMi" value="true" />
+
+                    <div class="form-group">
+                        <label asp-for="Code">Referans Kodu <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            <input asp-for="Code" type="text" placeholder="Referans kodunuzu girin" />
+                        </div>
+                        <div class="error-message" id="referralError" style="display: none;">
+                            <span>⚠</span> Referans kodu gereklidir
+                        </div>
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div>
 
                     <div class="form-row">
                         <div class="form-group half">
@@ -246,20 +263,6 @@
                             <span>⚠</span> Şifreler eşleşmiyor
                         </div>
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="Code">Referans Kodu <span class="required">*</span></label>
-                        <div class="input-wrapper">
-                            <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                            <input asp-for="Code" type="text" placeholder="Referans kodunuzu girin" />
-                        </div>
-                        <div class="error-message" id="referralError" style="display: none;">
-                            <span>⚠</span> Referans kodu gereklidir
-                        </div>
-                        <span asp-validation-for="Code" class="text-danger"></span>
                     </div>
 
                     <div class="checkbox-group">

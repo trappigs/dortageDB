@@ -40,7 +40,7 @@
             else
             {
                 <a asp-controller="Account" asp-action="Login" class="btn btn-outlined">Giriş Yap</a>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-filled">Kayıt Ol →</a>
+                <a asp-route="kayit" class="btn btn-filled">Kayıt Ol →</a>
             }
         </div>
 
@@ -105,7 +105,7 @@
                     <a asp-controller="Account" asp-action="Login" class="mobile-nav-link">Giriş Yap</a>
                 </li>
                 <li class="mobile-nav-item">
-                    <a asp-controller="Account" asp-action="Register" class="mobile-nav-link">Kayıt Ol</a>
+                    <a asp-route="kayit" class="mobile-nav-link">Kayıt Ol</a>
                 </li>
             }
         </ul>

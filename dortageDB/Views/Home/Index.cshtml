@@ -11,14 +11,14 @@
                 <div class="hero-content">
                     @* <span class="hero-badge">Türkiye'nin Network Arsa Satış Platformu</span> *@
                     <h1 class="hero-title">
-                        <span style="font-family: 'dortage' !important; font-weight: 100; font-size: 75px;" class="gradient-text">vekarer</span> <span class="hero-title-suffix">OL</span>
+                        <span style="font-family: 'dortage' !important; font-weight: 100; font-size: 95px;" class="gradient-text">vekarer </span> <span class="hero-title-suffix" style="font-size: 60px;">OL</span>
                     </h1>
                     <h2 style="font-size: 2.8rem" class="hero-subtitle">Kazan, Kazandır</h2>
                     <p class="hero-description">
                         Türkiye'nin ilk paylaşımlı gayrimenkul satış platformunda Vekarer ol, değer yarat.
                     </p>
                     <div class="hero-buttons">
-                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg">
+                        <a asp-route="kayit" class="btn btn-primary btn-lg">
                             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                                 <circle cx="8.5" cy="7" r="4"/>
@@ -53,13 +53,13 @@
                     </div> *@
                 </div>
             </div>
-            <div class="col-lg-6">
+            @* <div class="col-lg-6">
                 <div class="hero-visual">
                     <div class="success-card">
-                        <img src="~/images/amblem.svg" alt="Vekarer Amblem" style="width: 70%; height: 100%;" />
+                         <img src="~/images/amblem.svg" alt="Vekarer Amblem" style="width: 70%; height: 100%;" /> 
                     </div>
                 </div>
-            </div>
+            </div> *@
         </div>
     </div>
 </section>
@@ -297,7 +297,7 @@
                 Sen de bu ekibe katıl, hiçbir masraf yapmadan <strong>%3 komisyon</strong> kazan!
             </p>
             <div class="cta-buttons">
-                <a asp-controller="Account" asp-action="Register" class="btn btn-cta btn-lg">
+                <a asp-route="kayit" class="btn btn-cta btn-lg">
                     Hemen Başla
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="5" y1="12" x2="19" y2="12"/>

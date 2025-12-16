@@ -76,11 +76,11 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('/images/deneme-gorsel.webp');
+    background-image: url('/images/VEKARERHERO2UPSCALED.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.25; /* 0.1 = Çok hafif | 0.25 = Orta | 0.4 = Belirgin | 0.6 = Çok belirgin */
+    opacity: 0.65; /* 0.1 = Çok hafif | 0.25 = Orta | 0.4 = Belirgin | 0.6 = Çok belirgin */
     z-index: 1;
 }
 
@@ -719,7 +719,23 @@ body {
         margin-bottom: 5px;
     }
     .hero-section {
-        padding: 90px 0 40px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 0;
+    }
+
+    .hero-section::before {
+        background-position: inherit;
+    }
+
+    .hero-content {
+        margin-top: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
     }
 
     .hero-title {
@@ -761,6 +777,7 @@ body {
 
     .hero-buttons {
         flex-direction: column;
+        margin-bottom: 20px;
     }
 
     .btn {

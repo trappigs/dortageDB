@@ -558,6 +558,21 @@
 }
 
 /* Appointment Button */
+@keyframes attentionPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 10, 104, 0.7);
+        transform: scale(1);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 10, 104, 0);
+        transform: scale(1.02);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 10, 104, 0);
+        transform: scale(1);
+    }
+}
+
 .btn-appointment {
     background-color: #000a68;
     color: white;
@@ -569,6 +584,7 @@
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    animation: attentionPulse 2s infinite;
 }
 
 .btn-appointment:hover {
@@ -1389,13 +1405,15 @@
     box-shadow: var(--shadow-lg);
     margin-bottom: 20px;
     cursor: pointer;
+    aspect-ratio: 16/9;
 }
 
 .gallery-main img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
     transition: transform 0.3s ease;
+    object-fit: cover;
 }
 
 .gallery-main:hover img {

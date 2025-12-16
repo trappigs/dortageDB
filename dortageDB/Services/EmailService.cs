@@ -22,7 +22,8 @@ namespace dortageDB.Services
         public async Task SendEmailAsync(
             string to,
             string subject = "Kayıt Başarılı",
-            string htmlBody = "Kayıt işleminiz başarıyla tamamlanmıştır.")
+            string htmlBody = "Kayıt işleminiz başarıyla tamamlanmıştır.",
+            List<string> attachmentPaths = null)
         {
             var mailSettings = _configuration.GetSection("MailSettings");
             var mail = mailSettings["Mail"]?.Trim();
@@ -54,6 +55,30 @@ namespace dortageDB.Services
             {
                 HtmlBody = fullHtml
             };
+
+            // Attach files if any
+            if (attachmentPaths != null && attachmentPaths.Count > 0)
+            {
+                foreach (var path in attachmentPaths)
+                {
+                    if (File.Exists(path))
+                    {
+                        try
+                        {
+                            bodyBuilder.Attachments.Add(path);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Failed to attach file: {Path}", path);
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Attachment file not found: {Path}", path);
+                    }
+                }
+            }
+
             message.Body = bodyBuilder.ToMessageBody();
 
             try 

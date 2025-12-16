@@ -270,10 +270,20 @@ namespace dortageDB.Controllers
 
             // Sadece kendi randevusunu düzenleyebilir (admin hariç)
             var user = await _userManager.GetUserAsync(User);
-            if (!User.IsInRole("admin") && randevu.VekarerID != user.Id)
+            if (!User.IsInRole("admin"))
             {
-                TempData["ErrorMessage"] = "Bu randevuyu düzenleme yetkiniz yok.";
-                return RedirectToAction(nameof(Index));
+                if (randevu.VekarerID != user.Id)
+                {
+                    TempData["ErrorMessage"] = "Bu randevuyu düzenleme yetkiniz yok.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // 2 saat kuralı
+                if (randevu.RandevuZaman < DateTime.Now.AddHours(2))
+                {
+                    TempData["ErrorMessage"] = "Randevuya 2 saatten az kaldığı için güncelleme yapamazsınız.";
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             var model = new RandevuCreateVM
@@ -337,10 +347,20 @@ namespace dortageDB.Controllers
 
                 // Yetki kontrol�
                 var user = await _userManager.GetUserAsync(User);
-                if (!User.IsInRole("admin") && randevu.VekarerID != user.Id)
+                if (!User.IsInRole("admin"))
                 {
-                    TempData["ErrorMessage"] = "Bu randevuyu düzenleme yetkiniz yok.";
-                    return RedirectToAction(nameof(Index));
+                    if (randevu.VekarerID != user.Id)
+                    {
+                        TempData["ErrorMessage"] = "Bu randevuyu düzenleme yetkiniz yok.";
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                    // 2 saat kuralı
+                    if (randevu.RandevuZaman < DateTime.Now.AddHours(2))
+                    {
+                        TempData["ErrorMessage"] = "Randevuya 2 saatten az kaldığı için güncelleme yapamazsınız.";
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
 
                 // MusteriId validation (Edit doesn't support creating new customers)
@@ -389,10 +409,39 @@ namespace dortageDB.Controllers
 
                 if (Enum.TryParse<RandevuDurum>(status, out var durum))
                 {
+                    var eskiDurum = randevu.RandevuDurum;
                     randevu.RandevuDurum = durum;
                     await _context.SaveChangesAsync();
 
                     _logger.LogInformation($"? Randevu durumu güncellendi: {id} -> {status} (Admin: {User.Identity.Name})");
+                    
+                    // Vekarer'e e-posta gönder
+                    try
+                    {
+                        var vekarer = await _userManager.FindByIdAsync(randevu.VekarerID.ToString());
+                        if (vekarer != null && !string.IsNullOrEmpty(vekarer.Email))
+                        {
+                            var emailSubject = $"Randevu Durumu Güncellendi: #{randevu.RandevuID}";
+                            var emailBody = $@"
+                                <h2>Randevu Durumu Değişti</h2>
+                                <p><strong>Randevu ID:</strong> {randevu.RandevuID}</p>
+                                <p><strong>Müşteri:</strong> {randevu.Musteri?.Ad} {randevu.Musteri?.Soyad}</p>
+                                <p><strong>Eski Durum:</strong> {eskiDurum}</p>
+                                <p><strong>Yeni Durum:</strong> {durum}</p>
+                                <p><strong>Tarih:</strong> {randevu.RandevuZaman:dd.MM.yyyy HH:mm}</p>
+                                <br>
+                                <p>Detaylar için panele giriş yapınız.</p>
+                            ";
+
+                            await _emailService.SendEmailAsync(vekarer.Email, emailSubject, emailBody);
+                            _logger.LogInformation($"? Randevu durum güncelleme e-postası gönderildi: {vekarer.Email}");
+                        }
+                    }
+                    catch (Exception emailEx)
+                    {
+                        _logger.LogError($"? E-posta gönderme hatası (Status Update): {emailEx.Message}");
+                    }
+
                     TempData["SuccessMessage"] = "Randevu durumu güncellendi.";
                 }
                 else

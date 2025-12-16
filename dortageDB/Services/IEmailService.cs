@@ -5,6 +5,7 @@
         Task SendEmailAsync(
             string to,
             string subject = "Kayıt Başarılı",
-            string htmlBody = "Kayıt işleminiz başarıyla tamamlanmıştır.");
+            string htmlBody = "Kayıt işleminiz başarıyla tamamlanmıştır.",
+            List<string> attachmentPaths = null);
     }
 }
