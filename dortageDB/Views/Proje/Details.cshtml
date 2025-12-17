@@ -12,7 +12,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Anasayfa</a></li>
-                <li class="breadcrumb-item"><a asp-controller="Proje" asp-action="Index">Projeler</a></li>
+                <li class="breadcrumb-item"><a asp-route="projeler">Projeler</a></li>
                 <li class="breadcrumb-item active" aria-current="page">@Model.ProjeAdi</li>
             </ol>
         </nav>
@@ -479,7 +479,7 @@
                             }
                             else
                             {
-                                <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path"
+                                <a asp-route="giris" asp-route-returnUrl="@Context.Request.Path"
                                    class="btn btn-primary btn-block">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>

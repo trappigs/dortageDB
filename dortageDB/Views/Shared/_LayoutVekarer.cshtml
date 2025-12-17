@@ -510,15 +510,12 @@
                 </svg>
                 <span>Anasayfa</span>
             </a>
-            <a asp-controller="Proje" asp-action="Index" class="navbar-link">
-                <svg viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="7" height="7"/>
-                    <rect x="14" y="3" width="7" height="7"/>
-                    <rect x="14" y="14" width="7" height="7"/>
-                    <rect x="3" y="14" width="7" height="7"/>
-                </svg>
-                <span>Projeler</span>
-            </a>
+                        <li class="navbar-item">
+                            <a asp-route="projeler" class="navbar-link">
+                                <i class="fas fa-project-diagram"></i>
+                                <span>Projeler</span>
+                            </a>
+                        </li>
         </div>
     </nav>
 
@@ -592,7 +589,7 @@
 
         <ul class="nav-menu">
             <li class="nav-item">
-                <a asp-controller="Dashboard" asp-action="Index"
+                <a asp-route="dashboard"
                    class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                     <svg class="nav-icon" viewBox="0 0 24 24">
                         <rect x="3" y="3" width="7" height="7"></rect>
@@ -624,7 +621,7 @@
             </li> *@
 
             <li class="nav-item">
-                <a asp-controller="Randevu" asp-action="Index"
+                <a asp-route="randevu"
                    class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Randevu" ? "active" : "")">
                     <svg class="nav-icon" viewBox="0 0 24 24">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>

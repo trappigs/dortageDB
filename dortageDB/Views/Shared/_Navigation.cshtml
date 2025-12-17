@@ -11,19 +11,19 @@
                 <a asp-controller="" asp-action="" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" && ViewContext.RouteData.Values["controller"]?.ToString() == "" ? "active" : "")">Anasayfa</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="VekarerNedir" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Vekarer Nedir</a>
+                <a asp-route="vekarernedir" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Vekarer Nedir</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="Proje" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Proje" ? "active" : "")">Projeler</a>
+                <a asp-route="projeler" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Proje" ? "active" : "")">Projeler</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="VekarerAkademi" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "VekarerAkademi" ? "active" : "")">Vekarer Akademi</a>
+                <a asp-route="vekarer-akademi" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "VekarerAkademi" ? "active" : "")">Vekarer Akademi</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="Hakkimizda" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Hakkimizda" ? "active" : "")">Hakkımızda</a>
+                <a asp-route="hakkimizda" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Hakkimizda" ? "active" : "")">Hakkımızda</a>
             </li>
             <li class="nav-item">
-                <a asp-controller="Iletisim" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Iletisim" ? "active" : "")">İletişim</a>
+                <a asp-route="iletisim" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Iletisim" ? "active" : "")">İletişim</a>
             </li>
         </ul>
 
@@ -32,14 +32,14 @@
             @if (User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Settings" asp-action="Profile" class="btn btn-outlined">Profilim</a>
-                <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outlined">Dashboard</a>
+                <a asp-route="dashboard" class="btn btn-outlined">Dashboard</a>
                 <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
                     <button type="submit" class="btn btn-filled">Çıkış Yap</button>
                 </form>
             }
             else
             {
-                <a asp-controller="Account" asp-action="Login" class="btn btn-outlined">Giriş Yap</a>
+                <a asp-route="giris" class="btn btn-outlined">Giriş Yap</a>
                 <a asp-route="kayit" class="btn btn-filled">Kayıt Ol →</a>
             }
         </div>
@@ -66,24 +66,24 @@
                 <a asp-controller="" asp-action="" class="mobile-nav-link">Anasayfa</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="" asp-action="" class="mobile-nav-link">Vekarer Nedir</a>
+                <a asp-route="vekarernedir" class="mobile-nav-link">Vekarer Nedir</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="Proje" asp-action="Index" class="mobile-nav-link">Projeler</a>
+                <a asp-route="projeler" class="mobile-nav-link">Projeler</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="VekarerAkademi" asp-action="Index" class="mobile-nav-link">Vekarer Akademi</a>
+                <a asp-route="vekarer-akademi" class="mobile-nav-link">Vekarer Akademi</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="Hakkimizda" asp-action="Index" class="mobile-nav-link">Hakkımızda</a>
+                <a asp-route="hakkimizda" class="mobile-nav-link">Hakkımızda</a>
             </li>
             <li class="mobile-nav-item">
-                <a asp-controller="Iletisim" asp-action="Index" class="mobile-nav-link">İletişim</a>
+                <a asp-route="iletisim" class="mobile-nav-link">İletişim</a>
             </li>
             @if (User.Identity.IsAuthenticated)
             {
                 <li class="mobile-nav-item">
-                    <a asp-controller="Dashboard" asp-action="Index" class="mobile-nav-link">Dashboard</a>
+                    <a asp-route="dashboard" class="mobile-nav-link">Dashboard</a>
                 </li>
             }
 
@@ -102,7 +102,7 @@
             else
             {
                 <li class="mobile-nav-item">
-                    <a asp-controller="Account" asp-action="Login" class="mobile-nav-link">Giriş Yap</a>
+                    <a asp-route="giris" class="mobile-nav-link">Giriş Yap</a>
                 </li>
                 <li class="mobile-nav-item">
                     <a asp-route="kayit" class="mobile-nav-link">Kayıt Ol</a>

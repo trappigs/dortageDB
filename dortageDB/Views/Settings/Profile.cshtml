@@ -21,11 +21,10 @@
 </style>
 
 <div class="container-fluid px-4">
-            <div class="breadcrumb">
-                <a asp-controller="Home" asp-action="Index">Ana Sayfa</a> >
-                <a asp-controller="Dashboard" asp-action="Index">Dashboard</a> >
-                Profil Ayarları
-            </div>
+    <div class="settings-breadcrumb">
+        <a asp-route="dashboard">Dashboard</a> >
+        <span>Profil Ayarları</span>
+    </div>
 
     <h1>Hesap Ayarları</h1>
     <p class="subtitle">Profil bilgilerinizi ve hesap ayarlarınızı yönetin</p>

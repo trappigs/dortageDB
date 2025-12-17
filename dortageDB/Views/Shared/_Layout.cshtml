@@ -195,7 +195,7 @@
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                        <a class="nav-link text-dark" asp-route="dashboard">Dashboard</a>
                     </li>
                     @if (User.IsInRole("admin"))
                     {
@@ -209,7 +209,7 @@
                             <a class="nav-link text-dark" asp-controller="Musteri" asp-action="Index">Müşteriler</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Randevu" asp-action="Index">Randevular</a>
+                            <a class="nav-link text-dark" asp-route="randevu">Randevular</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Satis" asp-action="Index">Satışlar</a>
@@ -247,7 +247,7 @@
                 else
                 {
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Giriş Yap</a>
+                        <a class="nav-link text-dark" asp-route="giris">Giriş Yap</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link btn btn-primary text-white ms-2" asp-route="kayit">Kayıt Ol</a>

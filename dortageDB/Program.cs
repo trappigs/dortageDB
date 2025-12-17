@@ -221,9 +221,59 @@ app.MapControllerRoute(
     defaults: new { controller = "Home", action = "AydınlatmaMetni" });
 
 app.MapControllerRoute(
+    name: "giris",
+    pattern: "giris",
+    defaults: new { controller = "Account", action = "Login" });
+
+app.MapControllerRoute(
+    name: "dashboard",
+    pattern: "dashboard",
+    defaults: new { controller = "Dashboard", action = "Index" });
+
+app.MapControllerRoute(
+    name: "randevu",
+    pattern: "randevu",
+    defaults: new { controller = "Randevu", action = "Index" });
+
+app.MapControllerRoute(
+    name: "randevu-detaylar",
+    pattern: "randevu/detaylar/{id}",
+    defaults: new { controller = "Randevu", action = "Details" });
+
+app.MapControllerRoute(
+    name: "randevu-duzenle",
+    pattern: "randevu/duzenle/{id}",
+    defaults: new { controller = "Randevu", action = "Edit" });
+
+app.MapControllerRoute(
     name: "kayit",
     pattern: "kayit",
     defaults: new { controller = "Account", action = "Register" });
+
+app.MapControllerRoute(
+    name: "projeler",
+    pattern: "projeler",
+    defaults: new { controller = "Proje", action = "Index" });
+
+app.MapControllerRoute(
+    name: "vekarernedir",
+    pattern: "vekarernedir",
+    defaults: new { controller = "VekarerNedir", action = "Index" });
+
+app.MapControllerRoute(
+    name: "vekarer-akademi",
+    pattern: "vekarer-akademi",
+    defaults: new { controller = "VekarerAkademi", action = "Index" });
+
+app.MapControllerRoute(
+    name: "hakkimizda",
+    pattern: "hakkimizda",
+    defaults: new { controller = "Hakkimizda", action = "Index" });
+
+app.MapControllerRoute(
+    name: "iletisim",
+    pattern: "iletisim",
+    defaults: new { controller = "Iletisim", action = "Index" });
 
 // Özel route: Proje slug'ları için (örn: /dikili)
 // Bu route en sonda olmalı, böylece diğer route'lar önce denenir

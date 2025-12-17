@@ -284,6 +284,13 @@ namespace dortageDB.Controllers
                     TempData["ErrorMessage"] = "Randevuya 2 saatten az kaldığı için güncelleme yapamazsınız.";
                     return RedirectToAction(nameof(Index));
                 }
+
+                // Durum kontrolü: Sadece "Onay Bekliyor" durumundaki randevular düzenlenebilir
+                if (randevu.RandevuDurum != RandevuDurum.OnayBekliyor)
+                {
+                    TempData["ErrorMessage"] = "Sadece 'Onay Bekliyor' durumundaki randevular düzenlenebilir.";
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             var model = new RandevuCreateVM
@@ -361,6 +368,13 @@ namespace dortageDB.Controllers
                         TempData["ErrorMessage"] = "Randevuya 2 saatten az kaldığı için güncelleme yapamazsınız.";
                         return RedirectToAction(nameof(Index));
                     }
+
+                    // Durum kontrolü
+                    if (randevu.RandevuDurum != RandevuDurum.OnayBekliyor)
+                    {
+                        TempData["ErrorMessage"] = "Sadece 'Onay Bekliyor' durumundaki randevular düzenlenebilir.";
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
 
                 // MusteriId validation (Edit doesn't support creating new customers)
@@ -371,6 +385,11 @@ namespace dortageDB.Controllers
                     return View(model);
                 }
 
+                // Eski değerleri sakla (E-posta bildirimi için)
+                var eskiTarih = randevu.RandevuZaman;
+                var eskiAciklama = randevu.Aciklama;
+                var eskiTip = randevu.RandevuTipi;
+
                 randevu.MusteriId = model.MusteriId.Value;
                 randevu.Aciklama = model.Aciklama;
                 randevu.RandevuZaman = model.RandevuZaman.Value;
@@ -379,6 +398,61 @@ namespace dortageDB.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation($"Randevu güncellendi: {id}");
+
+                // Bilgilendirme E-postası Gönder (Eğer Vekarer ise)
+                if (!User.IsInRole("admin"))
+                {
+                    try
+                    {
+                        var musteri = await _context.Musteriler.FindAsync(randevu.MusteriId);
+                        var emailSubject = $"Randevu Güncellendi: #{randevu.RandevuID}";
+                        var emailBody = $@"
+                            <h2>Randevu Bilgileri Güncellendi</h2>
+                            <p><strong>Randevu ID:</strong> {randevu.RandevuID}</p>
+                            <hr>
+                            <h3>Vekarer Bilgileri</h3>
+                            <p><strong>Ad Soyad:</strong> {user.Ad} {user.Soyad}</p>
+                            <p><strong>E-posta:</strong> {user.Email}</p>
+                            <p><strong>Telefon:</strong> {user.PhoneNumber}</p>
+                            <hr>
+                            <h3>Müşteri Bilgileri</h3>
+                            <p><strong>Ad Soyad:</strong> {musteri?.Ad} {musteri?.Soyad}</p>
+                            <p><strong>Telefon:</strong> {musteri?.Telefon}</p>
+                            <hr>
+                            <h3>Randevu Detayları</h3>
+                            <table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>
+                                <tr style='background-color: #f2f2f2;'>
+                                    <th>Alan</th>
+                                    <th>Eski Değer</th>
+                                    <th>Yeni Değer</th>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tarih/Saat</strong></td>
+                                    <td>{eskiTarih:dd.MM.yyyy HH:mm}</td>
+                                    <td>{randevu.RandevuZaman:dd.MM.yyyy HH:mm}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tip</strong></td>
+                                    <td>{eskiTip}</td>
+                                    <td>{randevu.RandevuTipi}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Açıklama</strong></td>
+                                    <td>{eskiAciklama ?? "-"}</td>
+                                    <td>{randevu.Aciklama ?? "-"}</td>
+                                </tr>
+                            </table>
+                        ";
+
+                        await _emailService.SendEmailAsync("info@dortage.com", emailSubject, emailBody);
+                        _logger.LogInformation($"? Randevu güncelleme bildirimi gönderildi: {randevu.RandevuID}");
+                    }
+                    catch (Exception emailEx)
+                    {
+                        _logger.LogError($"? E-posta gönderme hatası (Edit): {emailEx.Message}");
+                    }
+                }
+
                 TempData["SuccessMessage"] = "Randevu başarıyla güncellendi.";
                 return RedirectToAction(nameof(Index));
             }

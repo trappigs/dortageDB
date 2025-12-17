@@ -231,6 +231,9 @@
     }
 
     .btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         padding: 6px 12px;
         border-radius: 6px;
         font-size: 13px;
@@ -464,12 +467,12 @@
                                         }
                                     }
 
-                                    <a asp-action="Details" asp-route-id="@randevu.RandevuID" class="btn-action btn-edit">
-                                        Detaylar
-                                    </a>
-                                    <a asp-action="Edit" asp-route-id="@randevu.RandevuID" class="btn-action btn-edit">
-                                        Düzenle
-                                    </a>
+                                            <a asp-route="randevu-detaylar" asp-route-id="@randevu.RandevuID" class="btn-action btn-edit">
+                                                <i class="fas fa-eye"></i> Detaylar
+                                            </a>
+                                            <a asp-route="randevu-duzenle" asp-route-id="@randevu.RandevuID" class="btn-action btn-edit">
+                                                <i class="fas fa-edit"></i> Düzenle
+                                            </a>
                                     <a asp-action="Delete" asp-route-id="@randevu.RandevuID" class="btn-action btn-delete">
                                         Sil
                                     </a>
