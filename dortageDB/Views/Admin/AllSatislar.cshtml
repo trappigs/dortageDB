@@ -658,20 +658,20 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Müşteri *</label>
-                        <select name="SatilanMusteriID" required>
+                        <select name="SatilanMusteriID" id="createMusteriId" required>
                             <option value="">Müşteri Seçin</option>
                             @if (ViewBag.Musteriler != null)
                             {
                                 @foreach (var musteri in ViewBag.Musteriler as IEnumerable<Musteri>)
                                 {
-                                    <option value="@musteri.IdMusteri">@musteri.Ad @musteri.Soyad (@musteri.Telefon)</option>
+                                    <option value="@musteri.IdMusteri" data-vekarer-id="@musteri.VekarerID">@musteri.Ad @musteri.Soyad (@musteri.Telefon)</option>
                                 }
                             }
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Vekarer *</label>
-                        <select name="VekarerID" required>
+                        <select name="VekarerID" id="createVekarerId" required>
                             <option value="">Vekarer Seçin</option>
                             @if (ViewBag.Vekarerlar != null)
                             {
@@ -1010,6 +1010,55 @@
 
         rows.forEach(row => tbody.appendChild(row));
     }
+
+    // Customer & Vekarer Link Logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const musteriSelect = document.getElementById('createMusteriId');
+        const vekarerSelect = document.getElementById('createVekarerId');
+
+        if (musteriSelect && vekarerSelect) {
+            // When Customer is selected -> Auto-select Vekarer
+            musteriSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const vekarerId = selectedOption.getAttribute('data-vekarer-id');
+                
+                if (vekarerId) {
+                    vekarerSelect.value = vekarerId;
+                }
+            });
+
+            // When Vekarer is selected -> Filter Customers
+            vekarerSelect.addEventListener('change', function() {
+                const selectedVekarerId = this.value;
+                const options = musteriSelect.options;
+
+                // Reset customer selection if current selection doesn't match new vekarer
+                const currentMusteriOption = options[musteriSelect.selectedIndex];
+                if (currentMusteriOption && currentMusteriOption.value && currentMusteriOption.getAttribute('data-vekarer-id') != selectedVekarerId) {
+                    musteriSelect.value = "";
+                }
+
+                // Filter options
+                for (let i = 0; i < options.length; i++) {
+                    const option = options[i];
+                    const optionVekarerId = option.getAttribute('data-vekarer-id');
+
+                    // Skip the placeholder option
+                    if (!option.value) continue;
+
+                    if (selectedVekarerId && optionVekarerId != selectedVekarerId) {
+                        option.hidden = true;
+                        option.disabled = true;
+                        option.style.display = 'none';
+                    } else {
+                        option.hidden = false;
+                        option.disabled = false;
+                        option.style.display = '';
+                    }
+                }
+            });
+        }
+    });
 </script>
 ```
 
