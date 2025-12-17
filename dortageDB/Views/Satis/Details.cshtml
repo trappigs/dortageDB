@@ -592,7 +592,7 @@
                     <div class="timeline-description">
                         @Model.Vekarer.Ad @Model.Vekarer.Soyad tarafından satış gerçekleştirildi
                     </div>
-                    <div class="timeline-date">@Model.SatilmaTarihi.ToString("dd MMMM yyyy, HH:mm")</div>
+                    @* <div class="timeline-date">@Model.SatilmaTarihi.ToString("dd MMMM yyyy, HH:mm")</div> *@
                 </div>
             </div>
 
@@ -603,7 +603,7 @@
                     <div class="timeline-description">
                         Satış sisteme kaydedildi ve komisyon hesaplandı
                     </div>
-                    <div class="timeline-date">@Model.SatilmaTarihi.ToString("dd MMMM yyyy, HH:mm")</div>
+                    @* <div class="timeline-date">@Model.SatilmaTarihi.ToString("dd MMMM yyyy, HH:mm")</div> *@
                 </div>
             </div>
 
@@ -614,7 +614,7 @@
                     <div class="timeline-description">
                         @(Model.Taksit ? "Taksitli ödeme seçeneği ile" : "Peşin ödeme ile") satış gerçekleşti
                     </div>
-                    <div class="timeline-date">@Model.SatilmaTarihi.ToString("dd MMMM yyyy")</div>
+                    @* <div class="timeline-date">@Model.SatilmaTarihi.ToString("dd MMMM yyyy")</div> *@
                 </div>
             </div>
         </div>
