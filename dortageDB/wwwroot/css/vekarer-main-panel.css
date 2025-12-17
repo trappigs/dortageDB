@@ -447,6 +447,10 @@
             }
 
     .Vekarer-main-panel .mobile-overlay {
+        display: none;
+    }
+
+    .Vekarer-main-panel .mobile-overlay.active {
         display: block;
     }
 
