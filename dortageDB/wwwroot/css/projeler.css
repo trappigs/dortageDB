@@ -53,7 +53,7 @@
     font-size: 1.2rem;
     color: rgba(255, 255, 255, 0.9);
     margin-top: 12px;
-    font-weight: 300;
+    font-weight: 600;
     letter-spacing: 0.5px;
 }
 
@@ -634,6 +634,7 @@
 
     .page-subtitle {
         font-size: 1rem;
+        font-weight: 600;
         margin-top: 10px;
     }
 
@@ -786,6 +787,7 @@
     }
 
     .page-subtitle {
+        font-weight: 600;
         font-size: 0.9rem;
         margin-top: 8px;
     }

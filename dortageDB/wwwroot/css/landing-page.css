@@ -719,7 +719,7 @@ body {
         margin-bottom: 5px;
     }
     .hero-section {
-        min-height: 100vh;
+        min-height: 110vh;
         display: flex;
         align-items: center;
         padding: 0;
