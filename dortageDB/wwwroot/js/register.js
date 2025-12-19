@@ -182,49 +182,14 @@ function handleTcNoBlur() {
 function handlePasswordInput() {
     const passwordInput = document.getElementById('Password');
     const password = passwordInput.value;
-    let strength = 0;
 
     // Length requirement
     const lengthReq = document.getElementById('req-length');
     if (lengthReq) {
-        if (password.length >= 8) {
+        if (password.length >= 6) {
             lengthReq.classList.add('met');
-            strength += 25;
         } else {
             lengthReq.classList.remove('met');
-        }
-    }
-
-    // Uppercase requirement
-    const uppercaseReq = document.getElementById('req-uppercase');
-    if (uppercaseReq) {
-        if (/[A-Z]/.test(password)) {
-            uppercaseReq.classList.add('met');
-            strength += 25;
-        } else {
-            uppercaseReq.classList.remove('met');
-        }
-    }
-
-    // Number requirement
-    const numberReq = document.getElementById('req-number');
-    if (numberReq) {
-        if (/[0-9]/.test(password)) {
-            numberReq.classList.add('met');
-            strength += 25;
-        } else {
-            numberReq.classList.remove('met');
-        }
-    }
-
-    // Special character requirement
-    const specialReq = document.getElementById('req-special');
-    if (specialReq) {
-        if (/[+!@#$%^&*(),.?":{}|<>]/.test(password)) {
-            specialReq.classList.add('met');
-            strength += 25;
-        } else {
-            specialReq.classList.remove('met');
         }
     }
 
@@ -235,15 +200,12 @@ function handlePasswordInput() {
 
         if (password.length === 0) {
             passwordStrengthBar.style.width = '0%';
-        } else if (strength <= 50) {
-            passwordStrengthBar.classList.add('weak');
-            passwordStrengthBar.style.width = '';
-        } else if (strength <= 75) {
-            passwordStrengthBar.classList.add('medium');
-            passwordStrengthBar.style.width = '';
-        } else {
+        } else if (password.length >= 6) {
             passwordStrengthBar.classList.add('strong');
-            passwordStrengthBar.style.width = '';
+            passwordStrengthBar.style.width = '100%';
+        } else {
+            passwordStrengthBar.classList.add('weak');
+            passwordStrengthBar.style.width = '30%';
         }
     }
 }
@@ -461,10 +423,7 @@ function isValidTcNo(tcNo) {
 }
 
 function isStrongPassword(password) {
-    return password.length >= 6 &&
-        /[A-Z]/.test(password) &&
-        /[0-9]/.test(password) &&
-        /[+!@#$%^&*(),.?":{}|<>]/.test(password);
+    return password.length >= 6;
 }
 
 console.log('✅ VEKARER Registration Form initialized successfully');
