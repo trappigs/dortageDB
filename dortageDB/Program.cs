@@ -119,7 +119,8 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()));
 
 // Identity
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
