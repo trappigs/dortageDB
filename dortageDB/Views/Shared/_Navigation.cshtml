@@ -13,9 +13,12 @@
             <li class="nav-item">
                 <a asp-route="vekarernedir" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "" ? "active" : "")">Vekarer Nedir</a>
             </li>
-            <li class="nav-item">
-                <a asp-route="projeler" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Proje" ? "active" : "")">Projeler</a>
-            </li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li class="nav-item">
+                    <a asp-route="projeler" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Proje" ? "active" : "")">Projeler</a>
+                </li>
+            }
             <li class="nav-item">
                 <a asp-route="vekarer-akademi" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "VekarerAkademi" ? "active" : "")">Vekarer Akademi</a>
             </li>
@@ -68,9 +71,12 @@
             <li class="mobile-nav-item">
                 <a asp-route="vekarernedir" class="mobile-nav-link">Vekarer Nedir</a>
             </li>
-            <li class="mobile-nav-item">
-                <a asp-route="projeler" class="mobile-nav-link">Projeler</a>
-            </li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li class="mobile-nav-item">
+                    <a asp-route="projeler" class="mobile-nav-link">Projeler</a>
+                </li>
+            }
             <li class="mobile-nav-item">
                 <a asp-route="vekarer-akademi" class="mobile-nav-link">Vekarer Akademi</a>
             </li>

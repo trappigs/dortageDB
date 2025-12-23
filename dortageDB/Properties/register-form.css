@@ -647,6 +647,7 @@
 @media (max-width: 768px) {
     .register-form .container {
         flex-direction: column;
+        padding-top: 0px !important;
     }
 
     .register-form .left-section {
