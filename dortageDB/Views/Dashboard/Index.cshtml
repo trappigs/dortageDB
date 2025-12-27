@@ -7,6 +7,40 @@
 <style>
     .dashboard-header {
         margin-bottom: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .dashboard-action-btn {
+        background-color: #000a68;
+        color: #ffffff;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        border: 2px solid transparent;
+        line-height: 1;
+    }
+
+    .dashboard-action-btn:hover {
+        background-color: #ffffff;
+        color: #000a68;
+        border: 2px solid #000a68;
+        transform: translateY(-2px);
     }
 
     .dashboard-title {
@@ -14,6 +48,7 @@
         font-weight: 700;
         color: #1f2937;
         margin-bottom: 8px;
+        margin-top: 20px;
     }
 
     .dashboard-subtitle {
@@ -394,6 +429,22 @@
     }
 
     @@media (max-width: 768px) {
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .header-actions {
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .dashboard-action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
         .dashboard-grid {
             grid-template-columns: 1fr;
         }
@@ -419,8 +470,33 @@
 <div class="vekarer-main-panel">
     <div class="main-content">
         <div class="dashboard-header">
-            <h1 class="dashboard-title">Vekarer Panel</h1>
-            <p class="dashboard-subtitle">Güncel istatistikler ve özet bilgiler</p>
+            <div>
+                <h1 class="dashboard-title">Vekarer Panel</h1>
+                <p class="dashboard-subtitle">Güncel istatistikler ve özet bilgiler</p>
+            </div>
+            <div class="header-actions">
+                <a asp-controller="Proje" asp-action="Index" class="dashboard-action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Projeleri İncele
+                </a>
+                <a asp-controller="Randevu" asp-action="Create" class="dashboard-action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M8 14h.01"/>
+                        <path d="M12 14h.01"/>
+                        <path d="M16 14h.01"/>
+                        <path d="M8 18h.01"/>
+                        <path d="M12 18h.01"/>
+                        <path d="M16 18h.01"/>
+                    </svg>
+                    Randevu Al
+                </a>
+            </div>
         </div>
 
         <div class="dashboard-grid">
