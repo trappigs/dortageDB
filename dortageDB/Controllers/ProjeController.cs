@@ -17,6 +17,11 @@ public class ProjeController : Controller
     // GET: /Proje
     public async Task<IActionResult> Index(string? sehir, decimal? minFiyat, decimal? maxFiyat, bool? taksit, bool? takas, string? yatirimTuru)
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return View("RestrictedAccess");
+        }
+
         var projelerQuery = _context.Projeler.Where(p => p.AktifMi);
 
         // Filtreler

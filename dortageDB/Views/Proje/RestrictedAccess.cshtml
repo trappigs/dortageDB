@@ -1,0 +1,55 @@
+@{
+    ViewData["Title"] = "Erişim Kısıtlı";
+}
+
+<div class="container py-5 my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg border-0 rounded-4 p-5">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-lock-fill text-primary mb-3" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                        </svg>
+                        <h1 class="display-5 fw-bold mb-3">Sadece Vekarerler Projeleri Görüntüleyebilir</h1>
+                        <p class="lead text-muted mb-4">
+                            Projelerimizin detaylarını incelemek ve yatırım fırsatlarından yararlanmak için Vekarer ailesine katılmanız gerekmektedir.
+                        </p>
+                    </div>
+                    
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg px-4 gap-3">
+                            Vekarer Ol (Kayıt Ol)
+                        </a>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg px-4">
+                            Giriş Yap
+                        </a>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top">
+                        <p class="small text-muted">
+                            Zaten bir hesabınız varsa giriş yaparak projeleri görüntüleyebilirsiniz.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.3s ease;
+        margin-top: 20px;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .btn-primary {
+        background-color: #000a68;
+        border-color: #000a68;
+    }
+    .text-primary {
+        color: #000a68 !important;
+    }
+</style>
