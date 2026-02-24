@@ -7,12 +7,13 @@ namespace dortageDB.Entities
     {
         OnayBekliyor,           // 1- Onay Bekliyor
         GorusmeBekleniyor,      // 2- Görüşme Bekleniyor
-        KararBekleniyor,        // 3- Görüşüldü - Karar Bekleniyor
-        Olumsuz,                // 4- Görüşüldü - Olumsuz
-        KaporaAlindi,           // 5- Görüşüldü - Kapora Alındı
-        OdemeAlindi,            // 6- Görüşüldü - Ödeme Alındı
-        Gerceklesmedi,          // 7- Gerçekleşmedi
-        Iptal                   // 8- İptal
+        GorusmeDevamEdiyor,     // 3- Görüşme Devam Ediyor
+        KararBekleniyor,        // 4- Görüşüldü - Karar Bekleniyor
+        Olumsuz,                // 5- Görüşüldü - Olumsuz
+        KaporaAlindi,           // 6- Görüşüldü - Kapora Alındı
+        OdemeAlindi,            // 7- Görüşüldü - Ödeme Alındı
+        Gerceklesmedi,          // 8- Gerçekleşmedi
+        Iptal                   // 9- İptal
     }
 
     public class Randevu

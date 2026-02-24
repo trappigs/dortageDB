@@ -16,7 +16,6 @@ namespace dortageDB.Data
         public DbSet<Musteri> Musteriler => Set<Musteri>();
         public DbSet<Randevu> Randevular => Set<Randevu>();
         public DbSet<Satis> Satislar => Set<Satis>();
-        public DbSet<Referral> Referrals => Set<Referral>();
         public DbSet<Proje> Projeler => Set<Proje>();
         public DbSet<EgitimVideo> EgitimVideolar => Set<EgitimVideo>();
         public DbSet<SeoSetting> SeoSettings { get; set; }
@@ -51,7 +50,6 @@ namespace dortageDB.Data
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.Property(tp => tp.TotalCommission).HasPrecision(18, 2);
-                entity.HasIndex(tp => tp.ReferralCode).IsUnique();
             });
 
             // ============================================
@@ -148,24 +146,6 @@ namespace dortageDB.Data
 
                 // Varsayılan değerler
                 entity.Property(s => s.OlusturulmaTarihi).HasDefaultValueSql("GETDATE()");
-            });
-
-            // ============================================
-            // REFERRAL
-            // ============================================
-            b.Entity<Referral>(entity =>
-            {
-                entity.HasKey(r => r.Id);
-
-                entity.Property(r => r.Code)
-                    .HasMaxLength(32)
-                    .IsRequired();
-
-                entity.HasIndex(r => r.Code).IsUnique();
-                entity.HasIndex(r => r.CreatedByUserId);
-                entity.HasIndex(r => r.IsActive);
-
-                entity.Property(r => r.CreatedAtUtc).HasDefaultValueSql("GETUTCDATE()");
             });
 
             // ============================================

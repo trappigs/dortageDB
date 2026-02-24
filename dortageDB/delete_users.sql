@@ -22,16 +22,13 @@ DELETE FROM Musteriler WHERE VekarerID IN (SELECT Id FROM @UserIds);
 -- 5. VekarerProfiles tablosundan ilgili kayıtları sil
 DELETE FROM VekarerProfiles WHERE UserId IN (SELECT Id FROM @UserIds);
 
--- 6. Referrals tablosundan ilgili kayıtları sil
-DELETE FROM Referrals WHERE CreatedByUserId IN (SELECT Id FROM @UserIds);
-
--- 7. Identity tablolarından ilgili kayıtları sil (ASP.NET Core Identity varsayılan tabloları)
+-- 6. Identity tablolarından ilgili kayıtları sil (ASP.NET Core Identity varsayılan tabloları)
 DELETE FROM AspNetUserRoles WHERE UserId IN (SELECT Id FROM @UserIds);
 DELETE FROM AspNetUserClaims WHERE UserId IN (SELECT Id FROM @UserIds);
 DELETE FROM AspNetUserLogins WHERE UserId IN (SELECT Id FROM @UserIds);
 DELETE FROM AspNetUserTokens WHERE UserId IN (SELECT Id FROM @UserIds);
 
--- 8. Son olarak AspNetUsers tablosundan kullanıcıları sil
+-- 7. Son olarak AspNetUsers tablosundan kullanıcıları sil
 DELETE FROM AspNetUsers WHERE Id IN (SELECT Id FROM @UserIds);
 
 -- İşlem tamamlandığında bir mesaj göster

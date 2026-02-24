@@ -46,16 +46,7 @@ function attachEventListeners() {
         confirmPasswordInput.addEventListener('blur', handleConfirmPasswordBlur);
     }
 
-    // Referral code
-    const referralInput = document.getElementById('Code');
-    if (referralInput) {
-        referralInput.addEventListener('blur', handleReferralBlur);
-        referralInput.addEventListener('input', function () {
-            if (this.value.trim()) {
-                hideError('Code', 'referralError');
-            }
-        });
-    }
+
 
     // Submit button
     const submitBtn = document.getElementById('submitBtn');
@@ -239,17 +230,7 @@ function handleConfirmPasswordBlur() {
     }
 }
 
-function handleReferralBlur() {
-    const referralInput = document.getElementById('Code');
-    if (!referralInput.value.trim()) {
-        showError('Code', 'referralError');
-    } else if (referralInput.value.length < 6) {
-        document.getElementById('referralError').innerHTML = '<span>⚠</span> Referans kodu en az 6 karakter olmalıdır';
-        showError('Code', 'referralError');
-    } else {
-        hideError('Code', 'referralError');
-    }
-}
+
 
 function handleSubmit(e) {
     e.preventDefault();
@@ -327,19 +308,7 @@ function validateForm() {
         hideError('ConfirmPassword', 'confirmPasswordError');
     }
 
-    // Referans kodu
-    const referralCode = document.getElementById('Code');
-    if (!referralCode.value.trim()) {
-        document.getElementById('referralError').innerHTML = '<span>⚠</span> Referans kodu gereklidir';
-        showError('Code', 'referralError');
-        valid = false;
-    } else if (referralCode.value.length < 6) {
-        document.getElementById('referralError').innerHTML = '<span>⚠</span> Referans kodu en az 6 karakter olmalıdır';
-        showError('Code', 'referralError');
-        valid = false;
-    } else {
-        hideError('Code', 'referralError');
-    }
+
 
     // Kullanım koşulları (Pazarlama checkbox)
     const terms = document.getElementById('Pazarlama');

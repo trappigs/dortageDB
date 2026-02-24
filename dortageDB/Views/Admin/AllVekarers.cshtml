@@ -450,11 +450,9 @@
                     var satisCount = (int)item.SatisCount;
                     var totalKomisyon = (decimal)item.TotalKomisyon;
                     var totalCiro = (decimal)item.TotalCiro;
-                    var referralCode = item.ReferralCode as string;
-                    var usedReferralCode = item.UsedReferralCode as string;
                     var initials = $"{user.Ad?.Substring(0, 1)}{user.Soyad?.Substring(0, 1)}";
 
-                    <div class="Vekarer-card" data-search="@user.Ad @user.Soyad @user.Email @user.PhoneNumber @referralCode @usedReferralCode">
+                    <div class="Vekarer-card" data-search="@user.Ad @user.Soyad @user.Email @user.PhoneNumber">
                         @if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.Now)
                         {
                             <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -497,16 +495,6 @@
                                 </svg>
                                 @user.Sehir
                             </div>
-                            @if (!string.IsNullOrEmpty(usedReferralCode))
-                            {
-                                <div class="info-row">
-                                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                                    </svg>
-                                    <span style="font-family: 'Courier New', monospace; font-weight: 600; color: #3b82f6;">@usedReferralCode</span>
-                                </div>
-                            }
                         </div>
 
                         <div class="stats-grid">
@@ -548,6 +536,10 @@
                                 ✓ Hesabı Aktifleştir
                             </button>
                         }
+
+                        <button class="btn-delete" onclick="openDeleteModal(@user.Id, '@user.Ad @user.Soyad')" style="margin-top: 8px; width: 100%; padding: 10px; background: #fff; color: #dc2626; border: 2px solid #dc2626; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                            🗑️ Hesabı Tamamen Sil
+                        </button>
                     </div>
                 }
             </div>
@@ -723,6 +715,51 @@
     </div>
 </div>
 
+<!-- Delete Vekarer Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3 style="color: #dc2626;">🗑️ Hesabı Tamamen Sil</h3>
+            <button type="button" class="modal-close" onclick="closeDeleteModal()">✕</button>
+        </div>
+        <form asp-controller="Admin" asp-action="DeleteVekarer" method="post" id="deleteForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" id="deleteUserId" />
+            <div class="modal-body">
+                <div style="padding: 20px; background: #fef2f2; border-radius: 10px; border: 2px solid #dc2626; margin-bottom: 20px;">
+                    <div style="display: center; align-items: center; gap: 12px; margin-bottom: 12px; text-align: center;">
+                        <svg style="width: 48px; height: 48px; color: #dc2626; margin-bottom: 10px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                        <h4 style="margin: 0; color: #991b1b; font-size: 18px; font-weight: 800;">GERİ DÖNÜŞÜ YOK!</h4>
+                    </div>
+                    <p style="color: #7f1d1d; margin: 12px 0 0 0; font-size: 14px; line-height: 1.6; text-align: center;">
+                        <strong id="deleteUserName" style="font-size: 16px;"></strong> kullanıcısını ve <b>tüm verilerini</b> silmek üzeresiniz.
+                    </p>
+                    <ul style="color: #7f1d1d; margin: 12px 0 0 0; font-size: 13px; line-height: 1.5;">
+                        <li>Bu Vekarer'e bağlı <b>tüm müşteriler</b> silinecek.</li>
+                        <li>Tüm <b>randevular</b> ve <b>satış kayıtları</b> silinecek.</li>
+                        <li>Bu işlem <b>asla geri alınamaz.</b></li>
+                    </ul>
+                </div>
+                <p style="color: #6b7280; font-size: 14px; margin: 0; text-align: center;">
+                    Devam etmek istediğinizden emin misiniz?
+                </p>
+            </div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button type="button" class="btn-modal btn-cancel" onclick="closeDeleteModal()" style="min-width: 120px;">Vazgeç</button>
+                <button type="button" class="btn-modal" onclick="confirmDelete()" style="background: #dc2626; color: white; min-width: 120px; font-weight: 700;">
+                    SİLİNSİN
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     // Create Modal functions
     function openCreateModal() {
@@ -851,6 +888,32 @@
         if (reactivateUserId) {
             console.log('✅ Aktifleştirme onaylandı:', reactivateUserId);
             document.getElementById('reactivateForm').submit();
+        }
+    }
+
+    // Delete Modal functions
+    let deleteUserId = null;
+    let deleteUserName = '';
+
+    function openDeleteModal(userId, userName) {
+        console.log('🗑️ Delete modal açılıyor:', userId, userName);
+        deleteUserId = userId;
+        deleteUserName = userName;
+        document.getElementById('deleteUserName').textContent = userName;
+        document.getElementById('deleteUserId').value = userId;
+        document.getElementById('deleteModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('active');
+        deleteUserId = null;
+        deleteUserName = '';
+    }
+
+    function confirmDelete() {
+        if (deleteUserId) {
+            console.log('?? SİLME ONAYLANDI:', deleteUserId);
+            document.getElementById('deleteForm').submit();
         }
     }
 </script>

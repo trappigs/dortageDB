@@ -52,6 +52,13 @@
                 </div>
 
                 <!-- Validation Summary -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success" role="alert">
+                        <div class="text-success">@TempData["SuccessMessage"]</div>
+                    </div>
+                }
+
                 @if (!ViewData.ModelState.IsValid)
                 {
                     <div class="alert alert-error" role="alert">
@@ -60,8 +67,9 @@
                 }
 
                 <!-- Login Form -->
-                <form asp-route="giris" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" id="loginForm">
+                <form asp-controller="Account" asp-action="Login" method="post" id="loginForm">
                     @Html.AntiForgeryToken()
+                    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
 
                     <!-- Email -->
                     <div class="login-form-group">
@@ -153,7 +161,7 @@
 
                     <!-- Sign Up Link -->
                     <div class="login-signup-link">
-                        Hesabınız yok mu? <a asp-route="kayit">Kayıt Ol</a>
+                        Hesabınız yok mu? <a asp-route="kayit" asp-route-returnUrl="@ViewData["ReturnUrl"]">Kayıt Ol</a>
                     </div>
 
                     <!-- Trust Badges -->

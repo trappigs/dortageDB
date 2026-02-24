@@ -1,6 +1,7 @@
 using dortageDB.Data;
 using dortageDB.Entities;
 using dortageDB.Helpers;
+using dortageDB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,17 +16,20 @@ namespace dortageDB.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<AdminController> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IEmailService _emailService;
 
         public AdminController(
             AppDbContext context,
             UserManager<AppUser> userManager,
             ILogger<AdminController> logger,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IEmailService emailService)
         {
             _context = context;
             _userManager = userManager;
             _logger = logger;
             _webHostEnvironment = webHostEnvironment;
+            _emailService = emailService;
         }
 
         // Admin Dashboard
@@ -40,7 +44,6 @@ namespace dortageDB.Controllers
                 TotalSatislar = await _context.Satislar.CountAsync(),
                 TotalSatisMiktari = await _context.Satislar.SumAsync(s => (decimal?)s.ToplamSatisFiyati) ?? 0,
                 TotalKomisyon = await _context.Satislar.SumAsync(s => (decimal?)s.OdenecekKomisyon) ?? 0,
-                ActiveReferrals = await _context.Referrals.CountAsync(r => r.IsActive),
                 TotalVideos = await _context.EgitimVideolar.CountAsync(),
                 ActiveVideos = await _context.EgitimVideolar.CountAsync(v => v.Aktif)
             };
@@ -49,127 +52,15 @@ namespace dortageDB.Controllers
             return View();
         }
 
-        // ====================================
-        // REFERRAL CODE MANAGEMENT
-        // ====================================
 
-        // GET: Admin/Referrals
-        public async Task<IActionResult> Referrals()
-        {
-            var referrals = await _context.Referrals
-                .OrderByDescending(r => r.CreatedAtUtc)
-                .ToListAsync();
 
-            return View(referrals);
-        }
 
-        // POST: Admin/CreateReferral
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateReferral(string code, int? maxUses, DateTime? expiresAt)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(code))
-                {
-                    TempData["ErrorMessage"] = "Referans kodu boş olamaz.";
-                    return RedirectToAction(nameof(Referrals));
-                }
 
-                // Normalize code to uppercase
-                code = code.Trim().ToUpper();
 
-                // Check if code already exists
-                if (await _context.Referrals.AnyAsync(r => r.Code == code))
-                {
-                    TempData["ErrorMessage"] = "Bu referans kodu zaten mevcut.";
-                    return RedirectToAction(nameof(Referrals));
-                }
 
-                var userIdString = _userManager.GetUserId(User);
-                var referral = new Referral
-                {
-                    Code = code,
-                    IsActive = true,
-                    MaxUses = maxUses,
-                    UsedCount = 0,
-                    ExpiresAt = expiresAt,
-                    CreatedByUserId = userIdString != null ? int.Parse(userIdString) : null,
-                    CreatedAtUtc = DateTime.UtcNow
-                };
 
-                _context.Referrals.Add(referral);
-                await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"? Referans kodu oluşturuldu: {code} (Admin: {User.Identity.Name})");
-                TempData["SuccessMessage"] = "Referans kodu başarıyla oluşturuldu.";
-                return RedirectToAction(nameof(Referrals));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"? Referans kodu oluşturma hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
-                return RedirectToAction(nameof(Referrals));
-            }
-        }
 
-        // POST: Admin/ToggleReferralStatus
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ToggleReferralStatus(int id)
-        {
-            try
-            {
-                var referral = await _context.Referrals.FindAsync(id);
-                if (referral == null)
-                {
-                    TempData["ErrorMessage"] = "Referans kodu bulunamadı.";
-                    return RedirectToAction(nameof(Referrals));
-                }
-
-                referral.IsActive = !referral.IsActive;
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation($"Referans kodu durumu değiştirildi: {referral.Code} -> {referral.IsActive}");
-                TempData["SuccessMessage"] = $"Referans kodu {(referral.IsActive ? "aktif" : "pasif")} edildi.";
-                return RedirectToAction(nameof(Referrals));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Referans kodu durum değiştirme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
-                return RedirectToAction(nameof(Referrals));
-            }
-        }
-
-        // POST: Admin/DeleteReferral
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteReferral(int id)
-        {
-            try
-            {
-                var referral = await _context.Referrals.FindAsync(id);
-                if (referral == null)
-                {
-                    TempData["ErrorMessage"] = "Referans kodu bulunamadı.";
-                    return RedirectToAction(nameof(Referrals));
-                }
-
-                _context.Referrals.Remove(referral);
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation($"? Referans kodu silindi: {referral.Code}");
-                TempData["SuccessMessage"] = "Referans kodu başarıyla silindi.";
-                return RedirectToAction(nameof(Referrals));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"? Referans kodu silme hatası: {ex.Message}");
-                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
-                return RedirectToAction(nameof(Referrals));
-            }
-        }
 
         // ====================================
         // T�M KAYITLARA ER���M
@@ -378,9 +269,7 @@ namespace dortageDB.Controllers
                     .Where(s => s.VekarerID == Vekarer.Id)
                     .SumAsync(s => (decimal?)s.ToplamSatisFiyati) ?? 0;
 
-                // Get VekarerProfile for ReferralCode and UsedReferralCode
-                var profile = await _context.VekarerProfiles
-                    .FirstOrDefaultAsync(p => p.UserId == Vekarer.Id);
+
 
                 VekarerData.Add(new
                 {
@@ -388,9 +277,7 @@ namespace dortageDB.Controllers
                     RandevuCount = randevuCount,
                     SatisCount = satisCount,
                     TotalKomisyon = totalKomisyon,
-                    TotalCiro = totalCiro,
-                    ReferralCode = profile?.ReferralCode,
-                    UsedReferralCode = profile?.UsedReferralCode // Kay�t olurken kulland��� kod
+                    TotalCiro = totalCiro
                 });
             }
 
@@ -1302,6 +1189,14 @@ namespace dortageDB.Controllers
                     return RedirectToAction(nameof(AllVekarers));
                 }
 
+                // Phone cleaning and check
+                var cleanPhone = PhoneNumber.Replace("(", "").Replace(")", "").Replace(" ", "").Trim();
+                if (await _userManager.Users.AnyAsync(u => u.PhoneNumber == cleanPhone))
+                {
+                    TempData["ErrorMessage"] = "Bu telefon numarası zaten başka bir Vekarer tarafından kullanılıyor.";
+                    return RedirectToAction(nameof(AllVekarers));
+                }
+
                 // Create new AppUser
                 var newUser = new AppUser
                 {
@@ -1309,7 +1204,7 @@ namespace dortageDB.Controllers
                     Email = Email,
                     Ad = Ad.Trim(),
                     Soyad = Soyad.Trim(),
-                    PhoneNumber = PhoneNumber,
+                    PhoneNumber = cleanPhone,
                     Sehir = Sehir.Trim(),
                     Cinsiyet = Cinsiyet,
                     Kvkk = true,
@@ -1406,6 +1301,27 @@ namespace dortageDB.Controllers
                 {
                     _logger.LogInformation($"? Vekarer hesabı aktifleştirildi: {user.Email} (Admin: {User.Identity.Name})");
                     TempData["SuccessMessage"] = $"{user.Ad} {user.Soyad} hesabı başarıyla aktifleştirildi.";
+
+                    // Kullanıcıya bilgilendirme maili gönder
+                    try
+                    {
+                        var subject = "Hesabınız Aktif Edildi - Vekarer";
+                        var body = $@"
+                            <h3>Merhaba {user.Ad} {user.Soyad},</h3>
+                            <p>Vekarer sistemindeki üyeliğiniz yönetici tarafından onaylanmış ve hesabınız aktif edilmiştir.</p>
+                            <p>Artık sisteme giriş yapabilir, müşteri ekleyebilir ve randevu oluşturabilirsiniz.</p>
+                            <br>
+                            <p>Giriş adresi: <a href='https://vekarer.com/giris'>https://vekarer.com/giris</a></p>
+                            <br>
+                            <p>Bol kazançlar dileriz,</p>
+                            <p>Vekarer Ekibi</p>";
+
+                        await _emailService.SendEmailAsync(user.Email!, subject, body);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Aktivasyon maili gönderilemedi ({user.Email}): {ex.Message}");
+                    }
                 }
                 else
                 {
@@ -1419,6 +1335,94 @@ namespace dortageDB.Controllers
             {
                 _logger.LogError($"? Vekarer aktifleştirme hatası: {ex.Message}");
                 TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(AllVekarers));
+            }
+        }
+
+        // POST: Admin/DeleteVekarer
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteVekarer(int id)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id.ToString());
+                if (user == null)
+                {
+                    TempData["ErrorMessage"] = "Vekarer bulunamadı.";
+                    return RedirectToAction(nameof(AllVekarers));
+                }
+
+                // Check if the user is in the Vekarer role (sanity check)
+                if (!await _userManager.IsInRoleAsync(user, "Vekarer"))
+                {
+                    TempData["ErrorMessage"] = "Sadece Vekarer hesapları silinebilir.";
+                    return RedirectToAction(nameof(AllVekarers));
+                }
+
+                _logger.LogWarning($"?? Vekarer SİLME İŞLEMİ BAŞLADI: {user.Email} (Admin: {User.Identity.Name})");
+
+                // Müşterileri, randevuları ve satışları temizle
+                var randevular = await _context.Randevular.Where(r => r.VekarerID == id).ToListAsync();
+                if (randevular.Any()) _context.Randevular.RemoveRange(randevular);
+
+                var satislar = await _context.Satislar.Where(s => s.VekarerID == id).ToListAsync();
+                if (satislar.Any()) _context.Satislar.RemoveRange(satislar);
+
+                var musteriler = await _context.Musteriler.Where(m => m.VekarerID == id).ToListAsync();
+                if (musteriler.Any()) _context.Musteriler.RemoveRange(musteriler);
+                
+                // VekarerProfile (varsa)
+                var profile = await _context.Set<VekarerProfile>().FirstOrDefaultAsync(p => p.UserId == id);
+                if (profile != null) _context.Set<VekarerProfile>().Remove(profile);
+
+                await _context.SaveChangesAsync();
+
+                // E-posta gönder (Kullanıcı silinmeden önce bilgilerini almamız lazım)
+                var userEmail = user.Email;
+                var userName = $"{user.Ad} {user.Soyad}";
+
+                // Kullanıcıyı sil
+                var result = await _userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    _logger.LogWarning($"?? Vekarer TAMAMEN SİLİNDİ: {userEmail} (Admin: {User.Identity.Name})");
+                    TempData["SuccessMessage"] = $"{userName} ve tüm ilişkili verileri başarıyla silindi.";
+
+                    // E-posta gönderimi
+                    try
+                    {
+                        var subject = "Hesabınız Silindi - Vekarer";
+                        var body = $@"
+                            <h3>Merhaba {userName},</h3>
+                            <p>Vekarer sistemindeki hesabınız yönetici tarafından kalıcı olarak silinmiştir.</p>
+                            <p>Bu işlem sonucunda tüm verileriniz (müşteri kayıtları, randevular ve satışlar) sistemden temizlenmiştir.</p>
+                            <br>
+                            <p>Sorularınız için bizimle iletişime geçebilirsiniz.</p>
+                            <br>
+                            <p>Saygılarımızla,</p>
+                            <p>Vekarer Ekibi</p>";
+
+                        await _emailService.SendEmailAsync(userEmail!, subject, body);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Silme bilgilendirme maili gönderilemedi ({userEmail}): {ex.Message}");
+                    }
+                }
+                else
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    TempData["ErrorMessage"] = $"Silme işlemi başarısız: {errors}";
+                }
+
+                return RedirectToAction(nameof(AllVekarers));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"? Vekarer silme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu: " + ex.Message;
                 return RedirectToAction(nameof(AllVekarers));
             }
         }

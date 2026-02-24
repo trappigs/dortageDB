@@ -15,7 +15,6 @@ namespace dortageDB.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly AppDbContext _context;
-        private readonly IReferralService _referralService;
         private readonly IEmailService _emailService;
         private readonly ILogger<AccountController> _logger;
 
@@ -24,7 +23,6 @@ namespace dortageDB.Controllers
             SignInManager<AppUser> signInManager,
             RoleManager<AppRole> roleManager,
             AppDbContext context,
-            IReferralService referralService,
             IEmailService emailService,
             ILogger<AccountController> logger)
         {
@@ -32,7 +30,6 @@ namespace dortageDB.Controllers
             _signInManager = signInManager;
             _roleManager = roleManager;
             _context = context;
-            _referralService = referralService;
             _emailService = emailService;
             _logger = logger;
         }
@@ -40,8 +37,9 @@ namespace dortageDB.Controllers
         // GET: Account/Register
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Register()
+        public IActionResult Register(string? returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
@@ -50,15 +48,15 @@ namespace dortageDB.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterVM model)
+        public async Task<IActionResult> Register(RegisterVM model, string? returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             try
             {
                 Console.WriteLine("=== KAYIT ��LEM� BA�LADI ===");
                 Console.WriteLine($"?? Email: {model.Email}");
                 Console.WriteLine($"?? Telefon: {model.PhoneNumber}");
                 Console.WriteLine($"?? TC No: {model.TcNo}");
-                Console.WriteLine($"?? Referans Kodu: {model.Code}");
 
                 if (!ModelState.IsValid)
                 {
@@ -88,28 +86,30 @@ namespace dortageDB.Controllers
                     return View(model);
                 }
 
-                // Referral kodu kontrol� - ZORUNLU
-                if (string.IsNullOrWhiteSpace(model.Code))
-                {
-                    Console.WriteLine("? Referans kodu boş");
-                    ModelState.AddModelError("Code", "Referans kodu zorunludur.");
-                    return View(model);
-                }
+                
 
-                Console.WriteLine($"?? Referans kodu kontrol ediliyor: {model.Code}");
-                var (isValid, error) = await _referralService.ValidateAndConsumeAsync(model.Code);
 
-                if (!isValid)
-                {
-                    Console.WriteLine($"? Referans kodu geçersiz: {error}");
-                    ModelState.AddModelError("Code", error ?? "Geçersiz referans kodu.");
-                    return View(model);
-                }
 
-                Console.WriteLine("? Referans kodu do�ruland�!");
+
+
+
+
+                
 
                 // Telefon numaras�n� temizle (format� kald�r)
                 var cleanPhone = model.PhoneNumber.Replace("(", "").Replace(")", "").Replace(" ", "").Trim();
+
+                if (await _userManager.Users.AnyAsync(u => u.PhoneNumber == cleanPhone))
+                {
+                    ModelState.AddModelError("PhoneNumber", "Bu telefon numarası zaten kayıtlı.");
+                    return View(model);
+                }
+
+                if (!string.IsNullOrEmpty(model.TcNo) && await _userManager.Users.AnyAsync(u => u.TcNo == model.TcNo))
+                {
+                    ModelState.AddModelError("TcNo", "Bu TC kimlik numarası zaten kayıtlı.");
+                    return View(model);
+                }
                 Console.WriteLine($"?? Temizlenmi� telefon: {cleanPhone}");
 
                 // Yeni kullan�c� olu�tur
@@ -125,7 +125,9 @@ namespace dortageDB.Controllers
                     TcNo = model.TcNo,
                     Kvkk = model.Kvkk,
                     Pazarlama = model.Pazarlama,
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    LockoutEnabled = true,
+                    LockoutEnd = DateTimeOffset.MaxValue // Onaylanana kadar deaktif
                 };
 
                 Console.WriteLine($"?? Kullan�c� olu�turuluyor: {user.Email}");
@@ -166,8 +168,7 @@ namespace dortageDB.Controllers
                     Console.WriteLine("?? Vekarer profili olu�turuluyor...");
                     var VekarerProfile = new VekarerProfile
                     {
-                        UserId = user.Id,
-                        UsedReferralCode = model.Code // Kay�t olurken kulland��� referans kodu
+                        UserId = user.Id
                     };
                     _context.VekarerProfiles.Add(VekarerProfile);
                     await _context.SaveChangesAsync();
@@ -204,8 +205,42 @@ namespace dortageDB.Controllers
 
                 Console.WriteLine("?? Kay�t i�lemi tamamland�! Login sayfas�na y�nlendiriliyor...");
 
-                TempData["SuccessMessage"] = "Kayıt başarılı! Referans kodunuz kullanıldı. Giriş yapabilirsiniz.";
-                return RedirectToAction(nameof(Login));
+                // Yöneticiye bildirim gönder
+                try
+                {
+                    var adminSubject = "Yeni Vekarer Kaydı (Onay Bekliyor)";
+                    var adminBody = $@"
+                        <h2>Sisteme Yeni Bir Vekarer Kayıt Oldu</h2>
+                        <p><strong>Ad Soyad:</strong> {model.Ad} {model.Soyad}</p>
+                        <p><strong>Email:</strong> {model.Email}</p>
+                        <p><strong>Telefon:</strong> {model.PhoneNumber}</p>
+                        <p><strong>Şehir:</strong> {model.Sehir}</p>
+                        <p><strong>Cinsiyet:</strong> {(model.Cinsiyet ? "Erkek" : "Kadın")}</p>
+                        <p><strong>TC No:</strong> {model.TcNo ?? "-"}</p>
+                        <hr>
+                        <p>Bu hesap şu an deaktif (kilitli) durumdadır. Admin panelinden aktifleştirebilirsiniz.</p>";
+
+                    await _emailService.SendEmailAsync("info@dortage.com", adminSubject, adminBody);
+
+                    // Kullanıcıya teyit maili gönder
+                    var userSubject = "Kaydınız Alındı - Vekarer";
+                    var userBody = $@"
+                        <h3>Merhaba {model.Ad} {model.Soyad},</h3>
+                        <p>Vekarer sistemine yaptığınız kayıt başvurusu başarıyla alınmıştır.</p>
+                        <p>Hesabınız yönetici incelemesinin ardından aktif hale getirilecektir. Onay işlemi tamamlandığında size tekrar bilgilendirme e-postası gönderilecektir.</p>
+                        <br>
+                        <p>Bize katıldığınız için teşekkür ederiz.</p>
+                        <p>Vekarer Ekibi</p>";
+
+                    await _emailService.SendEmailAsync(model.Email, userSubject, userBody);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Yeni kayıt bildirim mailleri gönderilemedi: {ex.Message}");
+                }
+
+                TempData["SuccessMessage"] = "Kayıt işleminiz başarıyla tamamlandı. Hesabınız yönetici onayından sonra aktif edilecektir. Onaylandığında bilgilendirileceksiniz.";
+                return RedirectToAction(nameof(Login), new { returnUrl = returnUrl });
             }
             catch (Exception ex)
             {
@@ -269,7 +304,7 @@ namespace dortageDB.Controllers
             if (result.IsLockedOut)
             {
                 Console.WriteLine($"?? Hesap kilitli: {model.Email}");
-                ModelState.AddModelError("", "Hesabınız kilitlenmiştir. Lütfen daha sonra tekrar deneyin.");
+                ModelState.AddModelError("", "Kaydınız alınmıştır, yönetici onayından geçtikten sonra hesabınız aktif hale gelecek ve tarafınıza e-posta gönderilecektir.");
                 return View(model);
             }
 
@@ -535,3 +570,4 @@ namespace dortageDB.Controllers
         }
     }
 }
+

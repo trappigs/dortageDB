@@ -10,6 +10,7 @@ namespace dortageDB.Helpers
             {
                 RandevuDurum.OnayBekliyor => "Onay Bekliyor",
                 RandevuDurum.GorusmeBekleniyor => "Görüşme Bekleniyor",
+                RandevuDurum.GorusmeDevamEdiyor => "Görüşme Devam Ediyor",
                 RandevuDurum.KararBekleniyor => "Görüşüldü - Karar Bekleniyor",
                 RandevuDurum.Olumsuz => "Görüşüldü - Olumsuz",
                 RandevuDurum.KaporaAlindi => "Görüşüldü - Kapora Alındı",
@@ -26,6 +27,7 @@ namespace dortageDB.Helpers
             {
                 RandevuDurum.OnayBekliyor => "status-pending",
                 RandevuDurum.GorusmeBekleniyor => "status-confirmed",
+                RandevuDurum.GorusmeDevamEdiyor => "status-in-progress",
                 RandevuDurum.KararBekleniyor => "status-in-progress",
                 RandevuDurum.Olumsuz => "status-cancelled",
                 RandevuDurum.KaporaAlindi => "status-success",
@@ -42,6 +44,7 @@ namespace dortageDB.Helpers
             {
                 RandevuDurum.OnayBekliyor => "⏳",
                 RandevuDurum.GorusmeBekleniyor => "📅",
+                RandevuDurum.GorusmeDevamEdiyor => "💬",
                 RandevuDurum.KararBekleniyor => "⏱️",
                 RandevuDurum.Olumsuz => "❌",
                 RandevuDurum.KaporaAlindi => "💰",

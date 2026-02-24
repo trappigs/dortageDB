@@ -18,9 +18,7 @@ namespace dortageDB.ViewModels
         [Required, DataType(DataType.Password), Compare(nameof(Password))] public string ConfirmPassword { get; set; } = null!;
 
         public bool VekarerMi { get; set; } = true;
-        // RegisterVM.cs
-        [StringLength(32)]
-        public string? Code { get; set; }
-        public IList<string> Roller { get; set; } = new List<string>(); // örn: "admin","Vekarer"
+
+        public IList<string> Roller { get; set; } = new List<string>(); // ï¿½rn: "admin","Vekarer"
     }
 }

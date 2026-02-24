@@ -36,9 +36,9 @@
     *   `AccountController`: Giriş, kayıt, şifre sıfırlama işlemleri.
     *   `RandevuController`: Randevu oluşturma, listeleme ve durum yönetimi.
     *   `ProjeController`: Arsa projelerinin listelenmesi ve detayları.
-    *   `BasvuruController`: Referans kodu olmayan kullanıcıların başvuruları.
+    *   `BasvuruController`: Kullanıcıların Vekarer olmak için yaptıkları başvurular.
 *   **Entities/**: Veritabanı tablolarına karşılık gelen sınıflar (`AppUser`, `Proje`, `Randevu`, `Musteri` vb.).
-*   **Services/**: Yardımcı servisler (`EmailService`, `ReferralService`, `SeoService`).
+*   **Services/**: Yardımcı servisler (`EmailService`, `SeoService`).
 *   **Views/**: Kullanıcı arayüzü dosyaları (.cshtml).
 *   **wwwroot/**: Statik dosyalar (CSS, JS, Resimler, Uploads).
 
@@ -49,8 +49,8 @@
     *   `Admin`: Tüm sisteme tam erişim.
     *   `Vekarer`: Müşteri ekleyebilir, randevu oluşturabilir, kendi satışlarını görebilir.
 *   **Kayıt Ol (`/kayit`):**
-    *   Kullanıcılar sadece geçerli bir **Referans Kodu** ile kayıt olabilir.
-    *   Referans kodu olmayanlar için "Başvuru Formu" (Modal) bulunur.
+    *   Kullanıcılar doğrudan kayıt olabilirler.
+    *   Vekarer olmak isteyenler için ayrıca "Başvuru Formu" (Modal) bulunur.
 *   **Giriş Yap:** Standart e-posta/şifre girişi.
 
 ### 5.2. Randevu Yönetimi (`RandevuController`)
@@ -61,8 +61,8 @@
     *   Admin kullanıcıları bu kısıtlamadan muaftır.
 *   **Durum Yönetimi:** Randevu durumu (Onaylandı, İptal, Tamamlandı vb.) Admin tarafından değiştirildiğinde, ilgili Vekarer'e otomatik bilgilendirme e-postası gider.
 
-### 5.3. Başvuru ve Referans Sistemi (`BasvuruController`)
-*   Referans kodu olmayan kullanıcılar başvuru formu doldurur.
+### 5.3. Başvuru Sistemi (`BasvuruController`)
+*   Vekarer olmak isteyen kullanıcılar başvuru formu doldurur.
 *   Formda CV (PDF) yüklenebilir.
 *   Başvuru yapıldığında:
     1.  Kullanıcıya "Başvurunuz alındı" e-postası gider.

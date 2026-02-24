@@ -141,7 +141,7 @@ namespace dortageDB.Controllers
                 await _emailService.SendEmailAsync(model.Email, subject, body);
 
                 // 2. Yöneticiye (info@dortage.com) bildirim maili
-                string adminSubject = "Yeni Referans Kodu Talebi (Başvuru)";
+                string adminSubject = "Yeni Vekarer Başvurusu";
                 string adminBody = $@"
                     <h2>Yeni Başvuru Alındı</h2>
                     <p><strong>Ad Soyad:</strong> {encodedAdSoyad}</p>
@@ -151,7 +151,7 @@ namespace dortageDB.Controllers
                     <p><strong>Meslek:</strong> {encodedMeslek}</p>
                     <p><strong>Eğitim:</strong> {encodedEgitim}</p>
                     <p><strong>Tecrübe:</strong> {encodedTecrube}</p>
-                    <p><strong>Referans Kaynağı:</strong> {encodedNereden}</p>
+                    <p><strong>Bizi Nereden Duydunuz?:</strong> {encodedNereden}</p>
                     <hr>
                     <p><strong>Kendini Tanıtma:</strong><br>{encodedTanitim}</p>
                     <p><strong>Beklenti:</strong><br>{encodedBeklenti}</p>

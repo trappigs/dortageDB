@@ -1,0 +1,29 @@
+        // POST: Admin/DeleteSeoSettingConfirmed/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteSeoSettingConfirmed(int id)
+        {
+            try
+            {
+                var seoSetting = await _context.SeoSettings.FindAsync(id);
+                if (seoSetting == null)
+                {
+                    return NotFound();
+                }
+
+                _context.SeoSettings.Remove(seoSetting);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"🗑️ SEO ayarı silindi: {seoSetting.PagePath} (Admin: {User.Identity.Name})");
+                TempData["SuccessMessage"] = "SEO ayarı başarıyla silindi.";
+                return RedirectToAction(nameof(SeoSettings));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ SEO ayarı silme hatası: {ex.Message}");
+                TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+                return RedirectToAction(nameof(SeoSettings));
+            }
+        }
+    }
+}

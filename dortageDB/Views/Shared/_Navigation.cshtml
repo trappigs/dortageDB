@@ -39,8 +39,8 @@
             }
             else
             {
-                <a asp-route="giris" class="btn btn-outlined">Giriş Yap</a>
-                <a asp-route="kayit" class="btn btn-filled">Kayıt Ol →</a>
+                <a asp-route="giris" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outlined">Giriş Yap</a>
+                <a asp-route="kayit" asp-route-returnUrl="@Context.Request.Path" class="btn btn-filled">Kayıt Ol →</a>
             }
         </div>
 
@@ -102,10 +102,10 @@
             else
             {
                 <li class="mobile-nav-item">
-                    <a asp-route="giris" class="mobile-nav-link">Giriş Yap</a>
+                    <a asp-route="giris" asp-route-returnUrl="@Context.Request.Path" class="mobile-nav-link">Giriş Yap</a>
                 </li>
                 <li class="mobile-nav-item">
-                    <a asp-route="kayit" class="mobile-nav-link">Kayıt Ol</a>
+                    <a asp-route="kayit" asp-route-returnUrl="@Context.Request.Path" class="mobile-nav-link">Kayıt Ol</a>
                 </li>
             }
         </ul>

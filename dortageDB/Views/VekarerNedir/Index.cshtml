@@ -69,7 +69,7 @@
                 </div>
                 <h3 class="step-title">Üye Ol</h3>
                 <p class="step-description">
-                    Vekarer web sitesine girip hızlıca hesap oluştur. Referans kodu talep et. Referans kodu sadece ön değerlendirme sonucunu geçen Vekarerler ile paylaşılır.
+                    Vekarer web sitesine girip hızlıca hesap oluştur. Başvurunuz incelendikten sonra hesabınız aktif edilecektir.
                     <strong>Vekarer Akademisi</strong>'ne davet edilirsin; arsa satışı konusunda ipuçları, başarılı satış hikayeleri ve eğitim videoları ile donanımlı ol.
                 </p>
             </div>
@@ -94,7 +94,7 @@
                 </div>
                 <h3 class="step-title">Komisyonunu Al</h3>
                 <p class="step-description">
-                    Satış işlemleri resmi olarak tamamlanır tamamlanmaz, satış bedelinin <strong>%3'ü</strong> tutarındaki komisyonun <strong>2 iş günü içinde</strong> hesabına geçer.
+                    Satış işlemleri resmi olarak tamamlanır tamamlanmaz, satış bedelinin <strong>%5'i</strong> tutarındaki komisyonun <strong>2 iş günü içinde</strong> hesabına geçer.
                     Hiçbir masraf yapmadan gelir elde et!
                 </p>
             </div>
@@ -197,8 +197,8 @@
                             <i class="fas fa-percent"></i>
                         </div>
                         <div class="komisyon-content">
-                            <h4>%3 Komisyon Oranı</h4>
-                            <p>Her satıştan satış bedelinin %3'ü kadar komisyon kazanırsınız.</p>
+                            <h4>%5 Komisyon Oranı</h4>
+                            <p>Her satıştan satış bedelinin %5'i kadar komisyon kazanırsınız.</p>
                         </div>
                     </div>
                     <div class="komisyon-item">
@@ -225,7 +225,7 @@
                         </div>
                         <div class="komisyon-content">
                             <h4>Vadeli (Taksitli) Satışlar</h4>
-                            <p>Peşinat tutarının %3'ü hemen ödenir, kalan komisyon en geç 3 ay sonra tek seferde ödenir.</p>
+                            <p>Peşinat tutarının %5'i hemen ödenir, kalan komisyon en geç 3 ay sonra tek seferde ödenir.</p>
                         </div>
                     </div>
                     <div class="komisyon-item">
@@ -311,7 +311,7 @@
         <div class="cta-box text-center">
             <h2 class="cta-title">Vekarer Ailesine Katılmaya Hazır mısın?</h2>
             <p class="cta-description">
-                Hiçbir masraf yapmadan, sadece müşteri getirerek %3 komisyon kazanmaya bugün başla!
+                Hiçbir masraf yapmadan, sadece müşteri getirerek %5 komisyon kazanmaya bugün başla!
             </p>
             @* <div class="cta-stats">
                 <div class="cta-stat">
@@ -331,7 +331,7 @@
                 <i class="fas fa-rocket"></i>
                 Sen de Vekarer Ol, Kazandır Kazan!
             </a>
-            <p class="cta-note">Ücretsiz kayıt ol, referans kodunu al ve kazanmaya başla!</p>
+            <p class="cta-note">Ücretsiz kayıt ol ve kazanmaya başla!</p>
         </div>
     </div>
 </section>
@@ -348,7 +348,7 @@
         if (satisFiyatiInput && komisyonTutarElement) {
             satisFiyatiInput.addEventListener('input', function() {
                 const fiyat = parseFloat(this.value) || 0;
-                const komisyon = fiyat * 0.03;
+                const komisyon = fiyat * 0.05;
                 komisyonTutarElement.textContent = '₺' + komisyon.toLocaleString('tr-TR', {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0

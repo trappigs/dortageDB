@@ -18,7 +18,7 @@
                         Türkiye'nin ilk paylaşımlı gayrimenkul satış platformunda Vekarer ol, değer yarat.
                     </p>
                     <div class="hero-buttons">
-                        <a asp-route="kayit" class="btn btn-primary btn-lg">
+                        <a asp-route="kayit" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary btn-lg">
                             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                                 <circle cx="8.5" cy="7" r="4"/>
@@ -27,7 +27,7 @@
                             </svg>
                             Vekarer OL
                         </a>
-                        <a asp-route="giris" class="btn btn-outline btn-lg">
+                        <a asp-route="giris" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline btn-lg">
                             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="3" width="7" height="7"/>
                                 <rect x="14" y="3" width="7" height="7"/>
@@ -143,7 +143,7 @@
                         </div>
                         <h3 class="step-title">Üye Ol</h3>
                         <p class="step-description">
-                            Referans kodu ile üye ol, kazanmaya başla.
+                            Üye ol, kazanmaya başla.
                         </p>
                     </div>
                 </div>
@@ -175,7 +175,7 @@
                         </div>
                         <h3 class="step-title">Komisyon Kazan</h3>
                         <p class="step-description">
-                            Satış işlemi gerçekleştikten sonra %3 kazancını 2 iş günü içerisinde elde et.
+                            Satış işlemi gerçekleştikten sonra %5 kazancını 2 iş günü içerisinde elde et.
                         </p>
                     </div>
                 </div>
@@ -294,7 +294,7 @@
             <h2 class="cta-title">Kazanmaya Hazır mısın?</h2>
             <p class="cta-description">
                 Şu anda <strong>2000+ Vekarer</strong> ağımızda başarılı satışlar gerçekleştiriyor.
-                Sen de bu ekibe katıl, hiçbir masraf yapmadan <strong>%3 komisyon</strong> kazan!
+                Sen de bu ekibe katıl, hiçbir masraf yapmadan <strong>%5 komisyon</strong> kazan!
             </p>
             <div class="cta-buttons">
                 <a asp-route="kayit" class="btn btn-cta btn-lg">

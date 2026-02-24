@@ -158,7 +158,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 // Services
-builder.Services.AddScoped<IReferralService, ReferralService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ISeoService, SeoService>();
 

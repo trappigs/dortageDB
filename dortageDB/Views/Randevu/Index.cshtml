@@ -390,6 +390,9 @@
             <button class="filter-tab" data-filter="GorusmeBekleniyor">
                 📅 Görüşme Bekleniyor (@Model.Count(r => r.RandevuDurum == RandevuDurum.GorusmeBekleniyor))
             </button>
+            <button class="filter-tab" data-filter="GorusmeDevamEdiyor">
+                💬 Görüşme Devam Ediyor (@Model.Count(r => r.RandevuDurum == RandevuDurum.GorusmeDevamEdiyor))
+            </button>
             <button class="filter-tab" data-filter="KararBekleniyor">
                 ⏱️ Karar Bekleniyor (@Model.Count(r => r.RandevuDurum == RandevuDurum.KararBekleniyor))
             </button>

@@ -356,23 +356,6 @@
     height: 20px;
 }
 
-/* Referral Code */
-
-.register-form .referral-info {
-    display: none;
-    margin-top: 8px;
-    padding: 12px;
-    background: #ecfdf5;
-    border: 1px solid #10b981;
-    border-radius: 8px;
-    font-size: 14px;
-    color: #065f46;
-}
-
-    .register-form .referral-info.show {
-        display: block;
-    }
-
 /* Checkbox */
 
 .register-form .checkbox-group {

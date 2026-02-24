@@ -18,10 +18,10 @@
                     </div>
                     
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg px-4 gap-3">
-                            Vekarer Ol (Kayıt Ol)
+                        <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary btn-lg px-4 gap-3">
+                            Vekarer OL
                         </a>
-                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg px-4">
+                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline-secondary btn-lg px-4">
                             Giriş Yap
                         </a>
                     </div>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using dortageDB.Entities;
 using dortageDB.ViewModels;
 using dortageDB.Data;
@@ -84,7 +85,16 @@ namespace dortageDB.Controllers
 
             try
             {
-                // Kişisel bilgileri güncelle
+                // TC No kontrolü
+                if (!string.IsNullOrWhiteSpace(model.TcNo))
+                {
+                    if (await _userManager.Users.AnyAsync(u => u.TcNo == model.TcNo && u.Id != user.Id))
+                    {
+                        ModelState.AddModelError("TcNo", "Bu TC kimlik numarası başka bir kullanıcı tarafından kullanılıyor.");
+                        return View("Profile", model);
+                    }
+                }
+
                 user.Ad = model.Ad;
                 user.Soyad = model.Soyad;
                 user.Sehir = model.Sehir;
@@ -95,6 +105,13 @@ namespace dortageDB.Controllers
                 if (!string.IsNullOrWhiteSpace(model.PhoneNumber))
                 {
                     var cleanPhone = model.PhoneNumber.Replace("(", "").Replace(")", "").Replace(" ", "").Trim();
+                    
+                    if (await _userManager.Users.AnyAsync(u => u.PhoneNumber == cleanPhone && u.Id != user.Id))
+                    {
+                        ModelState.AddModelError("PhoneNumber", "Bu telefon numarası başka bir kullanıcı tarafından kullanılıyor.");
+                        return View("Profile", model);
+                    }
+                    
                     user.PhoneNumber = cleanPhone;
                 }
 
