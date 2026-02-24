@@ -554,6 +554,9 @@ namespace dortageDB.Migrations
                     b.Property<string>("OzelliklerJson")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PanellumKlasorYolu")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ProjeAdi")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -661,54 +664,6 @@ namespace dortageDB.Migrations
                     b.HasIndex("VekarerID", "RandevuZaman");
 
                     b.ToTable("Randevular");
-                });
-
-            modelBuilder.Entity("dortageDB.Entities.Referral", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ExpiresAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUsedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("MaxUses")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsedCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("IsActive");
-
-                    b.ToTable("Referrals");
                 });
 
             modelBuilder.Entity("dortageDB.Entities.Satis", b =>
@@ -840,10 +795,6 @@ namespace dortageDB.Migrations
                         .HasMaxLength(34)
                         .HasColumnType("nvarchar(34)");
 
-                    b.Property<string>("ReferralCode")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<decimal>("TotalCommission")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -851,15 +802,7 @@ namespace dortageDB.Migrations
                     b.Property<int>("TotalSales")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsedReferralCode")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.HasKey("UserId");
-
-                    b.HasIndex("ReferralCode")
-                        .IsUnique()
-                        .HasFilter("[ReferralCode] IS NOT NULL");
 
                     b.ToTable("VekarerProfiles", (string)null);
                 });

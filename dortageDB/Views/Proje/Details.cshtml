@@ -527,9 +527,9 @@
                 </div>
             </div>
             <!-- 360 Derece Sanal Tur -->
-            @if (!string.IsNullOrEmpty(Model.Tour360Url))
+            @if (!string.IsNullOrEmpty(Model.PanellumKlasorYolu) || !string.IsNullOrEmpty(Model.Tour360Url))
             {
-                <div class="detail-360-tour" data-aos="fade-up" data-aos-delay="200">
+                <div class="virtual-tour-section" data-aos="fade-up" data-aos-delay="200">
                     <h2 class="section-title">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 28px; height: 28px; margin-right: 8px;">
                             <circle cx="12" cy="12" r="10" />
@@ -538,28 +538,34 @@
                         </svg>
                         360° Sanal Tur
                     </h2>
-                    <div class="tour-360-container">
-                        <div class="tour-360-wrapper">
-                            @{
-                                string tourSrc = Model.Tour360Url;
-                                // Eğer http ile başlamıyorsa, turlar klasöründen yükle
-                                if (!tourSrc.StartsWith("http"))
-                                {
-                                    tourSrc = $"/turlar/{tourSrc}/index.html";
-                                }
+                    <div class="pano-preview-container" id="pano-container">
+                        @if (!string.IsNullOrEmpty(Model.PanellumKlasorYolu))
+                        {
+                            <iframe allowfullscreen style="border:none; width:100%; height:100%;"
+                                    src="/pannellum/pannellum.htm?config=/pannellum-turlar/@Model.PanellumKlasorYolu/config.json&autoLoad=true">
+                            </iframe>
+                        }
+                        else
+                        {
+                            string tourSrc = Model.Tour360Url;
+                            // Eğer http ile başlamıyorsa, turlar klasöründen yükle
+                            if (!tourSrc.StartsWith("http"))
+                            {
+                                tourSrc = $"/turlar/{tourSrc}/index.html";
                             }
                             <iframe src="@tourSrc"
                                     class="tour-360-iframe"
+                                    style="border:none; width:100%; height:100%;"
                                     allowfullscreen
                                     allow="accelerometer; gyroscope; vr">
                             </iframe>
+                        }
+                        <div class="pano-overlay">
+                            <button id="fullscreen-btn" onclick="openTourFullscreen()">
+                                <i class="fas fa-expand"></i> Tam Ekran Görünüm
+                            </button>
                         </div>
-                        <button class="tour-fullscreen-btn" onclick="openTourFullscreen()">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-                            </svg>
-                            Tam Ekran
-                        </button>
+                        <button class="pano-close-btn" onclick="closeTourFullscreen()">&times;</button>
                     </div>
                 </div>
             }
@@ -760,6 +766,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="~/css/projeler.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/projectDetail.css" asp-append-version="true" />
 
     <style>
         .thumbnail-item {
@@ -778,6 +785,17 @@
 
         .thumbnail-item:hover .video-play-overlay {
             transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* 360 Tour Button Color Override */
+        #fullscreen-btn {
+            background-color: var(--primary-color, #000a68) !important;
+            border-color: var(--primary-color, #000a68) !important;
+        }
+
+        #fullscreen-btn:hover {
+            color: var(--primary-color, #000a68) !important;
+            background-color: white !important;
         }
     </style>
 
@@ -926,16 +944,62 @@
 
         // 360 Tour Tam Ekran
         function openTourFullscreen() {
-            const iframe = document.querySelector('.tour-360-iframe');
-            if (iframe) {
-                if (iframe.requestFullscreen) {
-                    iframe.requestFullscreen();
-                } else if (iframe.webkitRequestFullscreen) {
-                    iframe.webkitRequestFullscreen();
-                } else if (iframe.msRequestFullscreen) {
-                    iframe.msRequestFullscreen();
+            const container = document.getElementById('pano-container');
+            if (container) {
+                container.classList.add('fullscreen');
+                document.body.style.overflow = 'hidden';
+
+                // Real Fullscreen API (Tarayıcı tam ekranı)
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
                 }
             }
         }
+
+        function closeTourFullscreen() {
+            const container = document.getElementById('pano-container');
+            if (container) {
+                container.classList.remove('fullscreen');
+                document.body.style.overflow = '';
+
+                // Real Fullscreen API çıkış
+                if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                }
+            }
+        }
+
+        // Fullscreen state değişikliğini dinle (ESC veya tarayıcı butonları ile çıkış durumu için)
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            const container = document.getElementById('pano-container');
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                if (container) {
+                    container.classList.remove('fullscreen');
+                    document.body.style.overflow = '';
+                }
+            }
+        }
+
+        // ESC tuşu ile tam ekrandan çıkma (Yedek kontrol)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeTourFullscreen();
+            }
+        });
     </script>
 }

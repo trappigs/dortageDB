@@ -40,6 +40,8 @@ public class Proje
 
     public string? Tour360Url { get; set; } // 360 derece sanal tur iframe URL'i veya turlar klasöründeki proje adı
 
+    public string? PanellumKlasorYolu { get; set; } // Pannellum turlar klasöründeki proje yolu (örn: kepsut)
+
     public string? SunumDosyaUrl { get; set; } // Proje sunumu (PDF, PPT vb.)
 
     public bool Imarlimi { get; set; } = true;

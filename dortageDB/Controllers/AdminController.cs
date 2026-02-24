@@ -581,6 +581,7 @@ namespace dortageDB.Controllers
                 existingProje.GaleriGorselleriAlt = proje.GaleriGorselleriAlt;
                 existingProje.KapakVideosu = proje.KapakVideosu;
                 existingProje.Tour360Url = proje.Tour360Url;
+                existingProje.PanellumKlasorYolu = proje.PanellumKlasorYolu;
                 existingProje.SunumDosyaUrl = proje.SunumDosyaUrl;
                 existingProje.Imarlimi = proje.Imarlimi;
                 existingProje.MustakilTapu = proje.MustakilTapu;

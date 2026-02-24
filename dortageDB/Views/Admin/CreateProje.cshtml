@@ -417,11 +417,29 @@
                                         Turlar klasöründen bir krpano projesi seçin
                                     </small>
                                 </div>
-                                <div class="mb-0">
-                                    <label asp-for="Tour360Url" class="form-label">Veya Manuel URL</label>
+                                <div class="mb-3">
+                                    <label asp-for="Tour360Url" class="form-label">Manuel URL (Krpano/Iframe)</label>
                                     <input asp-for="Tour360Url" class="form-control" placeholder="https://... veya tur klasör adı (örn: inkoy)" />
                                     <small class="text-muted">
-                                        Otomatik doldurulur veya manuel URL girebilirsiniz
+                                        Klasik 360 tur iframe URL'i veya /turlar/ klasöründeki klasör adı
+                                    </small>
+                                </div>
+
+                                <div class="mb-0 pt-3 border-top">
+                                    <label class="form-label fw-bold" style="color: #10b981;">Pannellum Sanal Tur (Yeni)</label>
+                                    <div class="mb-3">
+                                        <label class="form-label">Pannellum Tur Seçimi</label>
+                                        <select id="pannellumSelect" class="form-select" onchange="document.getElementById('PanellumKlasorYolu').value = this.value">
+                                            <option value="">Tur Seçiniz</option>
+                                            <option value="kepsut">Kepsut</option>
+                                            <option value="mkp">MKP</option>
+                                            <option value="ofisyeni">Ofis Yeni</option>
+                                        </select>
+                                    </div>
+                                    <label asp-for="PanellumKlasorYolu" class="form-label">Pannellum Klasör Yolu</label>
+                                    <input asp-for="PanellumKlasorYolu" class="form-control" placeholder="kepsut, mkp vb." />
+                                    <small class="text-muted">
+                                        /pannellum-turlar/ klasöründeki klasör adı. Eğer bu alan doluysa Pannellum turu gösterilir.
                                     </small>
                                 </div>
                             </div>
