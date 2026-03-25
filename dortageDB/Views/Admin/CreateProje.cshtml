@@ -242,7 +242,7 @@
                             </div>
                             <div class="col-md-2">
                                 <label asp-for="Oncelik" class="form-label">Öncelik</label>
-                                <input asp-for="Oncelik" type="number" class="form-control" />
+                                <input asp-for="Oncelik" type="number" class="form-control" value="0" />
                             </div>
                         </div>
 
@@ -281,15 +281,15 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label asp-for="MinFiyat" class="form-label">Min Fiyat (₺)</label>
-                                <input asp-for="MinFiyat" type="number" step="0.01" class="form-control" />
+                                <input asp-for="MinFiyat" type="number" step="0.01" class="form-control" value="0" />
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="MaxFiyat" class="form-label">Max Fiyat (₺)</label>
-                                <input asp-for="MaxFiyat" type="number" step="0.01" class="form-control" />
+                                <input asp-for="MaxFiyat" type="number" step="0.01" class="form-control" value="0" />
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="MetreKare" class="form-label">Brüt Alan / Metrekare</label>
-                                <input asp-for="MetreKare" type="number" class="form-control" />
+                                <input asp-for="MetreKare" type="number" class="form-control" value="0" />
                             </div>
                         </div>
 
@@ -305,11 +305,11 @@
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label asp-for="ToplamParsel" class="form-label">Toplam Parsel</label>
-                                            <input asp-for="ToplamParsel" type="number" class="form-control" />
+                                            <input asp-for="ToplamParsel" type="number" class="form-control" value="0" />
                                         </div>
                                         <div class="col-md-6">
                                             <label asp-for="SatilanParsel" class="form-label">Satılan Parsel</label>
-                                            <input asp-for="SatilanParsel" type="number" class="form-control" />
+                                            <input asp-for="SatilanParsel" type="number" class="form-control" value="0" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -335,15 +335,7 @@
                                     <div class="row mb-3">
                                         <div class="col-md-3">
                                             <label class="form-label">Oda Sayısı</label>
-                                            <select class="form-select dynamic-input" data-json-key="OdaSayisi">
-                                                <option value="">Seçiniz</option>
-                                                <option value="1+0 (Stüdyo)">1+0 (Stüdyo)</option>
-                                                <option value="1+1">1+1</option>
-                                                <option value="2+1">2+1</option>
-                                                <option value="3+1">3+1</option>
-                                                <option value="4+1">4+1</option>
-                                                <option value="5+1 ve üzeri">5+1 ve üzeri</option>
-                                            </select>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="OdaSayisi" placeholder="Örn: 3+1" />
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">Banyo Sayısı</label>
@@ -355,36 +347,35 @@
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">Bulunduğu Kat</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="BulunduguKat" placeholder="Örn: 3. Kat, Giriş vb." />
+                                            <input type="text" class="form-control dynamic-input" data-json-key="BulunduguKat" placeholder="Örn: 3. Kat" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label class="form-label">Isıtma Tipi</label>
-                                            <select class="form-select dynamic-input" data-json-key="IsitmaTipi">
-                                                <option value="">Seçiniz</option>
-                                                <option value="Doğalgaz (Kombi)">Doğalgaz (Kombi)</option>
-                                                <option value="Merkezi Sistem">Merkezi Sistem</option>
-                                                <option value="Yerden Isıtma">Yerden Isıtma</option>
-                                                <option value="Klima">Klima</option>
-                                                <option value="Yok">Yok</option>
-                                            </select>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="IsitmaTipi" placeholder="Örn: Kombi (Doğalgaz)" />
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label class="form-label">Eşya Durumu</label>
-                                            <select class="form-select dynamic-input" data-json-key="EsyaDurumu">
-                                                <option value="">Seçiniz</option>
-                                                <option value="Eşyalı">Eşyalı</option>
-                                                <option value="Eşyasız">Eşyasız</option>
-                                            </select>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="EsyaDurumu" placeholder="Örn: Eşyalı / Eşyasız" />
                                         </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">Site İçerisinde Mi?</label>
-                                            <select class="form-select dynamic-input" data-json-key="SiteIcerisinde">
-                                                <option value="">Seçiniz</option>
-                                                <option value="Evet">Evet</option>
-                                                <option value="Hayır">Hayır</option>
-                                            </select>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Otopark</label>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="Otopark" placeholder="Açık/Kapalı Otopark vb." />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Site İçerisinde</label>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="SiteIcerisinde" placeholder="Evet/Hayır" />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Aidat (₺)</label>
+                                            <input type="number" class="form-control dynamic-input" data-json-key="Aidat" placeholder="Aylık Aidat Tutarı" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Balkon</label>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="Balkon" placeholder="Var/Yok, 2 Adet vb." />
                                         </div>
                                     </div>
                                 </div>
@@ -392,27 +383,29 @@
                                 <!-- İŞ YERİ ALANLARI -->
                                 <div id="isYeriFields" class="category-fields" style="display:none;">
                                     <div class="row mb-3">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label class="form-label">Bölüm / Oda Sayısı</label>
                                             <input type="number" class="form-control dynamic-input" data-json-key="BolumSayisi" />
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label class="form-label">Isıtma Tipi</label>
-                                            <select class="form-select dynamic-input" data-json-key="IsYeriIsitma">
-                                                <option value="">Seçiniz</option>
-                                                <option value="Doğalgaz">Doğalgaz</option>
-                                                <option value="Klima">Klima</option>
-                                                <option value="Merkezi">Merkezi</option>
-                                            </select>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="IsYeriIsitma" placeholder="Örn: Klima, Doğalgaz" />
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label class="form-label">Kullanım Durumu</label>
-                                            <select class="form-select dynamic-input" data-json-key="KullanimDurumu">
-                                                <option value="">Seçiniz</option>
-                                                <option value="Boş">Boş</option>
-                                                <option value="Kiracılı">Kiracılı</option>
-                                            </select>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="KullanimDurumu" placeholder="Örn: Boş / Kiracılı" />
                                         </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Otopark</label>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="Otopark" placeholder="Örn: Açık Otopark, Yok" />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Aidat (₺)</label>
+                                            <input type="number" class="form-control dynamic-input" data-json-key="Aidat" placeholder="Aylık Aidat Tutarı" />
+                                        </div>
+
                                     </div>
                                 </div>
 

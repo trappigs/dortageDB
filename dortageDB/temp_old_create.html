@@ -1,6 +1,6 @@
 ﻿@model dortageDB.Entities.Proje
 @{
-    ViewData["Title"] = "Proje Düzenle";
+    ViewData["Title"] = "Yeni Proje Ekle";
     Layout = "_LayoutVekarer";
 }
 
@@ -209,39 +209,27 @@
 <div class="vekarer-main-panel">
     <div class="main-content">
 <div class="container-fluid px-4">
-    <h1 class="mt-4 mb-4">Proje Düzenle - @Model.ProjeAdi</h1>
+    <h1 class="mt-4 mb-4">Yeni Proje Ekle</h1>
 
     <div class="row">
         <div class="col-lg-10">
             <div class="card">
                 <div class="card-header">Proje Bilgileri</div>
                 <div class="card-body">
-                    <form asp-action="EditProje" asp-route-id="@Model.ProjeID" method="post">
-                        <input type="hidden" asp-for="ProjeID" />
+                    <form asp-action="CreateProje" method="post">
                         <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label asp-for="ProjeAdi" class="form-label">Proje (İlan) Adı *</label>
+                            <div class="col-md-6">
+                                <label asp-for="ProjeAdi" class="form-label">Proje Adı *</label>
                                 <input asp-for="ProjeAdi" class="form-control" id="projeAdiInput" required />
                             </div>
                             <div class="col-md-3">
-                                <label asp-for="IslemTipi" class="form-label">İşlem Tipi *</label>
-                                <select asp-for="IslemTipi" class="form-select" required>
-                                    <option value="Satılık">Satılık</option>
-                                    <option value="Kiralık">Kiralık</option>
-                                    <option value="Devren">Devren</option>
+                                <label asp-for="YatirimTuru" class="form-label">Yatırım Türü *</label>
+                                <select asp-for="YatirimTuru" class="form-select" required>
+                                    <option value="Arsa">Arsa</option>
+                                    <option value="Konut">Konut</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label asp-for="YatirimTuru" class="form-label">Portföy Tipi *</label>
-                                <select asp-for="YatirimTuru" class="form-select" id="PortfoyTipiSelect" required>
-                                    <option value="Konut">Konut</option>
-                                    <option value="İş Yeri">İş Yeri</option>
-                                    <option value="Arsa">Arsa</option>
-                                    <option value="Bina">Bina</option>
-                                    <option value="Turistik Tesis">Turistik Tesis</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
                                 <label asp-for="Oncelik" class="form-label">Öncelik</label>
                                 <input asp-for="Oncelik" type="number" class="form-control" />
                             </div>
@@ -280,144 +268,23 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label asp-for="MinFiyat" class="form-label">Min Fiyat (₺)</label>
                                 <input asp-for="MinFiyat" type="number" step="0.01" class="form-control" />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label asp-for="MaxFiyat" class="form-label">Max Fiyat (₺)</label>
                                 <input asp-for="MaxFiyat" type="number" step="0.01" class="form-control" />
                             </div>
-                            <div class="col-md-4">
-                                <label asp-for="MinMetreKare" class="form-label">Min Alan (m²)</label>
-                                <input asp-for="MinMetreKare" type="number" class="form-control" />
+                            <div class="col-md-3">
+                                <label asp-for="ToplamParsel" class="form-label">Toplam Parsel</label>
+                                <input asp-for="ToplamParsel" type="number" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="SatilanParsel" class="form-label">Satılan Parsel</label>
+                                <input asp-for="SatilanParsel" type="number" class="form-control" />
                             </div>
                         </div>
-
-                        <!-- DINAMIK KATEGORI ALANLARI -->
-                        <div class="card mb-4" style="border: 2px solid #000a68;">
-                            <div class="card-header" style="background-color: #000a68; color: white;">
-                                <h5 class="mb-0"><i class="bi bi-sliders"></i> Portföy Özellikleri</h5>
-                            </div>
-                            <div class="card-body">
-                                
-                                <!-- ARSA ALANLARI -->
-                                <div id="arsaFields" class="category-fields" style="display:none;">
-                                    <div class="row mb-3">
-                                        <div class="col-md-4">
-                                            <label asp-for="MaxMetreKare" class="form-label">Max Alan (m²)</label>
-                                            <input asp-for="MaxMetreKare" type="number" class="form-control" />
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label asp-for="ToplamParsel" class="form-label">Toplam Parsel</label>
-                                            <input asp-for="ToplamParsel" type="number" class="form-control" />
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label asp-for="SatilanParsel" class="form-label">Satılan Parsel</label>
-                                            <input asp-for="SatilanParsel" type="number" class="form-control" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <div class="form-check mb-2">
-                                                <input asp-for="Imarlimi" class="form-check-input" type="checkbox" checked />
-                                                <label asp-for="Imarlimi" class="form-check-label">İmarlı</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input asp-for="MustakilTapu" class="form-check-input" type="checkbox" checked />
-                                                <label asp-for="MustakilTapu" class="form-check-label">Müstakil Tapu</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label asp-for="Altyapi" class="form-label">Altyapı Durumu</label>
-                                            <input asp-for="Altyapi" class="form-control" placeholder="Elektrik, Su, Kanalizasyon vb." />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- KONUT ALANLARI -->
-                                <div id="konutFields" class="category-fields" style="display:none;">
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Oda Sayısı</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="OdaSayisi" placeholder="Örn: 3+1" />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Banyo Sayısı</label>
-                                            <input type="number" class="form-control dynamic-input" data-json-key="BanyoSayisi" />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Bina Yaşı</label>
-                                            <input type="number" class="form-control dynamic-input" data-json-key="BinaYasi" />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Bulunduğu Kat</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="BulunduguKat" placeholder="Örn: 3. Kat" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Isıtma Tipi</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="IsitmaTipi" placeholder="Örn: Kombi (Doğalgaz)" />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Eşya Durumu</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="EsyaDurumu" placeholder="Örn: Eşyalı / Eşyasız" />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Otopark</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="Otopark" placeholder="Açık/Kapalı Otopark vb." />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Site İçerisinde</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="SiteIcerisinde" placeholder="Evet/Hayır" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Aidat (₺)</label>
-                                            <input type="number" class="form-control dynamic-input" data-json-key="Aidat" placeholder="Aylık Aidat Tutarı" />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Balkon</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="Balkon" placeholder="Var/Yok, 2 Adet vb." />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- İŞ YERİ ALANLARI -->
-                                <div id="isYeriFields" class="category-fields" style="display:none;">
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Bölüm / Oda Sayısı</label>
-                                            <input type="number" class="form-control dynamic-input" data-json-key="BolumSayisi" />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Isıtma Tipi</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="IsYeriIsitma" placeholder="Örn: Klima, Doğalgaz" />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Kullanım Durumu</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="KullanimDurumu" placeholder="Örn: Boş / Kiracılı" />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Otopark</label>
-                                            <input type="text" class="form-control dynamic-input" data-json-key="Otopark" placeholder="Örn: Açık Otopark, Yok" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Aidat (₺)</label>
-                                            <input type="number" class="form-control dynamic-input" data-json-key="Aidat" placeholder="Aylık Aidat Tutarı" />
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <input type="hidden" asp-for="OzelliklerJson" id="OzelliklerJson" />
 
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -426,32 +293,15 @@
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="KapakGorseliAlt" class="form-label">Kapak Görseli Alt Text (SEO)</label>
-                                <input asp-for="KapakGorseliAlt" class="form-control" placeholder="Örn: İstanbul'da satılık gayrimenkul" />
+                                <input asp-for="KapakGorseliAlt" class="form-control" placeholder="Örn: İstanbul'da satılık arsa projesi" />
                                 <small class="text-muted">Görselin ne olduğunu açıklayan metin (SEO için önemli)</small>
                             </div>
                         </div>
 
-                        <!-- Kapak Videosu -->
-                        <div class="card mb-4" style="border: 2px solid #ef4444;">
-                            <div class="card-header" style="background-color: #ef4444; color: white;">
-                                <h5 class="mb-0"><i class="bi bi-play-circle"></i> Kapak Videosu (Galeri İlk Öğe)</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label asp-for="KapakVideosu" class="form-label">Video URL (YouTube, Vimeo, vb.)</label>
-                                    <input asp-for="KapakVideosu" class="form-control" placeholder="https://www.youtube.com/watch?v=... veya https://www.youtube.com/embed/..." />
-                                    <small class="text-muted">
-                                        YouTube veya Vimeo video URL'si. Hem normal hem embed URL'leri desteklenir.
-                                        Galeri bölümünde ilk öğe olarak gösterilecektir.
-                                    </small>
-                                </div>
-                                @if (!string.IsNullOrEmpty(Model.KapakVideosu))
-                                {
-                                    <div class="alert alert-info">
-                                        <i class="bi bi-info-circle"></i> Mevcut video:
-                                        <a href="@Model.KapakVideosu" target="_blank" class="alert-link">Videoyu Görüntüle</a>
-                                    </div>
-                                }
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="MetreKare" class="form-label">Metrekare</label>
+                                <input asp-for="MetreKare" type="number" class="form-control" />
                             </div>
                         </div>
 
@@ -465,9 +315,9 @@
                                         <i class="bi bi-cloud-upload" style="font-size: 3rem; color: #000a68;"></i>
                                         <p class="mb-2"><strong>Dosyaları buraya sürükleyin</strong></p>
                                         <p class="text-muted mb-3">veya</p>
-                                        <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click(); event.stopPropagation();">
+                                        <label for="fileInput" class="btn btn-primary">
                                             <i class="bi bi-folder2-open"></i> Dosya Seç
-                                        </button>
+                                        </label>
                                         <input type="file" id="fileInput" accept="image/jpeg,image/jpg,image/png,image/webp,image/gif" multiple style="display: none;" />
                                         <p class="text-muted mt-2" style="font-size: 0.875rem;">
                                             JPG, PNG, WEBP, GIF - Maksimum 5MB
@@ -515,20 +365,40 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-check mb-2">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input asp-for="Imarlimi" class="form-check-input" type="checkbox" checked />
+                                    <label asp-for="Imarlimi" class="form-check-label">İmarlı</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input asp-for="MustakilTapu" class="form-check-input" type="checkbox" checked />
+                                    <label asp-for="MustakilTapu" class="form-check-label">Müstakil Tapu</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
                                     <input asp-for="TaksitImkani" class="form-check-input" type="checkbox" checked />
                                     <label asp-for="TaksitImkani" class="form-check-label">Taksit İmkanı</label>
                                 </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-check">
                                     <input asp-for="TakasImkani" class="form-check-input" type="checkbox" />
                                     <label asp-for="TakasImkani" class="form-check-label">Takas İmkanı</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <label asp-for="KrediyeUygunluk" class="form-label">Krediye Uygunluk</label>
-                                <input asp-for="KrediyeUygunluk" class="form-control" />
-                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Altyapi" class="form-label">Altyapı</label>
+                            <input asp-for="Altyapi" class="form-control" placeholder="Elektrik, Su, Kanalizasyon" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="KrediyeUygunluk" class="form-label">Krediye Uygunluk</label>
+                            <input asp-for="KrediyeUygunluk" class="form-control" />
                         </div>
 
                         <!-- 360 Derece Sanal Tur -->
@@ -581,13 +451,6 @@
                                 <h5 class="mb-0"><i class="bi bi-file-earmark-arrow-down"></i> Proje Sunumu</h5>
                             </div>
                             <div class="card-body">
-                                @if (!string.IsNullOrEmpty(Model.SunumDosyaUrl))
-                                {
-                                    <div class="alert alert-info mb-3">
-                                        <i class="bi bi-info-circle"></i> Mevcut sunum:
-                                        <a href="@Model.SunumDosyaUrl" target="_blank" class="alert-link">Sunumu Görüntüle</a>
-                                    </div>
-                                }
                                 <div class="mb-3">
                                     <label class="form-label">Sunum Dosyası Yükle</label>
                                     <input type="file" id="sunumFileInput" class="form-control" accept=".pdf,.ppt,.pptx" />
@@ -611,49 +474,7 @@
                             </div>
                         </div>
 
-                        <!-- Yakınlık Bilgileri Section -->
-                        <div class="card mb-3" style="border: 2px solid #000a68;">
-                            <div class="card-header" style="background-color: #000a68; color: white;">
-                                <h5 class="mb-0"><i class="bi bi-geo-alt"></i> Yakınlık Bilgileri</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label asp-for="YakinBolgeler" class="form-label">Yakınındaki Önemli Bölgeler</label>
-                                    <textarea asp-for="YakinBolgeler" class="form-control" rows="4"
-                                        placeholder="Her satır bir madde olarak gösterilecektir. Örnek:&#10;OSB'ye 2km&#10;Otoyola 500m&#10;Havalimanına 15km&#10;Merkezi İş Bölgesine 5km"></textarea>
-                                    <small class="text-muted"><strong>ÖNEMLİ:</strong> Her satıra bir bilgi yazın. Her satır ✓ işareti ile madde olarak gösterilecektir.</small>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label asp-for="UlasimBilgileri" class="form-label">Ulaşım Bilgileri</label>
-                                    <textarea asp-for="UlasimBilgileri" class="form-control" rows="4"
-                                        placeholder="Her satır bir madde olarak gösterilecektir. Örnek:&#10;Metrobüs durağı 300m&#10;Otobüs durağı 100m&#10;Ana caddeye 200m&#10;Dolmuş durağı 50m"></textarea>
-                                    <small class="text-muted"><strong>ÖNEMLİ:</strong> Her satıra bir bilgi yazın. Her satır ✓ işareti ile madde olarak gösterilecektir.</small>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label asp-for="SosyalTesisler" class="form-label">Yakınındaki Sosyal Tesisler</label>
-                                    <textarea asp-for="SosyalTesisler" class="form-control" rows="4"
-                                        placeholder="Her satır bir madde olarak gösterilecektir. Örnek:&#10;Devlet Hastanesi 1km&#10;İlkokul 400m&#10;AVM 800m&#10;Park 150m"></textarea>
-                                    <small class="text-muted"><strong>ÖNEMLİ:</strong> Her satıra bir bilgi yazın. Her satır ✓ işareti ile madde olarak gösterilecektir.</small>
-                                </div>
-
-                                <div class="mb-0">
-                                    <label asp-for="YakinProjeler" class="form-label">Yakın Projeler</label>
-                                    <textarea asp-for="YakinProjeler" class="form-control" rows="4"
-                                        placeholder="Her satır bir madde olarak gösterilecektir. Örnek:&#10;500m mesafede yeni AVM projesi&#10;1km mesafede yeni toplu konut projesi&#10;2km mesafede sanayi sitesi"></textarea>
-                                    <small class="text-muted"><strong>ÖNEMLİ:</strong> Her satıra bir bilgi yazın. Her satır ✓ işareti ile madde olarak gösterilecektir.</small>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input asp-for="AktifMi" class="form-check-input" type="checkbox" />
-                                    <label asp-for="AktifMi" class="form-check-label">Proje Aktif</label>
-                                </div>
-                            </div>
                             <div class="col-md-6">
                                 <div class="form-check">
                                     <input asp-for="YeniBadge" class="form-check-input" type="checkbox" />
@@ -663,7 +484,7 @@
                         </div>
 
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-warning">Proje Güncelle</button>
+                            <button type="submit" class="btn btn-primary">Proje Ekle</button>
                             <a asp-action="Projeler" class="btn btn-secondary">İptal</a>
                         </div>
                     </form>
@@ -682,31 +503,6 @@
 
     // Sayfa yüklendiğinde mevcut görselleri yükle
     document.addEventListener('DOMContentLoaded', function() {
-        const galeriGorselleriValue = document.getElementById('galeriGorselleriInput').value;
-        if (galeriGorselleriValue && galeriGorselleriValue.trim() !== '') {
-            try {
-                galleryImages = JSON.parse(galeriGorselleriValue);
-            } catch (e) {
-                console.error('Galeri görselleri parse hatası:', e);
-                galleryImages = [];
-            }
-        }
-
-        const galeriAltTextsValue = document.getElementById('galeriGorselleriAltInput').value;
-        if (galeriAltTextsValue && galeriAltTextsValue.trim() !== '') {
-            try {
-                galleryAltTexts = JSON.parse(galeriAltTextsValue);
-            } catch (e) {
-                console.error('Galeri alt text parse hatası:', e);
-                galleryAltTexts = [];
-            }
-        }
-
-        // Alt text dizisini görseller ile eşitle
-        while (galleryAltTexts.length < galleryImages.length) {
-            galleryAltTexts.push('');
-        }
-
         renderGallery();
     });
 
@@ -782,7 +578,6 @@
         }
 
         galleryImages.push(url);
-        galleryAltTexts.push(''); // Boş alt text ekle
         input.value = '';
         renderGallery();
     }
@@ -827,72 +622,51 @@
     // DOSYA YÜKLEME FONKSİYONLARI
     // ===================================
 
-    // DOMContentLoaded içinde başlat
-    document.addEventListener('DOMContentLoaded', function() {
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const uploadProgress = document.getElementById('uploadProgress');
-        const uploadProgressBar = document.getElementById('uploadProgressBar');
-        const uploadProgressText = document.getElementById('uploadProgressText');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const uploadProgressBar = document.getElementById('uploadProgressBar');
+    const uploadProgressText = document.getElementById('uploadProgressText');
 
-        // Elementlerin var olup olmadığını kontrol et
-        if (!uploadArea || !fileInput) {
-            console.error('Upload elementleri bulunamadı!');
-            return;
-        }
+    // Dosya input değişikliği
+    fileInput.addEventListener('change', function(e) {
+        handleFiles(e.target.files);
+    });
 
-        // Dosya input değişikliği
-        fileInput.addEventListener('change', function(e) {
-            const files = e.target.files;
-            if (files && files.length > 0) {
-                handleFiles(files);
-            }
-        }, { once: false });
+    // Upload area'ya tıklama
+    uploadArea.addEventListener('click', function() {
+        fileInput.click();
+    });
 
-        // Upload area'ya tıklama (buton hariç)
-        uploadArea.addEventListener('click', function(e) {
-            // Eğer tıklanan öğe button veya button içinde bir öğeyse, button'ın kendi davranışını kullan
-            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
-                // Button zaten file input'u tetikleyecek, hiçbir şey yapma
-                return;
-            }
-            // Diğer alanlara tıklanırsa da file input'u tetikle
-            if (fileInput) {
-                fileInput.click();
-            }
-        });
+    // Drag & Drop events
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadArea.classList.add('dragover');
+    });
 
-        // Drag & Drop events
-        uploadArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            uploadArea.classList.add('dragover');
-        });
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadArea.classList.remove('dragover');
+    });
 
-        uploadArea.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            uploadArea.classList.remove('dragover');
-        });
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadArea.classList.remove('dragover');
 
-        uploadArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            uploadArea.classList.remove('dragover');
-
-            const files = e.dataTransfer.files;
-            handleFiles(files);
-        });
+        const files = e.dataTransfer.files;
+        handleFiles(files);
     });
 
     // Dosyaları işle
     async function handleFiles(files) {
-        if (!files || files.length === 0) return;
+        if (files.length === 0) return;
 
         // Maksimum dosya kontrolü
         if (galleryImages.length + files.length > 50) {
             alert('Maksimum 50 görsel ekleyebilirsiniz!');
-            fileInput.value = '';
             return;
         }
 
@@ -927,10 +701,6 @@
                     body: formData
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP Error: ${response.status}`);
-                }
-
                 const result = await response.json();
 
                 if (result.success) {
@@ -938,25 +708,21 @@
                     galleryAltTexts.push(''); // Boş alt text ekle
                     uploadedFiles++;
                 } else {
-                    const errorMsg = result.message || 'Bilinmeyen hata oluştu';
-                    alert(`${file.name} yüklenemedi: ${errorMsg}`);
-                    console.error('Upload failed:', result);
+                    alert(`${file.name} yüklenemedi: ${result.message}`);
                 }
             } catch (error) {
-                console.error('Upload error for file:', file.name, error);
-                alert(`${file.name} yüklenirken bir hata oluştu: ${error.message}`);
+                console.error('Upload error:', error);
+                alert(`${file.name} yüklenirken bir hata oluştu!`);
             }
         }
 
         uploadProgressBar.style.width = '100%';
         uploadProgressText.textContent = `${uploadedFiles} dosya başarıyla yüklendi!`;
 
-        // File input'u hemen reset et
-        fileInput.value = '';
-
         setTimeout(() => {
             uploadProgress.style.display = 'none';
             uploadProgressBar.style.width = '0%';
+            fileInput.value = '';
         }, 2000);
 
         renderGallery();
@@ -1030,19 +796,13 @@
         }
     }
 
-    // Sayfa yüklendiğinde mevcut değeri seçili yap
+    // Sayfa yüklendiğinde mevcut sunum varsa göster
     document.addEventListener('DOMContentLoaded', function() {
-        const currentValue = document.getElementById('Tour360Url').value;
-        if (currentValue && !currentValue.startsWith('http')) {
-            document.getElementById('tour360Select').value = currentValue;
-        }
-
-        // Mevcut sunum varsa göster
-        const currentSunumUrl = sunumDosyaUrlInput.value;
+        const currentSunumUrl = document.getElementById('sunumDosyaUrlInput').value;
         if (currentSunumUrl) {
             const fileName = currentSunumUrl.split('/').pop();
-            sunumPreview.style.display = 'block';
-            sunumFileName.textContent = fileName || 'Mevcut Sunum';
+            document.getElementById('sunumPreview').style.display = 'block';
+            document.getElementById('sunumFileName').textContent = fileName || 'Mevcut Sunum';
         }
     });
 
@@ -1150,7 +910,7 @@
     // Slug otomatik oluşturma
     const projeAdiInput = document.getElementById('projeAdiInput');
     const slugInput = document.getElementById('slugInput');
-    let manualSlugEdit = slugInput && slugInput.value.length > 0; // Mevcut slug varsa manuel düzenleme olarak işaretle
+    let manualSlugEdit = false;
 
     function generateSlug(text) {
         if (!text) return '';
@@ -1184,89 +944,6 @@
         // Slug manuel olarak düzenlendiyse otomatik güncellemeyi durdur
         slugInput.addEventListener('input', function() {
             manualSlugEdit = this.value.length > 0;
-        });
-    }
-
-    // ===================================
-    // DİNAMİK PORTFÖY TİPİ YÖNETİMİ
-    // ===================================
-    const portfoyTipiSelect = document.getElementById('PortfoyTipiSelect');
-    const arsaFields = document.getElementById('arsaFields');
-    const konutFields = document.getElementById('konutFields');
-    const isYeriFields = document.getElementById('isYeriFields');
-
-    function updateDynamicFields() {
-        // Tüm dinamik alanları gizle
-        document.querySelectorAll('.category-fields').forEach(el => {
-            el.style.display = 'none';
-            el.classList.remove('active-category');
-        });
-
-        const secilenTip = portfoyTipiSelect.value;
-        if (secilenTip === 'Arsa') {
-            arsaFields.style.display = 'block';
-            arsaFields.classList.add('active-category');
-        } else if (secilenTip === 'Konut') {
-            konutFields.style.display = 'block';
-            konutFields.classList.add('active-category');
-        } else if (secilenTip === 'İş Yeri') {
-            isYeriFields.style.display = 'block';
-            isYeriFields.classList.add('active-category');
-        }
-    }
-
-    // JSON Verisini Parse Edip Form Alanlarını Doldurma
-    function populateFormFromJson() {
-        const jsonInput = document.getElementById('OzelliklerJson');
-        if (jsonInput && jsonInput.value) {
-            try {
-                const ozellikler = JSON.parse(jsonInput.value);
-                const activeCategory = document.querySelector('.category-fields.active-category');
-                
-                if (activeCategory) {
-                    const dynamicInputs = activeCategory.querySelectorAll('.dynamic-input');
-                    dynamicInputs.forEach(input => {
-                        const key = input.getAttribute('data-json-key');
-                        if (key && ozellikler[key] !== undefined) {
-                            input.value = ozellikler[key];
-                        }
-                    });
-                }
-            } catch (e) {
-                console.error("OzelliklerJson parse hatası:", e);
-            }
-        }
-    }
-
-    if (portfoyTipiSelect) {
-        portfoyTipiSelect.addEventListener('change', updateDynamicFields);
-        updateDynamicFields(); // Başlangıç durumunu ayarla
-        
-        // Form alanlarını JSON'dan doldur (sayfa tamamen yüklendiğinde)
-        populateFormFromJson();
-    }
-
-    // Form Submit Edilirken JSON verisini topla
-    const mainForm = document.querySelector('form[action^="/Admin/EditProje"]');
-    if (mainForm) {
-        mainForm.addEventListener('submit', function (e) {
-            const activeCategory = document.querySelector('.category-fields.active-category');
-            let ozellikler = {};
-
-            if (activeCategory) {
-                // Aktif kategori içindeki dynamic-input class'ına sahip elemanları bul
-                const dynamicInputs = activeCategory.querySelectorAll('.dynamic-input');
-                dynamicInputs.forEach(input => {
-                    const key = input.getAttribute('data-json-key');
-                    if (key) {
-                        ozellikler[key] = input.value;
-                    }
-                });
-            }
-
-            // JSON formatına dönüştürüp gizli input'a aktar
-            const jsonString = JSON.stringify(ozellikler);
-            document.getElementById('OzelliklerJson').value = Object.keys(ozellikler).length > 0 ? jsonString : '';
         });
     }
 </script>
