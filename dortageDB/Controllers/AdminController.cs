@@ -135,6 +135,21 @@ namespace dortageDB.Controllers
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
+                // Robust checkbox detection
+                var formTaksitRaw = Request.Form["Taksit"].ToString();
+                bool isTaksit = false;
+                
+                if (!string.IsNullOrEmpty(formTaksitRaw))
+                {
+                    var lowerFormValue = formTaksitRaw.ToLower();
+                    isTaksit = lowerFormValue.Contains("true") || lowerFormValue.Contains("on");
+                }
+                else
+                {
+                    // Fallback to parameter
+                    isTaksit = Taksit;
+                }
+
                 var satis = new Satis
                 {
                     SatilanMusteriID = SatilanMusteriID,
@@ -142,7 +157,7 @@ namespace dortageDB.Controllers
                     SatilmaTarihi = SatilmaTarihi,
                     ToplamSatisFiyati = ToplamSatisFiyati,
                     Bolge = Bolge.Trim(),
-                    Taksit = Taksit,
+                    Taksit = isTaksit,
                     OdenecekKomisyon = OdenecekKomisyon
                 };
 
@@ -194,13 +209,26 @@ namespace dortageDB.Controllers
                     return RedirectToAction(nameof(AllSatislar));
                 }
 
-                // Update satis
+                // Robust checkbox detection
+                var formTaksitRaw = Request.Form["Taksit"].ToString();
+                bool isTaksit = false;
+                
+                if (!string.IsNullOrEmpty(formTaksitRaw))
+                {
+                    var lowerFormValue = formTaksitRaw.ToLower();
+                    isTaksit = lowerFormValue.Contains("true") || lowerFormValue.Contains("on");
+                }
+                else
+                {
+                    isTaksit = Taksit;
+                }
+
                 satis.SatilanMusteriID = SatilanMusteriID;
                 satis.VekarerID = VekarerID;
                 satis.SatilmaTarihi = SatilmaTarihi;
                 satis.ToplamSatisFiyati = ToplamSatisFiyati;
                 satis.Bolge = Bolge.Trim();
-                satis.Taksit = Taksit;
+                satis.Taksit = isTaksit;
                 satis.OdenecekKomisyon = OdenecekKomisyon;
 
                 await _context.SaveChangesAsync();
