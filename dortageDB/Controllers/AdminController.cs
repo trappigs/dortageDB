@@ -599,6 +599,7 @@ namespace dortageDB.Controllers
                 existingProje.Sehir = proje.Sehir;
                 existingProje.Ilce = proje.Ilce;
                 existingProje.YatirimTuru = proje.YatirimTuru;
+                existingProje.IslemTipi = proje.IslemTipi;
                 existingProje.MinFiyat = proje.MinFiyat;
                 existingProje.MaxFiyat = proje.MaxFiyat;
                 existingProje.ToplamParsel = proje.ToplamParsel;

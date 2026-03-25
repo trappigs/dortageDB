@@ -18,7 +18,9 @@ public class Proje
 
     public string? Ilce { get; set; }
 
-    public string YatirimTuru { get; set; } = "Arsa"; // "Arsa" veya "Konut"
+    public string YatirimTuru { get; set; } = "Konut"; // Portföy Tipi: "Konut", "İş Yeri", "Arsa", "Bina", "Turistik Tesis"
+
+    public string IslemTipi { get; set; } = "Satılık"; // "Satılık", "Kiralık", "Devren" vb.
 
     public decimal MinFiyat { get; set; }
 
