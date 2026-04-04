@@ -289,8 +289,8 @@
                                 <input asp-for="MaxFiyat" type="number" step="0.01" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <label asp-for="MinMetreKare" class="form-label">Min Alan / Brüt (m²)</label>
-                                <input asp-for="MinMetreKare" type="number" class="form-control" />
+                                <label asp-for="MetreKare" class="form-label">Brüt Alan (m²)</label>
+                                <input asp-for="MetreKare" type="number" class="form-control" />
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Net Alan (m²)</label>
@@ -414,7 +414,50 @@
                                             <label class="form-label">Aidat (₺)</label>
                                             <input type="number" class="form-control dynamic-input" data-json-key="Aidat" placeholder="Aylık Aidat Tutarı" />
                                         </div>
+                                    </div>
+                                </div>
 
+                                <!-- BİNA ALANLARI -->
+                                <div id="binaFields" class="category-fields" style="display:none;">
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Kat Sayısı</label>
+                                            <input type="number" class="form-control dynamic-input" data-json-key="KatSayisi" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Kullanım Durumu</label>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="KullanimDurumu" placeholder="Örn: Boş / Kiracılı" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Isıtma Tipi</label>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="IsitmaTipi" placeholder="Örn: Merkezi, Kombi" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Otopark</label>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="Otopark" placeholder="Örn: Açık Otopark, Yok" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TURİSTİK TESİS ALANLARI -->
+                                <div id="turistikTesisFields" class="category-fields" style="display:none;">
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Tesis Türü</label>
+                                            <input type="text" class="form-control dynamic-input" data-json-key="TesisTuru" placeholder="Örn: Otel, Pansiyon, Apart" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Oda / Ünite Sayısı</label>
+                                            <input type="number" class="form-control dynamic-input" data-json-key="OdaSayisi" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Yıldız Sayısı</label>
+                                            <input type="number" class="form-control dynamic-input" data-json-key="YildizSayisi" min="1" max="5" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Kapasite (Kişi)</label>
+                                            <input type="number" class="form-control dynamic-input" data-json-key="Kapasite" />
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1198,6 +1241,8 @@
     const arsaFields = document.getElementById('arsaFields');
     const konutFields = document.getElementById('konutFields');
     const isYeriFields = document.getElementById('isYeriFields');
+    const binaFields = document.getElementById('binaFields');
+    const turistikTesisFields = document.getElementById('turistikTesisFields');
 
     function updateDynamicFields() {
         // Tüm dinamik alanları gizle
@@ -1216,6 +1261,12 @@
         } else if (secilenTip === 'İş Yeri') {
             isYeriFields.style.display = 'block';
             isYeriFields.classList.add('active-category');
+        } else if (secilenTip === 'Bina') {
+            binaFields.style.display = 'block';
+            binaFields.classList.add('active-category');
+        } else if (secilenTip === 'Turistik Tesis') {
+            turistikTesisFields.style.display = 'block';
+            turistikTesisFields.classList.add('active-category');
         }
     }
 
@@ -1226,7 +1277,7 @@
             try {
                 const ozellikler = JSON.parse(jsonInput.value);
                 const activeCategory = document.querySelector('.category-fields.active-category');
-                
+
                 if (activeCategory) {
                     const dynamicInputs = activeCategory.querySelectorAll('.dynamic-input');
                     dynamicInputs.forEach(input => {
@@ -1236,6 +1287,14 @@
                         }
                     });
                 }
+
+                // Global dynamic inputs (NetAlan vb. kategori bağımsız alanlar)
+                document.querySelectorAll('.global-dynamic-input').forEach(input => {
+                    const key = input.getAttribute('data-json-key');
+                    if (key && ozellikler[key] !== undefined) {
+                        input.value = ozellikler[key];
+                    }
+                });
             } catch (e) {
                 console.error("OzelliklerJson parse hatası:", e);
             }

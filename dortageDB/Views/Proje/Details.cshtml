@@ -44,7 +44,12 @@
         {"Balkon", "Balkon"},
         {"BolumSayisi", "Bölüm / Oda Sayısı"},
         {"IsYeriIsitma", "Isıtma Tipi"},
-        {"KullanimDurumu", "Kullanım Durumu"}
+        {"KullanimDurumu", "Kullanım Durumu"},
+        {"NetAlan", "Net Alan (m²)"},
+        {"KatSayisi", "Kat Sayısı"},
+        {"TesisTuru", "Tesis Türü"},
+        {"YildizSayisi", "Yıldız Sayısı"},
+        {"Kapasite", "Kapasite (Kişi)"}
     };
     
     string GetLabel(string key) => jsonKeyLabels.ContainsKey(key) ? jsonKeyLabels[key] : key;
@@ -407,6 +412,74 @@
                                 </div>
                             }
 
+                            @if (Model.YatirimTuru == "Konut")
+                            {
+                                @if (dinamikOzellikler.ContainsKey("OdaSayisi") && !string.IsNullOrWhiteSpace(dinamikOzellikler["OdaSayisi"]))
+                                {
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                <polyline points="9 22 9 12 15 12 15 22" />
+                                            </svg>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h4>Oda Sayısı</h4>
+                                            <p>@dinamikOzellikler["OdaSayisi"]</p>
+                                        </div>
+                                    </div>
+                                }
+                                @if (dinamikOzellikler.ContainsKey("IsitmaTipi") && !string.IsNullOrWhiteSpace(dinamikOzellikler["IsitmaTipi"]))
+                                {
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+                                                <path d="M12 6v6l4 2" />
+                                            </svg>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h4>Isıtma Tipi</h4>
+                                            <p>@dinamikOzellikler["IsitmaTipi"]</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+
+                            @if (Model.YatirimTuru == "İş Yeri")
+                            {
+                                @if (dinamikOzellikler.ContainsKey("KullanimDurumu") && !string.IsNullOrWhiteSpace(dinamikOzellikler["KullanimDurumu"]))
+                                {
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                                            </svg>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h4>Kullanım Durumu</h4>
+                                            <p>@dinamikOzellikler["KullanimDurumu"]</p>
+                                        </div>
+                                    </div>
+                                }
+                                @if (dinamikOzellikler.ContainsKey("BolumSayisi") && !string.IsNullOrWhiteSpace(dinamikOzellikler["BolumSayisi"]))
+                                {
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                <polyline points="9 22 9 12 15 12 15 22" />
+                                            </svg>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h4>Bölüm / Oda Sayısı</h4>
+                                            <p>@dinamikOzellikler["BolumSayisi"]</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+
                             @if (Model.MinMetreKare.HasValue || Model.MaxMetreKare.HasValue || Model.MetreKare.HasValue)
                             {
                                 <div class="feature-item">
@@ -420,28 +493,43 @@
                                     <div class="feature-content">
                                         <h4>@(Model.YatirimTuru == "Arsa" ? "Arsa Büyüklüğü" : "Brüt Alan (m²)")</h4>
                                         <p>
-                                            @if (Model.MinMetreKare.HasValue && Model.MaxMetreKare.HasValue)
+                                            @if (Model.YatirimTuru != "Arsa")
                                             {
-                                                if (Model.MinMetreKare == Model.MaxMetreKare)
+                                                var bAlan = Model.MetreKare ?? Model.MinMetreKare ?? 0;
+                                                if (bAlan > 0)
                                                 {
-                                                    @Model.MinMetreKare.Value.ToString("N0") <text> m²</text>
+                                                    @bAlan.ToString("N0") <text> m²</text>
                                                 }
                                                 else
                                                 {
-                                                    @Model.MinMetreKare.Value.ToString("N0") <text> - </text> @Model.MaxMetreKare.Value.ToString("N0") <text> m²</text>
+                                                    <text>Belirtilmemiş</text>
                                                 }
                                             }
-                                            else if (Model.MinMetreKare.HasValue)
+                                            else
                                             {
-                                                @Model.MinMetreKare.Value.ToString("N0") <text> m² +</text>
-                                            }
-                                            else if (Model.MaxMetreKare.HasValue)
-                                            {
-                                                <text>Max </text> @Model.MaxMetreKare.Value.ToString("N0") <text> m²</text>
-                                            }
-                                            else if (Model.MetreKare.HasValue)
-                                            {
-                                                @Model.MetreKare.Value.ToString("N0") <text> m²</text>
+                                                if (Model.MinMetreKare.HasValue && Model.MaxMetreKare.HasValue)
+                                                {
+                                                    if (Model.MinMetreKare == Model.MaxMetreKare)
+                                                    {
+                                                        @Model.MinMetreKare.Value.ToString("N0") <text> m²</text>
+                                                    }
+                                                    else
+                                                    {
+                                                        @Model.MinMetreKare.Value.ToString("N0") <text> - </text> @Model.MaxMetreKare.Value.ToString("N0") <text> m²</text>
+                                                    }
+                                                }
+                                                else if (Model.MinMetreKare.HasValue)
+                                                {
+                                                    @Model.MinMetreKare.Value.ToString("N0") <text> m² +</text>
+                                                }
+                                                else if (Model.MaxMetreKare.HasValue)
+                                                {
+                                                    <text>Max </text> @Model.MaxMetreKare.Value.ToString("N0") <text> m²</text>
+                                                }
+                                                else if (Model.MetreKare.HasValue)
+                                                {
+                                                    @Model.MetreKare.Value.ToString("N0") <text> m²</text>
+                                                }
                                             }
                                         </p>
                                     </div>
@@ -480,7 +568,7 @@
                                 </div>
                             </div>
 
-                            @if (!string.IsNullOrEmpty(Model.Altyapi))
+                            @if (Model.YatirimTuru == "Arsa" && !string.IsNullOrEmpty(Model.Altyapi))
                             {
                                 <div class="feature-item">
                                     <div class="feature-icon">
