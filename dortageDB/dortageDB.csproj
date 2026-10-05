@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <Content Include="Properties\register-form.css" />
+    <!-- Şifre dosyası publish ile sunucuya taşınmaz; sunucuda SifreGuncelle.bat ile oluşturulur -->
+    <Content Update="appsettings.Secrets.json" CopyToPublishDirectory="Never" />
+    <None Update="SifreGuncelle.bat;SifreGuncelle.ps1" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

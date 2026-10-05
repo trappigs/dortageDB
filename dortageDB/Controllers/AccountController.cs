@@ -5,7 +5,9 @@ using dortageDB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace dortageDB.Controllers
 {
@@ -48,6 +50,7 @@ namespace dortageDB.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("mail")]
         public async Task<IActionResult> Register(RegisterVM model, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -208,15 +211,18 @@ namespace dortageDB.Controllers
                 // Yöneticiye bildirim gönder
                 try
                 {
+                    // Kullanıcı girdileri maile HTML olarak gömülmesin diye encode ediliyor
+                    var adSoyad = WebUtility.HtmlEncode($"{model.Ad} {model.Soyad}");
+
                     var adminSubject = "Yeni Vekarer Kaydı (Onay Bekliyor)";
                     var adminBody = $@"
                         <h2>Sisteme Yeni Bir Vekarer Kayıt Oldu</h2>
-                        <p><strong>Ad Soyad:</strong> {model.Ad} {model.Soyad}</p>
-                        <p><strong>Email:</strong> {model.Email}</p>
-                        <p><strong>Telefon:</strong> {model.PhoneNumber}</p>
-                        <p><strong>Şehir:</strong> {model.Sehir}</p>
+                        <p><strong>Ad Soyad:</strong> {adSoyad}</p>
+                        <p><strong>Email:</strong> {WebUtility.HtmlEncode(model.Email)}</p>
+                        <p><strong>Telefon:</strong> {WebUtility.HtmlEncode(model.PhoneNumber)}</p>
+                        <p><strong>Şehir:</strong> {WebUtility.HtmlEncode(model.Sehir)}</p>
                         <p><strong>Cinsiyet:</strong> {(model.Cinsiyet ? "Erkek" : "Kadın")}</p>
-                        <p><strong>TC No:</strong> {model.TcNo ?? "-"}</p>
+                        <p><strong>TC No:</strong> {WebUtility.HtmlEncode(model.TcNo ?? "-")}</p>
                         <hr>
                         <p>Bu hesap şu an deaktif (kilitli) durumdadır. Admin panelinden aktifleştirebilirsiniz.</p>";
 
@@ -225,7 +231,7 @@ namespace dortageDB.Controllers
                     // Kullanıcıya teyit maili gönder
                     var userSubject = "Kaydınız Alındı - Vekarer";
                     var userBody = $@"
-                        <h3>Merhaba {model.Ad} {model.Soyad},</h3>
+                        <h3>Merhaba {adSoyad},</h3>
                         <p>Vekarer sistemine yaptığınız kayıt başvurusu başarıyla alınmıştır.</p>
                         <p>Hesabınız yönetici incelemesinin ardından aktif hale getirilecektir. Onay işlemi tamamlandığında size tekrar bilgilendirme e-postası gönderilecektir.</p>
                         <br>
@@ -336,6 +342,7 @@ namespace dortageDB.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("mail")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordVM model)
         {
             if (!ModelState.IsValid)

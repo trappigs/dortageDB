@@ -59,7 +59,12 @@ static async Task CreateAdminUser(IServiceProvider serviceProvider)
 
     // Admin kullanıcısı yoksa oluştur
     var adminUser = await userManager.FindByEmailAsync("admin@dortage.com");
-    if (adminUser == null)
+    var adminSeedPassword = serviceProvider.GetRequiredService<IConfiguration>()["AdminSeedPassword"];
+    if (adminUser == null && string.IsNullOrEmpty(adminSeedPassword))
+    {
+        Console.WriteLine("⚠️  Admin kullanıcısı yok ve AdminSeedPassword tanımlı değil, oluşturulmadı");
+    }
+    else if (adminUser == null)
     {
         adminUser = new AppUser
         {
@@ -76,13 +81,11 @@ static async Task CreateAdminUser(IServiceProvider serviceProvider)
             Pazarlama = false
         };
 
-        var result = await userManager.CreateAsync(adminUser, "Admin123!");
+        var result = await userManager.CreateAsync(adminUser, adminSeedPassword!);
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(adminUser, "admin");
-            Console.WriteLine("✅ Admin kullanıcısı oluşturuldu:");
-            Console.WriteLine($"   Email: admin@dortage.com");
-            Console.WriteLine($"   Şifre: Admin123!");
+            Console.WriteLine("✅ Admin kullanıcısı oluşturuldu: admin@dortage.com");
         }
         else
         {
@@ -101,6 +104,10 @@ static async Task CreateAdminUser(IServiceProvider serviceProvider)
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Şifreler repo'da tutulmaz: SifreGuncelle.bat ile oluşturulan appsettings.Secrets.json'dan okunur
+builder.Configuration.AddJsonFile("appsettings.Secrets.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddEnvironmentVariables();
+
 Console.WriteLine("=== UYGULAMA BAŞLATILIYOR ===");
 
 // Add services to the container.
@@ -118,8 +125,16 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 });
 
 // DbContext
+var connectionString = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(
+    builder.Configuration.GetConnectionString("Default"));
+var dbPassword = builder.Configuration["DbPassword"];
+if (!string.IsNullOrEmpty(dbPassword))
+{
+    connectionString.Password = dbPassword;
+}
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"),
+    options.UseSqlServer(connectionString.ConnectionString,
         sqlOptions => sqlOptions.EnableRetryOnFailure()));
 
 // Identity
@@ -155,6 +170,20 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromDays(30);
     options.SlidingExpiration = true;
+});
+
+// Mail tetikleyen anonim formlar için IP başına istek limiti (spam koruması)
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("mail", httpContext =>
+        System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(15)
+            }));
 });
 
 // Services
@@ -195,6 +224,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

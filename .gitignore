@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Uygulama sifreleri (SifreGuncelle.bat ile olusturulur)
+appsettings.Secrets.json

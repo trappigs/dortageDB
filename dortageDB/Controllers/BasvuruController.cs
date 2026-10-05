@@ -4,6 +4,7 @@ using dortageDB.Services;
 using dortageDB.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace dortageDB.Controllers
 {
@@ -23,6 +24,7 @@ namespace dortageDB.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("mail")]
         public async Task<IActionResult> Submit(BasvuruCreateVM model)
         {
             if (!ModelState.IsValid)
