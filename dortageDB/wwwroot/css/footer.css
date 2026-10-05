@@ -104,6 +104,25 @@
     margin-bottom: 24px;
 }
 
+.footer-company-link {
+    color: var(--footer-white);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.footer-company-link:hover {
+    color: var(--footer-white);
+    opacity: 0.85;
+}
+
+.footer-ownership-english {
+    display: block;
+    margin-top: 8px;
+    color: var(--footer-text-lighter);
+    font-size: 12px;
+}
+
 .footer-social-icons {
     display: flex;
     gap: 16px;
